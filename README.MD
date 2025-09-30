@@ -17,14 +17,4 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas:
 - Python 3.x
 - Django 4.x
 - PostgreSQL
-- Node.js (para funcionalidades JS mais avançadas)
 
-## Instalação
-
-### Passo 1: Clonar o repositório
-
-Clone o repositório para sua máquina local:
-
-```bash
-git clone https://github.com/seu-usuario/barbearia-site.git
-cd barbearia-site
