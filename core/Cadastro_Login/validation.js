@@ -32,6 +32,12 @@ function getSignUpFormErrors(username, email, password, repeatPassword) {
         errors.push('Email é obrigatório');
         email_input.parentElement.classList.add('incorrect');
     }
+
+    if (!email.includes('@') || !email.includes('.')) {
+        errors.push('Escreva um email válido');
+        email_input.parentElement.classList.add('incorrect');
+    }
+
     if (password === '' || password == null) {
         errors.push('Senha é obrigatória');
         password_input.parentElement.classList.add('incorrect');
@@ -63,6 +69,12 @@ function getLoginFormErrors(email, password) {
         errors.push('Email é obrigatório');
         email_input.parentElement.classList.add('incorrect');
     }
+    
+    if (!email.includes('@') || !email.includes('.')) {
+        errors.push('Escreva um email válido');
+        email_input.parentElement.classList.add('incorrect');
+    }
+
     if (password === '' || password == null) {
         errors.push('Senha é obrigatória');
         password_input.parentElement.classList.add('incorrect');
