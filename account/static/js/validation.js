@@ -66,7 +66,7 @@ form.addEventListener('submit', async (e) => {
 
         if (response.ok) {
             // Sucesso → redireciona ou faz algo
-            window.location.href = result.redirect_url || '/dashboard/';
+            window.location.href = result.redirect_url || '/cliente/dashboard'; 
         } else {
             // Erro vindo do backend
             error_message.innerText = result.error || 'Erro ao tentar logar.';
@@ -151,6 +151,7 @@ allInputs.forEach(input => {
             input.parentElement.classList.remove('incorrect');
             error_message.innerText = '';
         }
+
     })
 })
 
