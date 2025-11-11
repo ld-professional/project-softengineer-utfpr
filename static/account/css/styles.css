@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
-    --color-primary: #1c0000;
-    --color-secondary: #001891;
-    --color-background: #f5f5f5;
-    --color-input-background: #ffffffdc;
-    --color-text: #212121;
+    --color-primary: #f5f5f5;
+    --color-secondary: #FFD700;
+    --color-background: #000000;
+    --color-input-background: #232323dc;
+    --color-text: #ffffff;
     --color-incorrect: #de0101;
     --font-family-primary: 'Roboto', sans-serif;
     --font-family-secondary: 'Quicksand', sans-serif;
