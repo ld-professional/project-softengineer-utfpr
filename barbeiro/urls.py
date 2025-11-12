@@ -3,6 +3,11 @@ from django.urls import path,include
 from . import views
 
 
-path('agendamentos/',include('agendamentos.urls')),
+urlpatterns = [
 
-path('/dashboard',views.barbeiro_dashboard,name='barbeiro_pagina_inicial_dashboard'),
+path('agendamentos/',include('agendamentos.urls_barbeiro')),
+
+path('dashboard/',views.barbeiro_dashboard,name='barbeiro_pagina_inicial_dashboard'),
+
+path('servicos/',include('servicos.urls')),
+]
