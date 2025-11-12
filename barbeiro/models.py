@@ -25,11 +25,13 @@ colunas_da_excecoes=[
 #'fk_horario_de_trabalho__fk_barbeiro' 
 # assim agora eu acessei a fk horario trab e entrei, e entao acessei o campo fk barbeiro e entrei, logo estou agr
 # na tabela barbeiro, mas n pode, logo apenas referenciando a horario de trabalho, ja fica compreendido a unicidade
-'fk_horario_de_trabalho',
+'fk_barbeiro',
 'data_inicio',
 'data_fim',
 ]
-
+# pensando melhor mer para modelo fisico usar direto fk_barbeiro ja que estas 2 entidades so definem a regra
+#no mer faz ate sentido usar elas depnedneo uma da outra, mas auqi o melhor caminho nao eh estarem ligadas
+# pois o excecoes so usa a tabela de horario de trabalho pra acessar o barbeiro...
 
 
 
@@ -42,6 +44,12 @@ class Barbeiro(models.Model):
     # e no caso sera msm pq eh mais facil e no padrao o djano n coloca esta linha no settings
     fk_user = models.OneToOneField(User,on_delete=models.CASCADE,null=False,related_name='barber')
 
+    class Meta():
+
+        constraints=[models.UniqueConstraint(name='barbeiro_user_unico',fields=['id_barbeiro','fk_user'])]
+
+    def __str__(self):
+        return f'Barbeiro:{self.fk_user.username}'
 
 class Horarios_de_trabalho(models.Model):
 
@@ -62,15 +70,27 @@ class Horarios_de_trabalho(models.Model):
 
         #logo esta classe guarda metadados ( nossas regras ) e nao dados...
 
+    def __str__(self):
+        dia_da_semana_string= dict(dias_da_semana).get(self.dia_semana,'Desconhecido')
+        return f'Horario de trabalho do barbeiro: {self.fk_barbeiro.fk_user.username}:\nDia da semana {dia_da_semana_string}, {self.hora_inicio} : {self.hora_fim} '
+        # para navegar nao pelo ORM que eh __, aqui eh por ponto normal como python
+        #dict transforma a nossa lista de tupla em dicionario
+        #get tenta buscar pela chave self.dia_semana e o resultado salva em dia da semana string
+        #se nao achar, o conteudo sera o "desconhecido"
 
 class Excecoes(models.Model):
 
     id_excecoes= models.AutoField(primary_key=True)
-    fk_horario_de_trabalho= models.ForeignKey(Horarios_de_trabalho,on_delete=models.CASCADE)
+    fk_barbeiro= models.ForeignKey(Barbeiro,on_delete=models.CASCADE)
     
     data_inicio= models.DateTimeField()
     data_fim= models.DateTimeField()
+    motivo_da_indisponibilidade= models.CharField(null=True,max_length=200)
     # ou seja supondo o front q ele seleciona o slot 9:30  10:00 10:30 e 11:00
     # logo data inicio sera dia tal vindo do front tb supondo 13/11 9:30 e dt fim 13/11 11:00
     class Meta():
         constraints= [models.UniqueConstraint(fields=colunas_da_excecoes,name='unique_excecao') ,]
+
+    def __str__(self):
+       
+     return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\nDe {self.data_inicio} até {self.data_fim} '
