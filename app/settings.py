@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'barbeiro',
     'clientes',
     'core',
+    'servicos'
 ]
 
 MIDDLEWARE = [
