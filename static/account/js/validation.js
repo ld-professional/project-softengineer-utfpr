@@ -4,6 +4,9 @@ const email_input = document.getElementById('email');
 const password_input = document.getElementById('password');
 const repeatPassword_input = document.getElementById('repeat-password');
 const error_message = document.getElementById('error-message'); 
+const themeSwitch = document.getElementById('theme-switch');
+
+let lightmode = localStorage.getItem('lightmode');
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault(); // cancela o envio padrão
@@ -155,4 +158,24 @@ allInputs.forEach(input => {
     })
 })
 
+const enanableLightMode = () => {
+    document.body.classList.add('lightmode');
+    localStorage.setItem('lightmode', 'active');
+};
+const disableLightMode = () => {
+    document.body.classList.remove('lightmode');
+    localStorage.setItem('lightmode', null);
+};
 
+if (lightmode === 'active') {
+    enanableLightMode();
+}
+
+themeSwitch.addEventListener('click', () => {
+    lightmode = localStorage.getItem('lightmode');
+    if (lightmode !== 'active') {
+        enanableLightMode();
+    } else {
+        disableLightMode();
+    }
+});
