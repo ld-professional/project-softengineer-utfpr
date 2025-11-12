@@ -58,7 +58,7 @@ class Horarios_de_trabalho(models.Model):
     #ou seja as constraints de SQL e logo a variavel nesse espaco deve se chamar logo constraints
     # que recebe uma lsita das regras, no caso esta tabela horarios trabalho so tem 1
     class Meta():
-        constraints= [models.UniqueConstraint(fields=colunas_da_tabela_hora_trab,name='unique_horario_barbeiro',name='unique_horario_barbeiro'), ]
+        constraints= [models.UniqueConstraint(fields=colunas_da_tabela_hora_trab,name='unique_horario_barbeiro',), ]
 
         #logo esta classe guarda metadados ( nossas regras ) e nao dados...
 
@@ -73,4 +73,4 @@ class Excecoes(models.Model):
     # ou seja supondo o front q ele seleciona o slot 9:30  10:00 10:30 e 11:00
     # logo data inicio sera dia tal vindo do front tb supondo 13/11 9:30 e dt fim 13/11 11:00
     class Meta():
-        constraints= [models.UniqueConstraint(fields=colunas_da_excecoes,name='unique_horario_barbeiro') ,]
+        constraints= [models.UniqueConstraint(fields=colunas_da_excecoes,name='unique_excecao') ,]
