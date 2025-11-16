@@ -28,6 +28,7 @@ colunas_da_excecoes=[
 'fk_barbeiro',
 'data_inicio',
 'data_fim',
+
 ]
 # pensando melhor mer para modelo fisico usar direto fk_barbeiro ja que estas 2 entidades so definem a regra
 #no mer faz ate sentido usar elas depnedneo uma da outra, mas auqi o melhor caminho nao eh estarem ligadas
@@ -84,7 +85,7 @@ class Excecoes(models.Model):
     fk_barbeiro= models.ForeignKey(Barbeiro,on_delete=models.CASCADE)
     
     data_inicio= models.DateTimeField()
-    data_fim= models.DateTimeField()
+    data_fim=models.DateTimeField()
     motivo_da_indisponibilidade= models.CharField(null=True,max_length=200)
     # ou seja supondo o front q ele seleciona o slot 9:30  10:00 10:30 e 11:00
     # logo data inicio sera dia tal vindo do front tb supondo 13/11 9:30 e dt fim 13/11 11:00
@@ -93,4 +94,6 @@ class Excecoes(models.Model):
 
     def __str__(self):
        
-     return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\nDe {self.data_inicio} até {self.data_fim} '
+     return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\n {self.data_inicio} até {self.data_fim} '
+    
+
