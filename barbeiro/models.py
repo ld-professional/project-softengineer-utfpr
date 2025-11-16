@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 
@@ -79,6 +80,28 @@ class Horarios_de_trabalho(models.Model):
         #get tenta buscar pela chave self.dia_semana e o resultado salva em dia da semana string
         #se nao achar, o conteudo sera o "desconhecido"
 
+    def clean(self):
+        super().clean()
+        
+        if self.hora_inicio >= self.hora_fim:
+            raise ValidationError("A hora de término deve ser depois da hora de início.")
+
+        conflitos = Horarios_de_trabalho.objects.filter(
+            fk_barbeiro=self.fk_barbeiro,
+            dia_semana=self.dia_semana,
+            hora_fim__gt=self.hora_inicio,   
+            hora_inicio__lt=self.hora_fim
+        )
+
+        if self.pk:
+            conflitos = conflitos.exclude(pk=self.pk)
+
+        if conflitos.exists():
+            raise ValidationError(
+                f'Conflito de horário! Este barbeiro já tem um horário cadastrado que se sobrepõe a este na {self.get_dia_semana_display()}.'
+            )
+
+
 class Excecoes(models.Model):
 
     id_excecoes= models.AutoField(primary_key=True)
@@ -97,3 +120,28 @@ class Excecoes(models.Model):
      return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\n {self.data_inicio} até {self.data_fim} '
     
 
+def clean(self):
+        super().clean()
+        
+        # 1. se o digitado eh obvio
+        if self.data_inicio >= self.data_fim:
+            raise ValidationError("A data de término deve ser depois da data de início.")
+
+        # 2. select pra retornando linahs q representam nossos conflitos,
+        conflitos = Excecoes.objects.filter(
+            fk_barbeiro=self.fk_barbeiro,
+            
+            # A a msm logica, usando gt e lt, porem com datetimefield, tbm funfa !
+            data_fim__gt=self.data_inicio,   
+            data_inicio__lt=self.data_fim
+        )
+
+        # 3. Se estiver editando um existente, excluir eu da lista de conflitos, atraves obvio da minah pk
+        if self.pk:
+            conflitos = conflitos.exclude(pk=self.pk)
+
+        # 4.Da o erro se a lsita tiver errlinhas...
+        if conflitos.exists():
+            raise ValidationError(
+                'Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.'
+            )
