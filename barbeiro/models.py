@@ -120,7 +120,7 @@ class Excecoes(models.Model):
      return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\n {self.data_inicio} até {self.data_fim} '
     
 
-def clean(self):
+    def clean(self):
         super().clean()
         
         # 1. se o digitado eh obvio
