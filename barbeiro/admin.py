@@ -19,6 +19,11 @@ class BarbeiroAdmin(admin.ModelAdmin):
         'fk_user__email'
     )
 
+    list_filter=(
+        'fk_barbeiro' # como a itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
+
+    )
+
 admin.site.register(Barbeiro,BarbeiroAdmin)
 
 class Horarios_trabalhoAdmin(admin.ModelAdmin):
@@ -50,6 +55,8 @@ class Horarios_trabalhoAdmin(admin.ModelAdmin):
 
     list_filter=(
         'dia_semana',
+        'fk_barbeiro' # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
+
     )
 
 admin.site.register(Horarios_de_trabalho,Horarios_trabalhoAdmin)
@@ -78,6 +85,7 @@ class ExcecoesAdmin(admin.ModelAdmin):
 
     list_filter=(
         'data_inicio' #assim faz ser uma data selecioanvel na lateral
+        'fk_barbeiro' # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
     )
 
     

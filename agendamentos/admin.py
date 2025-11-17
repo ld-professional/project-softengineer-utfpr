@@ -15,7 +15,8 @@ class AgendamentosAdmin(admin.ModelAdmin):
         'barbeiro_nome',
         'servico_nome',
         'servico_preco',
-        'data_e_horario',
+        'data_e_horario_inicio',
+        'data_e_horario_fim'
     )
 
     # Métodos para acessar campos relacionados:
@@ -51,6 +52,13 @@ class AgendamentosAdmin(admin.ModelAdmin):
         'fk_barbeiro__fk_user__username',
         'fk_servicos__nome_servico',
 
+    )
+
+    list_filter=(
+
+        'data_e_horario_inicio',
+        'fk_barbeiro',
+        'fk_cliente',
     )
 
 admin.site.register(Agendamentos,AgendamentosAdmin)

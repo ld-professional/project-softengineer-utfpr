@@ -19,7 +19,7 @@ colunas_da_tabela_hora_trab=[
 'fk_barbeiro',
 'dia_semana',
 'hora_inicio',
-'hora_fim'
+#'hora_fim' assim permite apenas q n tenham horarios q coemcem no msm
 ]
 
 colunas_da_excecoes=[
@@ -28,7 +28,7 @@ colunas_da_excecoes=[
 # na tabela barbeiro, mas n pode, logo apenas referenciando a horario de trabalho, ja fica compreendido a unicidade
 'fk_barbeiro',
 'data_inicio',
-'data_fim',
+# 'data_fim', assim permite q n pode ter excecoes q estejam no msm comeco
 
 ]
 # pensando melhor mer para modelo fisico usar direto fk_barbeiro ja que estas 2 entidades so definem a regra
@@ -133,7 +133,7 @@ class Excecoes(models.Model):
             
             # A a msm logica, usando gt e lt, porem com datetimefield, tbm funfa !
             data_fim__gt=self.data_inicio,   
-            data_inicio__lt=self.data_fim
+            data_inicio__lt=self.data_fim 
         )
 
         # 3. Se estiver editando um existente, excluir eu da lista de conflitos, atraves obvio da minah pk
