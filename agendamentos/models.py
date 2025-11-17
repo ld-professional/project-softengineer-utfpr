@@ -83,3 +83,5 @@ class Agendamentos(models.Model):
             raise ValidationError(
                 f'Conflito de horário! Ja existe um agendamento ocorrendo neste slot de horario!'
             )
+
+        # ainda falta toda logica do agendamento mas isso sera feito como parte do bac-end para agendamentos...
