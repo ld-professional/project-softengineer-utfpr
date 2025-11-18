@@ -19,7 +19,8 @@ class Cliente(models.Model):
 
         super().clean()
 
-        vazio={}
-
-        if not self.fk_user:
+        if not self.fk_user_id:
             raise ValidationError({'fk_user':'Campo obrigatorio!'})
+        
+        #Ao adicionar _id ao nome do campo, você verifica apenas se o número do ID está preenchido na memória,
+        #  sem tentar buscar o usuário inteiro no banco de dados (o que causava o erro).
