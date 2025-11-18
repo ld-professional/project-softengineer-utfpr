@@ -16,13 +16,12 @@ class BarbeiroAdmin(admin.ModelAdmin):
     
     search_fields=(
         'fk_user__username',
-        'fk_user__email'
+        'fk_user__email',
     )
 
-    list_filter=(
-        'fk_barbeiro' # como a itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
-
-    )
+    list_filter=([
+        'fk_user', # como a itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
+    ])
 
 admin.site.register(Barbeiro,BarbeiroAdmin)
 
@@ -32,7 +31,7 @@ class Horarios_trabalhoAdmin(admin.ModelAdmin):
         'barbeiro_nome',
         'dia_da_semana',
         'horario_de_inicio',
-        'horario_final'
+        'horario_final',
     )
 
     def horario_de_inicio(self,obj):
@@ -53,9 +52,9 @@ class Horarios_trabalhoAdmin(admin.ModelAdmin):
         #'fk_barbeiro__id_barbeiro' da erro pq n pode buscar nome e numero simultanemanente
     )
 
-    list_filter=(
+    list_filter=([
         'dia_semana',
-        'fk_barbeiro' # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
+        'fk_barbeiro',] # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
 
     )
 
@@ -83,9 +82,10 @@ class ExcecoesAdmin(admin.ModelAdmin):
         #'data_inicio' pq se nao ele tem q digitar dia mes ano hora minuto segundo... eh melhor ser algo selecionavel
     )
 
-    list_filter=(
-        'data_inicio' #assim faz ser uma data selecioanvel na lateral
-        'fk_barbeiro' # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
+    list_filter=([
+        'data_inicio', #assim faz ser uma data selecioanvel na lateral
+        'fk_barbeiro',
+        'motivo_da_indisponibilidade',] # ocm oa itnencao eh existir poucos barbeiros vai mostra ru mlink clicavel do barbeiro.str
     )
 
     
