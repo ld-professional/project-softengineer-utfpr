@@ -84,7 +84,9 @@ class Horarios_de_trabalho(models.Model):
         super().clean()
         
         if self.hora_inicio >= self.hora_fim:
-            raise ValidationError("A hora de término deve ser depois da hora de início.")
+            raise ValidationError({
+        'hora_inicio': "A hora de término deve ser depois da hora de início."
+    })
 
         conflitos = Horarios_de_trabalho.objects.filter(
             fk_barbeiro=self.fk_barbeiro,
@@ -97,9 +99,7 @@ class Horarios_de_trabalho(models.Model):
             conflitos = conflitos.exclude(pk=self.pk)
 
         if conflitos.exists():
-            raise ValidationError(
-                f'Conflito de horário! Este barbeiro já tem um horário cadastrado que se sobrepõe a este na {self.get_dia_semana_display()}.'
-            )
+            raise ValidationError('Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.')
 
 
 class Excecoes(models.Model):
@@ -125,7 +125,7 @@ class Excecoes(models.Model):
         
         # 1. se o digitado eh obvio
         if self.data_inicio >= self.data_fim:
-            raise ValidationError("A data de término deve ser depois da data de início.")
+            raise ValidationError({'data_fim':"A data de término deve ser depois da data de início."})
 
         # 2. select pra retornando linahs q representam nossos conflitos,
         conflitos = Excecoes.objects.filter(
