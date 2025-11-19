@@ -21,17 +21,19 @@ class UserPersonalziadoAdmin(UserAdmin):
         'username',
     )
 
-    list_filter=(['is_staff', 'is_superuser', 'is_active'])
+    list_filter=('is_staff', 'is_superuser', 'is_active')
 
 
     #clico em useradmin copio um tal de  fieldsets e em informacoes pessoas coloco o telefone
-    # cltr e botao direito em useradmin => go to definiton, dps apagar o _()
+    # cltr e botao direito em useradmin => go to definiton, dps apagar o _() por exemprlo (_("personal info"))
+    # vai ficar ( "personal info")
 
+    # e em add fieldsets oq exigimos na criacao, ou seja, email e telefone
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (("Personal info"), {"fields": ("first_name", "last_name", "email",'telefone')}),
+        ("Personal info", {"fields": ("first_name", "last_name", "email")}),
         (
-            ("Permissions"),
+            "Permissions",
             {
                 "fields": (
                     "is_active",
@@ -42,14 +44,14 @@ class UserPersonalziadoAdmin(UserAdmin):
                 ),
             },
         ),
-        (("Important dates"), {"fields": ("last_login", "date_joined")}),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "usable_password", "password1", "password2"),
+                "fields": ("username", "usable_password", "password1", "password2",'email','telefone'),
             },
         ),
     )
