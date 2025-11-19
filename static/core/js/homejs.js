@@ -1,8 +1,11 @@
+// Recebe os dados do HTML pelo ID
 const sections = document.querySelectorAll('section');
 const themeSwitch = document.getElementById('theme-switch');
 
+// pega o estado atual do modo (se esstá claro ou escuro)
 let lightmode = localStorage.getItem('lightmode');
 
+// indentifica em qual seção está
 const observer = new IntersectionObserver(
     (entries) => {
         entries.forEach((entry) => {
@@ -18,12 +21,12 @@ const observer = new IntersectionObserver(
     },
     { threshold: 0.3}
 );
-
 sections.forEach(section => {
     observer.observe(section);
 });
 
-const enanableLightMode = () => {
+// darkmode
+const enableLightMode = () => {
     document.body.classList.add('lightmode');
     localStorage.setItem('lightmode', 'active');
 };
@@ -33,13 +36,13 @@ const disableLightMode = () => {
 };
 
 if (lightmode === 'active') {
-    enanableLightMode();
+    enableLightMode();
 }
 
 themeSwitch.addEventListener('click', () => {
     lightmode = localStorage.getItem('lightmode');
     if (lightmode !== 'active') {
-        enanableLightMode();
+        enableLightMode();
     } else {
         disableLightMode();
     }
