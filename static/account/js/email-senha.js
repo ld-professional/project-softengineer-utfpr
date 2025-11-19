@@ -31,6 +31,24 @@ themeSwitch.addEventListener('click', () => {
     }
 });
 
+
+// --- FUNÇÃO GETCOOKIE (Necessária para segurança CSRF) --- basicamente um copia e cola da internet...
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 // --- ABSTRAÇÃO INTELIGENTE: Captura UID e TOKEN da URL ---
 // O navegador extrai automaticamente tudo que vem depois da '?'
 const params = new URLSearchParams(window.location.search);
@@ -105,8 +123,8 @@ form.addEventListener('submit', async (e) => {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-                // Não precisa de X-CSRFToken se a view tiver @csrf_exempt
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify(data)
         });
