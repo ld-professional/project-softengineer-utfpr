@@ -2,7 +2,7 @@
 const form = document.getElementById('form'); 
 const username_input = document.getElementById('username');
 const email_input = document.getElementById('email');
-const indentifier_input = document.getElementById('indentifier');
+const identifier_input = document.getElementById('identifier');
 const telefone_input = document.getElementById('telefone');
 const password_input = document.getElementById('password');
 const repeatPassword_input = document.getElementById('repeat-password');
@@ -29,7 +29,7 @@ form.addEventListener('submit', async (e) => {
     } else {
         // Formulário de login
         errors = getLoginFormErrors(
-            indentifier_input.value,
+            identifier_input.value,
             password_input.value
         );
     }
@@ -54,7 +54,7 @@ form.addEventListener('submit', async (e) => {
         url = '/account/signup/'; 
     } else {
         // Login
-        data.indentifier = indentifier_input.value;
+        data.identifier = identifier_input.value;
         data.password = password_input.value;
         url = '/account/login/';
     }
@@ -65,7 +65,7 @@ form.addEventListener('submit', async (e) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // se usar Django
+                //'X-CSRFToken': getCookie('csrftoken') // se usar Django
             },
             body: JSON.stringify(data)
         });
@@ -165,13 +165,13 @@ function getSignUpFormErrors(username, email, password, repeatPassword, telefone
 }
 
 // Fução que indentidica se existe ou não erro nos campos de login
-function getLoginFormErrors(indentifier, password) {
+function getLoginFormErrors(identifier, password) {
     let errors = [];
 
     // se o indentificador é vazio
-    if (indentifier === '' || indentifier == null) {
+    if (identifier === '' || identifier == null) {
         errors.push('Um identificador é obrigatório');
-        indentifier_input.parentElement.classList.add('incorrect');
+        identifier_input.parentElement.classList.add('incorrect');
     }
 
     // se a senha é vazia
@@ -195,7 +195,7 @@ telefone_input.addEventListener('input', function(e) {
 });
 
 // fica atualizando o erro, para verificar se ele foi corrigido ou não
-const allInputs = [username_input, email_input, password_input, repeatPassword_input, indentifier_input, telefone_input].filter(input => input != null);
+const allInputs = [username_input, email_input, password_input, repeatPassword_input, identifier_input, telefone_input].filter(input => input != null);
 allInputs.forEach(input => {
     input.addEventListener('input', () => {
         if(input.parentElement.classList.contains('incorrect')) {

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Página não encontrada</title>
+    <link rel="stylesheet" href="/static/core/css/styleshome.css">
+    <style>
+        /* Um CSS extra só pra centralizar o erro */
+        .error-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--color-text); /* Usando suas variáveis */
+            background-color: var(--color-background);
+        }
+        h1 { font-size: 4rem; color: var(--color-secondary); }
+        p { font-size: 1.5rem; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>404</h1>
+        <p>Ops! Parece que essa página foi cortada.</p>
+        
+        <a href="/" class="btn">Voltar para o Início</a>
+    </div>
+</body>
+</html>
