@@ -1,91 +1,17 @@
-// Recebe os dados do HTML pelo ID
+// --- SELEÇÃO DE ELEMENTOS ---
 const form = document.getElementById('form'); 
-const username_input = document.getElementById('username');
-const email_input = document.getElementById('email');
-const identifier_input = document.getElementById('identifier');
-const telefone_input = document.getElementById('telefone');
+const username_input = document.getElementById('username'); // Só existe no cadastro
+const email_input = document.getElementById('email');       // Só existe no cadastro
+const telefone_input = document.getElementById('telefone'); // Só existe no cadastro
+const identifier_input = document.getElementById('identifier'); // Só existe no Login
 const password_input = document.getElementById('password');
 const repeatPassword_input = document.getElementById('repeat-password');
 const error_message = document.getElementById('error-message'); 
 const themeSwitch = document.getElementById('theme-switch');
 
-// pega o estado atual do modo (se esstá claro ou escuro)
+// --- MODO ESCURO/CLARO ---
 let lightmode = localStorage.getItem('lightmode');
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // cancela o envio padrão
-
-    // 🔹 1. Validação
-    let errors = [];
-
-    if (username_input) {
-        // Formulário de cadastro
-        errors = getSignUpFormErrors(
-            username_input.value,
-            email_input.value,
-            password_input.value,
-            repeatPassword_input.value
-        );
-    } else {
-        // Formulário de login
-        errors = getLoginFormErrors(
-            identifier_input.value,
-            password_input.value
-        );
-    }
-
-    // Se houver erros, mostra e para o fluxo
-    if (errors.length > 0) {
-        error_message.innerText = errors.join(". ");
-        return;
-    }
-
-    // 🔹 2. Montar dados para envio
-    let data = {};
-    let url = "";
-
-    if (username_input) {
-        // Cadastro
-        data.username = username_input.value;
-        data.email = email_input.value;
-        data.telefone = telefone_input.value;
-        data.password = password_input.value;
-        data.repeat_password = repeatPassword_input.value;
-        url = '/account/signup/'; 
-    } else {
-        // Login
-        data.identifier = identifier_input.value;
-        data.password = password_input.value;
-        url = '/account/login/';
-    }
-
-    // 🔹 3. Envio via fetch
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                //'X-CSRFToken': getCookie('csrftoken') // se usar Django
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            // Sucesso → redireciona ou faz algo
-            window.location.href = result.redirect_url || '/cliente/dashboard'; 
-        } else {
-            // Erro vindo do backend
-            error_message.innerText = result.error || 'Erro ao tentar logar.';
-        }
-    } catch (err) {
-        console.error(err);
-        error_message.innerText = 'Erro de conexão com o servidor.';
-    }
-});
-
-// darkmode
 const enableLightMode = () => {
     document.body.classList.add('lightmode');
     localStorage.setItem('lightmode', 'active');
@@ -95,9 +21,7 @@ const disableLightMode = () => {
     localStorage.setItem('lightmode', null);
 };
 
-if (lightmode === 'active') {
-    enableLightMode();
-}
+if (lightmode === 'active') enableLightMode();
 
 themeSwitch.addEventListener('click', () => {
     lightmode = localStorage.getItem('lightmode');
@@ -108,94 +32,163 @@ themeSwitch.addEventListener('click', () => {
     }
 });
 
-// Fução que indentidica se existe ou não erro nos campos de cadastro
+// --- SIMPLIFICAÇÃO DO TELEFONE (Só Números, Max 11) ---
+if (telefone_input) {
+    telefone_input.addEventListener('input', function(e) {
+        // Remove tudo que não for número
+        let limpo = e.target.value.replace(/\D/g, '');
+        
+        // Trava em 11 dígitos (DDD + Número)
+        if (limpo.length > 11) limpo = limpo.slice(0, 11);
+        
+        e.target.value = limpo;
+    });
+}
+
+// --- SUBMISSÃO DO FORMULÁRIO ---
+form.addEventListener('submit', async (e) => {
+    e.preventDefault(); 
+
+    let errors = [];
+    let data = {};
+    let url = "";
+
+    // --- DECISÃO: É CADASTRO OU LOGIN? ---
+    if (username_input) {
+        // === MODO CADASTRO ===
+        errors = getSignUpFormErrors(
+            username_input.value,
+            email_input.value,
+            password_input.value,
+            repeatPassword_input.value,
+            telefone_input.value
+        );
+
+        data = {
+            username: username_input.value,
+            email: email_input.value,
+            telefone: telefone_input.value, // Vai enviar só números (ex: 41999998888)
+            password: password_input.value,
+            password_confirm: repeatPassword_input.value // Nome igual ao do forms.py
+        };
+        url = '/account/signup/';
+
+    } else {
+        // === MODO LOGIN ===
+        errors = getLoginFormErrors(
+            identifier_input.value,
+            password_input.value
+        );
+
+        // Envia 'identifier' e o Django descobre se é email ou telefone no backend
+        data = {
+            identifier: identifier_input.value,
+            password: password_input.value
+        };
+        url = '/account/login/';
+    }
+
+    // Se tiver erro visual, para aqui
+    if (errors.length > 0) {
+        error_message.innerText = errors.join(". ");
+        error_message.style.color = "var(--color-incorrect)";
+        return;
+    }
+
+    // Envio para o servidor
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Sucesso!
+            window.location.href = result.redirect_url || '/cliente/dashboard'; 
+        } else {
+            // Erro do Backend
+            error_message.style.color = "var(--color-incorrect)";
+            
+            if (result.errors) {
+                // Tenta ler a lista de erros do Django
+                try {
+                    const errorData = typeof result.errors === 'string' ? JSON.parse(result.errors) : result.errors;
+                    const errorList = Object.values(errorData).flat().map(err => err.message || err);
+                    error_message.innerText = errorList.join(". ");
+                } catch (e) {
+                    error_message.innerText = result.errors;
+                }
+            } else {
+                // Erro simples
+                error_message.innerText = result.error || result.mensagem || 'Erro ao processar.';
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        error_message.innerText = 'Erro de conexão com o servidor.';
+    }
+});
+
+// --- FUNÇÕES DE VALIDAÇÃO ---
+
 function getSignUpFormErrors(username, email, password, repeatPassword, telefone) { 
     let errors = [];
 
-    // nome de usuário vazio
-    if (username === '' || username == null) {
-        errors.push('Nome de usuário é obrigatório');
-        username_input.parentElement.classList.add('incorrect');
-    }
-
-    // se o numero de telefone é menor de 11
-    if (telefone_input && telefone_input.value.replace(/\D/g, '').length !== 11) {
-    errors.push('Telefone deve ter 11 dígitos');
-    telefone_input.parentElement.classList.add('incorrect');
-    }   
-
-    // se o email é vazio
-    if (email === '' || email == null) {
+    if (!username) errors.push('Nome de usuário é obrigatório');
+    
+    if (!email) {
         errors.push('Email é obrigatório');
-        email_input.parentElement.classList.add('incorrect');
+    } else if (!email.includes('@')) {
+        errors.push('Email inválido');
     }
 
-    // se o email é um email
-    if (!email.includes('@') || !email.includes('.')) {
-        errors.push('Escreva um email válido');
-        email_input.parentElement.classList.add('incorrect');
+    // Validação simples de tamanho do telefone
+    if (!telefone || telefone.length !== 11) {
+        errors.push('Telefone deve ter 11 dígitos (DDD + Número)');
+        telefone_input?.parentElement.classList.add('incorrect');
     }
 
-    // se a senha não é vazia
-    if (password === '' || password == null) {
+    if (!password) {
         errors.push('Senha é obrigatória');
-        password_input.parentElement.classList.add('incorrect');
-    }
-
-    // se a senha repetida não é vazia
-    if (repeatPassword === '' || repeatPassword == null) {
-        errors.push('Repetir senha é obrigatório');
-        repeatPassword_input.parentElement.classList.add('incorrect');
-    }
-
-    // se a senha tem no minimo 8 caracteres
-    if(password.length < 8) {
+    } else if (password.length < 8) {
         errors.push('A senha deve ter no mínimo 8 caracteres');
-        password_input.parentElement.classList.add('incorrect');
     }
 
-    // se a senha e a senha repetida são iguais
     if (password !== repeatPassword) {
         errors.push('As senhas não são iguais');
-        password_input.parentElement.classList.add('incorrect');
-        repeatPassword_input.parentElement.classList.add('incorrect');
+        repeatPassword_input?.parentElement.classList.add('incorrect');
+    }
+
+    // Marca visualmente os campos com erro
+    if(errors.length > 0) {
+        if(!username) username_input.parentElement.classList.add('incorrect');
+        if(!email || !email.includes('@')) email_input.parentElement.classList.add('incorrect');
+        if(!password || password.length < 8) password_input.parentElement.classList.add('incorrect');
     }
 
     return errors;
 }
 
-// Fução que indentidica se existe ou não erro nos campos de login
 function getLoginFormErrors(identifier, password) {
     let errors = [];
-
-    // se o indentificador é vazio
-    if (identifier === '' || identifier == null) {
-        errors.push('Um identificador é obrigatório');
+    
+    if (!identifier) {
+        errors.push('Digite seu E-mail, Telefone ou Usuário');
         identifier_input.parentElement.classList.add('incorrect');
     }
-
-    // se a senha é vazia
-    if (password === '' || password == null) {
+    if (!password) {
         errors.push('Senha é obrigatória');
         password_input.parentElement.classList.add('incorrect');
     }
-
     return errors;
 }
 
-// limita o que o campo de telefone recebe para abenas numeros e formata para numero de telefone brasileiro
-telefone_input.addEventListener('input', function(e) {
-    let x = e.target.value.replace(/\D/g, '');
-    if(x.length > 11) x = x.slice(0,11); 
-    
-    x = x.replace(/^(\d{2})(\d)/, '($1) $2');
-    x = x.replace(/(\d)(\d{4})$/, '$1-$2');         
-
-    e.target.value = x;
-});
-
-// fica atualizando o erro, para verificar se ele foi corrigido ou não
+// Limpa a classe de erro (vermelho) quando o usuário começa a digitar
 const allInputs = [username_input, email_input, password_input, repeatPassword_input, identifier_input, telefone_input].filter(input => input != null);
+
 allInputs.forEach(input => {
     input.addEventListener('input', () => {
         if(input.parentElement.classList.contains('incorrect')) {
@@ -203,6 +196,4 @@ allInputs.forEach(input => {
             error_message.innerText = '';
         }
     })
-})
-
-
+});

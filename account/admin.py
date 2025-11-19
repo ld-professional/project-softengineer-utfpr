@@ -1,12 +1,12 @@
 from django.contrib import admin
 from .models import UserPersonalizado
 from django.contrib.auth.admin import UserAdmin
-# Register your models here.
+    # Register your models here.
 
 
-#. Como você está usando um AbstractUser, o ideal não é usar admin.ModelAdmin simples, e sim herdar de UserAdmin.
+    #. Como você está usando um AbstractUser, o ideal não é usar admin.ModelAdmin simples, e sim herdar de UserAdmin.
 
-class UserPersonalziadoAdmin(UserAdmin):
+class UserPersonalizadoAdmin(UserAdmin):
 
     list_display=(
         'username',
@@ -31,7 +31,7 @@ class UserPersonalziadoAdmin(UserAdmin):
     # e em add fieldsets oq exigimos na criacao, ou seja, email e telefone
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name", "email")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "email",'telefone')}),
         (
             "Permissions",
             {
@@ -56,4 +56,4 @@ class UserPersonalziadoAdmin(UserAdmin):
         ),
     )
 
-admin.site.register(UserPersonalizado,UserPersonalziadoAdmin)
+admin.site.register(UserPersonalizado,UserPersonalizadoAdmin)
