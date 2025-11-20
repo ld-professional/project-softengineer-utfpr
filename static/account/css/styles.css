@@ -35,7 +35,7 @@ html{
 
 body {
     min-width: 100vw;
-    background-image: url(../images/scissors.jpg);
+    background-image: url(/static/account/images/scissors.jpg);
     background-size: cover;
     background-position: right;
     overflow: hidden;

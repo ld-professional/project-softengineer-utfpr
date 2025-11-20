@@ -55,11 +55,11 @@ class AgendamentosAdmin(admin.ModelAdmin):
     )
 
     list_filter=(
-        [
+        
         'data_e_horario_inicio',
         'fk_barbeiro',
         'fk_cliente',
-        ]
+        
     )
 
 admin.site.register(Agendamentos,AgendamentosAdmin)
