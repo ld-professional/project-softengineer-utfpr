@@ -37,6 +37,9 @@ O fluxo real é este:
 
 from django.contrib.auth.backends import ModelBackend
 from .loginstrategy import EmailStrategy, TelefoneStrategy
+#from .models import UserPersonalizado melhor usar o de baixo pq assim, da erro
+#"o modelo chama o backend, o backend chama o modelo"
+from django.contrib.auth import get_user_model
 
 class Contexto(ModelBackend):
     
@@ -57,4 +60,70 @@ class Contexto(ModelBackend):
         com a url dashboard do cliente, e envia o json pro javascript e o javascript pega a chave 'url' e redireciona
           para este html
     '''
+
+    # para realizar o backend eh simples tbm 1) copiar da origem  no modelbackend e copiando a funcao autenticate
+    # 2) basta substituir os campos necessarios, por exemplo importar seu from .models import UserPersonalizado
+    # e onde esta o User original trocar pelo Userpersonalziado...
+    #e pra manter como um contexto ou seja temos q usar a logica de validacao dos campos pelo meu loginstrategy...
+    # pode ver q eh bem o try/ except a funcao onde tenta realizar 
+
+    strategies = [
+         
+        EmailStrategy(),    # todos os metodos tenho q instacialos aqui como variavel da classe e nao no init
+        TelefoneStrategy(), # assim emailstrategy e telefone strategy sao da classe, e se um objeto fizer modificacao
+    ]                       # ai ele modifica a variavel global
+
+    '''
+    Como suas estratégias (EmailStrategy, TelefoneStrategy) não guardam estado 
+    (elas não têm self.valor ou self.usuario guardado dentro delas, apenas métodos de lógica),
+    não faz sentido criar novas instâncias toda vez que alguém tenta logar.
+    '''
+
+
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        
+        UserPersonalizado= get_user_model()
+        
+        identifier = username # Só para clareza
+
+        # onde estes 2 if eh apenas se os campos nao sao nulos
+        if identifier is None:
+            identifier = kwargs.get(UserPersonalizado.USERNAME_FIELD)
+            #esta linha veio da origem e mantem pq eh de seguranca
+
+        if identifier is None or password is None:
+            return
+        
+
+        user=None
+
+        # Removemos o 'get_by_natural_key' (que é burro)
+        # e colocamos o nosso Loop Inteligente.
+        
+
+        # 2. ABSTRAÇÃO: A busca complexa virou uma linha simples
+        user = self.buscar_usuario_nas_estrategias(identifier)
+
+
+        if user and user.check_password(password) and self.user_can_authenticate(user):
+                return user
+            
+
+
+
+
+    def buscar_usuario_nas_estrategias(self, identifier):
+        """
+        Percorre as estratégias, valida o formato e tenta buscar no banco.
+        Retorna o User (se achar) ou None.
+        """
+        for strategy in self.strategies:
+            # Pergunta: O formato bate? (ex: é email?)
+            if strategy.validar(identifier):
+                # Ação: Busca no banco.
+                # Se achou ou não, retornamos o resultado imediatamente.
+                # (Não tentamos outras estratégias se o formato já bateu com uma).
+                return strategy.buscar_suposto_usuario(identifier)
+        
+        return None
 

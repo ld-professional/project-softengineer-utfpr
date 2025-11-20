@@ -32,6 +32,26 @@ themeSwitch.addEventListener('click', () => {
     }
 });
 
+
+// 1. Função para ler o cookie que o @ensure_csrf_cookie da account view login por exemplo ou cadastro mandou eh um 
+// algorimto copia e cola da internet
+function getCookie(name) {
+    
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 // --- SIMPLIFICAÇÃO DO TELEFONE (Só Números, Max 11) ---
 if (telefone_input) {
     telefone_input.addEventListener('input', function(e) {
@@ -99,8 +119,11 @@ form.addEventListener('submit', async (e) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // <--- O CRÁCHÁ DE SEGURANÇA
+             },
             body: JSON.stringify(data)
+            
         });
 
         const result = await response.json();
