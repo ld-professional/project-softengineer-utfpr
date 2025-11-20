@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
 path('',views.pagina_inicial_home,name='pagina_inicial'),
-path('verifiar-login-ou-agendar/',views.verficacao_login_agendar,name='verificacao-log-agend'),
+path('verificar-login-ou-agendar/',views.verficacao_login_agendar,name='verificacao-log-agend'),
 
 ]
