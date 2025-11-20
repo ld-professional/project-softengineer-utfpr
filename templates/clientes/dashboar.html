@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="icon" type="image/svg+xml" href="/static/global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg">
+  <link rel="icon" type="image/svg+xml" href="/static/core/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg">
   <link rel="stylesheet" href="/static/clientes/css/stylesdashboard.css">
   <script type="text/javascript" src="/static/clientes/js/dashboard.js" defer></script>
 </head>
@@ -13,26 +13,25 @@
     <div class="container">
         <div class="wrapper">
 
-            <a href ="/">
+            <a href ="../core/home.html">
                 <header class="page-header">
-                <img src="/static/global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg" alt="Ícone da Barbearia" class="logo-icon">
+                <img src="../../static/core/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg" alt="Ícone da Barbearia" class="logo-icon">
                 <h1 class="page-title">Barbearia do Wiese</h1>
                 </header>
             </a>
 
-            <div class="menu-actions">
-                <div style="margin-bottom: 10px;">
-                    <a href="/cliente/historico/">Meus Agendamentos</a>
+            <form id="form">
+                <div>
+                    <button type="button">Meus Agendamentos</button>
                 </div>
                 <div>
-                    <a href="/agendamento/novo/">Agendar</a>
+                    <button type="button">Agendar</button>
                 </div>
-            </div>
+            </form>
         </div>
         
         <div class="user-info">
-            <p>Olá, <span id="nome-cliente">Cliente</span></p>
-            <p><a href="/account/logout/" style="font-size: 0.8em; color: red;">Sair</a></p>
+            <p>Olá, username</p>
         </div>
     </div>
 
@@ -42,4 +41,3 @@
     </button>
 
 </body>
-</html>
