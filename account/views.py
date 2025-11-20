@@ -81,3 +81,6 @@ def login_view(request):
         except Exception as e:
 
             return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)
+        
+
+# para cadastro obvio usar o forms.py
