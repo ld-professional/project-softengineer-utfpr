@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u9$s6wf8@7eie3f*l81u-_#ej(j00)2!)3i!)yks$gfytg$6-g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True #tem q estar true pra rodar
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'agendamentos',
     'barbeiro',
     'clientes',
-    'core',
+    'global',
     'servicos'
 ]
 
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
@@ -136,5 +136,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
     'account.backends.Contexto',
-'django.contrib.auth.backends.ModelBackend',  
+#'django.contrib.auth.backends.ModelBackend',  na vdd tem q comentar pra funfar
 ]
+
+
+AUTH_USER_MODEL = 'account.UserPersonalizado'

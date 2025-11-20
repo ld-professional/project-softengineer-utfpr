@@ -6,7 +6,7 @@ def pagina_inicial_home(request):
     Esta view simplesmente renderiza a página principal (home).
     """
     # Retorna o template localizado em 'templates/core/home.html'
-    return render(request, 'core/home.html')
+    return render(request, 'global/home.html')
 
 def verficacao_login_agendar(request):
 # O Django já sabe automaticamente se o user tem o cookie sessionid válido atraves do request.user.is_autenticate

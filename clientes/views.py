@@ -3,5 +3,5 @@ from django.shortcuts import render
 # Create your views here.
 def cliente_dashboard(request):
     
-    if request.body == 'GET':
-        return render(request,'dashboard')
+    if request.method == 'GET':
+        return render(request,'/clientes/dashboard.html')
