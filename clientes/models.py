@@ -2,11 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 from django.core.exceptions import ValidationError
-
+from django.conf import settings
 
 class Cliente(models.Model):
     id_clientezao = models.AutoField(primary_key=True)
-    fk_user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='clientao')
+    fk_user= models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='clientao')
     
     class Meta():
 

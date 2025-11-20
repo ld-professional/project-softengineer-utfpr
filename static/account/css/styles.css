@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
 :root {
     --color-primary: #f5f5f5;
     --color-secondary: #DFB042;
@@ -35,7 +34,7 @@ html{
 
 body {
     min-width: 100vw;
-    background-image: url(/static/account/images/scissors.jpg);
+    background-image: url(../images/scissors.jpg);
     background-size: cover;
     background-position: right;
     overflow: hidden;

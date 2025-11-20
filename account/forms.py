@@ -6,7 +6,7 @@
 
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import UserCustomizado
+from .models import UserPersonalizado
 
 class CadastroClienteForm(forms.Form):
     
@@ -25,7 +25,7 @@ class CadastroClienteForm(forms.Form):
 
         email = self.cleaned_data.get('email')
 
-        if UserCustomizado.objects.filter(email=email).exists():
+        if UserPersonalizado.objects.filter(email=email).exists():
 
             raise ValidationError("Este e-mail já está cadastrado.")
         
@@ -37,13 +37,13 @@ class CadastroClienteForm(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if UserCustomizado.objects.filter(username=username).exists():
+        if UserPersonalizado.objects.filter(username=username).exists():
             raise ValidationError("Este nome de usuário já está em uso.")
         return username
 
     def clean_telefone(self):
         telefone = self.cleaned_data.get('telefone')
-        if UserCustomizado.objects.filter(telefone=telefone).exists():
+        if UserPersonalizado.objects.filter(telefone=telefone).exists():
             raise ValidationError("Este telefone já está cadastrado.")
         return telefone
 

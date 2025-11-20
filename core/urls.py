@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('account/',include('account.urls')),
-    path('clientes/',include('cliente.urls')),
+    path('clientes/',include('clientes.urls')),
     path('barbeiro/',include('barbeiro.urls')),
 # path('agendamentos/',include('agendamentos.urls')),
 # pois nao quero q seja www.xxx.com/agendamentos, mas /barbeiros/agendamentos/minha-agenda ou /clientes/agendamentos/agendar
