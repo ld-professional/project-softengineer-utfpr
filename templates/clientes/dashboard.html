@@ -20,18 +20,19 @@
                 </header>
             </a>
 
-            <form id="form">
-                <div>
-                    <button type="button">Meus Agendamentos</button>
+            <div class="menu-actions">
+                <div style="margin-bottom: 10px;">
+                    <a href="/cliente/historico/">Meus Agendamentos</a>
                 </div>
                 <div>
-                    <button type="button">Agendar</button>
+                    <a href="/agendamento/novo/">Agendar</a>
                 </div>
-            </form>
+            </div>
         </div>
         
         <div class="user-info">
-            <p>Olá, username</p>
+            <p>Olá, <span id="nome-cliente">Cliente</span></p>
+            <p><a href="/account/logout/" style="font-size: 0.8em; color: red;">Sair</a></p>
         </div>
     </div>
 
@@ -41,3 +42,4 @@
     </button>
 
 </body>
+</html>
