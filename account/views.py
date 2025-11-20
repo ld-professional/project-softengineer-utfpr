@@ -65,7 +65,7 @@ def login_view(request):
 
 
                 # 2. O DADO VISUAL (Mexe no BODY da resposta)
-                return JsonResponse({'status': 'ok', 'redirect_url': '/cliente/dashboard/'})
+                return JsonResponse({'status': 'ok', 'redirect_url': '/clientes/dashboard/'})
                 # O 'JsonResponse' cria o corpo da mensagem.
                 # Basicamente: "Aqui estão os dados escritos que o JavaScript pediu".
                 # O seu JS (fetch) vai ler APENAS esta parte aqui para saber o link de redirecionamento.
@@ -129,7 +129,7 @@ def signup_view(request):
                 login(request,novo_user) # para devovler ao somente ao, navegador o session id, no proximo repsonse
                                         # onde tal pagina ja ira cehcar se tem um session id, e n ocaso tem pq ele fez login
 
-                return JsonResponse({'status': 'ok', 'redirect_url': '/cliente/dashboard/'})
+                return JsonResponse({'status': 'ok', 'redirect_url': '/clientes/dashboard/'})
 
             else:
                 # sobre o if de is valid, ou seja, erro de validacao, q no caso o forms, devolve qual seja o erro

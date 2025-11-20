@@ -28,7 +28,7 @@ def cliente_dashboard(request):
     if  hasattr(request.user, 'barber'):
         return redirect('/barbeiro/dashboard/')
 
-    if not hasattr(request.user, 'cliente'):
+    if not hasattr(request.user, 'clientao'):
         # Se não for cliente (nem barbeiro),
         # mandamos ele para a home ou para o painel dele.
         return redirect('/')
