@@ -26,7 +26,7 @@ def login_view(request):
     
         #se for GET: Mostra o HTML e GRAVA O COOKIE DE SEGURANÇA
     if request.method == 'GET':
-        return render(request, '/account/login.html') # se digitar url vc n envia json entao request eh """null"""
+        return render(request, 'account/login.html') # se digitar url vc n envia json entao request eh """null"""
                                             #pois no caso eh o body o corpo do json, pois o resto eh dados de rede, aqui no caso
                                             # estamos devolvend uma repsosta com cookie e devolvendo o html em si
                                             # porem aqui no caso eh nitid oq estamos devolvend oo request ( mesma variavel
@@ -96,7 +96,7 @@ from django.contrib.auth import login
 def signup_view(request):
 
     if request.method == 'GET':
-        return render(request,'/account/signup.html')
+        return render(request,'account/signup.html') # sem a barra inicial
     
     try: 
         if request.method == 'POST':

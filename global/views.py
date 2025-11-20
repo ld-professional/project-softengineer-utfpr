@@ -15,7 +15,7 @@ def verficacao_login_agendar(request):
         return redirect('/clientes/dashboard/')
     else:
         # Se não tem, manda pro Login
-        return redirect('/account/login/')
+        return redirect('/account/login/')# ja o redirect precisa de barra
     
 
 
