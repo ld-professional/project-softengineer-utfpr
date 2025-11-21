@@ -74,7 +74,8 @@ if (form) {
             data.email = email_input.value;
             data.telefone = telefone_input.value;
             data.password = password_input.value;
-            data.repeat_password = repeatPassword_input.value;
+            // nome das variaveis aqui  deve ser igual ao do account/forms.py
+             data.password_confirm = repeatPassword_input.value;
             url = '/account/signup/'; // Rota do Django para criar conta
         } else {
             // Preenche struct para Login
