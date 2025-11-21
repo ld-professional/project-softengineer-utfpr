@@ -26,8 +26,9 @@ class ServicosAdmin(admin.ModelAdmin):
         # para search, use list_filter um link clicavel
     )
 
-    list_filter=(
+    list_filter=([
         'slot_duracao_servico'
+    ]
         #slot_duracao nao serveria assim como para o search field
     )
 

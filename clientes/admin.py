@@ -13,7 +13,7 @@ class ClienteAdmin(admin.ModelAdmin):
         return obj.fk_user.username
     
     search_fields=(
-        'fk_user__username'
+        ['fk_user__username']
     )
 
 admin.site.register(Cliente,ClienteAdmin)
