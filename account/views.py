@@ -136,7 +136,14 @@ def signup_view(request):
                 # email ja eiste, ou nao preenchido campo X... e o javascript fica repsonsavel por pegar cada erro
                 # e pra cada erro acumular numa variavel e imprimir em cada campo o erro...
 
-                return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+                # 1. Pega a string de erro do Django
+                erros_string = formulario.errors.as_json()
+                
+                # 2. Transforma (Parser) de String para Dicionário Python
+                erros_dict = json.loads(erros_string)
+
+                # 3. Envia o Dicionário. O JsonResponse vai criar um JSON limpo.
+                return JsonResponse({'errors': erros_dict}, status=400)
 
     except Exception as e: # onde exception eh qlqer erro e imprime o erro
         # se nao entrou em nenhum dos if, entao eh erro tecncio logo devolver erro status =500 q devovle a pagina de erro 500
