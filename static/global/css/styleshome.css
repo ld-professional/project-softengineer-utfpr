@@ -125,9 +125,9 @@ section.active {
 }
 
 .btn {
-    width: 100%;
+    /* Mantém o que você já tinha */
+    width: 250px; /* Tirei o 'width: 100%' duplicado */
     height: 50px;
-    width: 250px;
     font: inherit;
     font-weight: 600;
     font-size: 1.2rem;
@@ -137,6 +137,17 @@ section.active {
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 150ms ease, transform 150ms ease;
+
+    /* ADICIONADO PARA O LINK FUNCIONAR IGUAL BOTÃO */
+    text-decoration: none;      /* Tira o sublinhado */
+    display: flex;              /* Permite alinhar o texto */
+    justify-content: center;    /* Centraliza horizontalmente */
+    align-items: center;        /* Centraliza verticalmente */
+}
+
+/* Para garantir que a cor do texto não mude sozinha */
+.btn:visited {
+    color: var(--color-background);
 }
 
 .btn:hover {
