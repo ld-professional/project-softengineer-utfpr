@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-
+import core.constantes as t
 
 '''
 
@@ -26,7 +26,7 @@ Ele é um Decorador. Em Python, um decorador é uma função que "embrulha" a su
 def cliente_dashboard(request):
     
     if  hasattr(request.user, 'barber'):
-        return redirect('/barbeiro/dashboard/')
+        return redirect('barbeiro_pagina_inicial_dashboard ')
 
     if not hasattr(request.user, 'clientao'):
         # Se não for cliente (nem barbeiro),
@@ -35,4 +35,4 @@ def cliente_dashboard(request):
 
 
     if request.method == 'GET':
-        return render(request,'clientes/dashboard.html') # n pode ter barra !
+        return render(request,t.CLIENTE_DASHBOARD) # n pode ter barra !

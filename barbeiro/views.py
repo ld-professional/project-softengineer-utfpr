@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-
+import core.constantes as t
 # Create your views here.
 
 @login_required(login_url='/account/login/')
@@ -15,5 +15,6 @@ def barbeiro_dashboard(request):
         return redirect('/')
 
 
-    if request.method == 'GET':
-        return render(request,'barbeiro/dashboard.html') # n pode ter barra !
+    #if request.method == 'GET': como eh uma view simples so pra visualizar e os botoes sao redirecionaveis, logo
+                                    # posso deixa sem este if...
+    return render(request,t.BARBEIRO_DASHBOARD) # n pode ter barra !

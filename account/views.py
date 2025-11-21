@@ -19,14 +19,14 @@ import json
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login
 
-
+import core.constantes as t
  # no get envia o cookie e logo pdoe ser retornado pelo post
 @ensure_csrf_cookie
 def login_view(request):
     
         #se for GET: Mostra o HTML e GRAVA O COOKIE DE SEGURANÇA
     if request.method == 'GET':
-        return render(request, 'account/login.html') # se digitar url vc n envia json entao request eh """null"""
+        return render(request,t.LOGIN) # se digitar url vc n envia json entao request eh """null"""
                                             #pois no caso eh o body o corpo do json, pois o resto eh dados de rede, aqui no caso
                                             # estamos devolvend uma repsosta com cookie e devolvendo o html em si
                                             # porem aqui no caso eh nitid oq estamos devolvend oo request ( mesma variavel
@@ -65,7 +65,7 @@ def login_view(request):
 
 
                 # 2. O DADO VISUAL (Mexe no BODY da resposta)
-                return JsonResponse({'status': 'ok', 'redirect_url': '/clientes/dashboard/'})
+                return JsonResponse({'status': 'ok', 'redirect_url': '/clientes/dashboard/'}) # aqui trabalha com roteamento
                 # O 'JsonResponse' cria o corpo da mensagem.
                 # Basicamente: "Aqui estão os dados escritos que o JavaScript pediu".
                 # O seu JS (fetch) vai ler APENAS esta parte aqui para saber o link de redirecionamento.
@@ -96,7 +96,7 @@ from django.contrib.auth import login
 def signup_view(request):
 
     if request.method == 'GET':
-        return render(request,'account/signup.html') # sem a barra inicial
+        return render(request,t.CADASTRO) # sem a barra inicial
     
     try: 
         if request.method == 'POST':
@@ -136,7 +136,14 @@ def signup_view(request):
                 # email ja eiste, ou nao preenchido campo X... e o javascript fica repsonsavel por pegar cada erro
                 # e pra cada erro acumular numa variavel e imprimir em cada campo o erro...
 
-                return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+                # 1. Pega a string de erro do Django
+                erros_string = formulario.errors.as_json()
+                
+                # 2. Transforma (Parser) de String para Dicionário Python
+                erros_dict = json.loads(erros_string)
+
+                # 3. Envia o Dicionário. O JsonResponse vai criar um JSON limpo.
+                return JsonResponse({'errors': erros_dict}, status=400)
 
     except Exception as e: # onde exception eh qlqer erro e imprime o erro
         # se nao entrou em nenhum dos if, entao eh erro tecncio logo devolver erro status =500 q devovle a pagina de erro 500

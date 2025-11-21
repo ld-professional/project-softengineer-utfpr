@@ -34,14 +34,22 @@ class CriadorUser(BaseUserManager):
         telefone_stringado= str(telefone) # n eh self.telefone pq telefone eh do objeto user e nao somos o user, e a
                                           # tbm a questao q ele entra ocmo arugmetno, auqi ja estamos pegando o self.telefone 
  
-        if len(telefone_stringado) != 11:
+        #LIMPEZA
+        # Remove tudo que não for dígito antes de salvar/validar 
+        # precisa da validacao aqui se criar pelo cadastro,no forms esta sem... e se criar pelo admin o backends
+        #  ta so para validar se existe e nao se esta correto..
+        telefone_limpo = ''.join(filter(str.isdigit, str(telefone)))
+
+
+
+        if len(telefone_limpo) != 11:
             raise ValueError({'telefone':'Digite um numero valido 43 91234 5678'})
         
         # 4. Criação do Objeto
         user = self.model(
             username=username,
             email=email,
-            telefone=telefone
+            telefone=telefone_limpo,
         )
 
         # 5. Segurança da senha e Salvamento do objeto
@@ -56,6 +64,13 @@ class CriadorUser(BaseUserManager):
         
         if not telefone:
              raise ValueError('Superusuário precisa de telefone tambem.')
+        
+       
+        telefone_limpo = ''.join(filter(str.isdigit, str(telefone)))
+
+        if len(telefone_limpo) != 11:
+            
+            raise ValueError({'telefone':'Digite um numero valido 43 91234 5678'})
 
         user = self.create_user(
             username=username,

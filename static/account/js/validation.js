@@ -12,78 +12,126 @@ const themeSwitch = document.getElementById('theme-switch');
 // pega o estado atual do modo (se esstá claro ou escuro)
 let lightmode = localStorage.getItem('lightmode');
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // cancela o envio padrão
 
-    // 🔹 1. Validação
-    let errors = [];
 
-    if (username_input) {
-        // Formulário de cadastro
-        errors = getSignUpFormErrors(
-            username_input.value,
-            email_input.value,
-            password_input.value,
-            repeatPassword_input.value
-        );
-    } else {
-        // Formulário de login
-        errors = getLoginFormErrors(
-            indentifier_input.value,
-            password_input.value
-        );
-    }
 
-    // Se houver erros, mostra e para o fluxo
-    if (errors.length > 0) {
-        error_message.innerText = errors.join(". ");
-        return;
-    }
 
-    // 🔹 2. Montar dados para envio
-    let data = {};
-    let url = "";
 
-    if (username_input) {
-        // Cadastro
-        data.username = username_input.value;
-        data.email = email_input.value;
-        data.telefone = telefone_input.value;
-        data.password = password_input.value;
-        data.repeat_password = repeatPassword_input.value;
-        url = '/account/signup/'; 
-    } else {
-        // Login
-        data.indentifier = indentifier_input.value;
-        data.password = password_input.value;
-        url = '/account/login/';
-    }
+// Verifica se a variável 'form' aponta para algo real no HTML.
+// Se 'form' for null (ou seja, não estamos na página de login/cadastro e o getElementById falhou),
+// esse IF impede que o código tente acessar memória inválida e trave o site. 
+// (Similar a checar se um ponteiro é NULL em C antes de usar).
+if (form) {
 
-    // 🔹 3. Envio via fetch
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // se usar Django
-            },
-            body: JSON.stringify(data)
-        });
+    // Adiciona um "Ouvinte" (Listener). Fica esperando o evento 'submit' (clicar no botão).
+    // 'async' avisa que dentro dessa função teremos operações lentas (rede) e precisaremos pausar (await).
+    form.addEventListener('submit', async (e) => {
 
-        const result = await response.json();
+        // "Prevent Default": Impede o navegador de recarregar a página inteira (comportamento padrão do HTML).
+        // Nós queremos controlar o envio via JavaScript silenciosamente, sem piscar a tela.
+        e.preventDefault();
 
-        if (response.ok) {
-            // Sucesso → redireciona ou faz algo
-            window.location.href = result.redirect_url || '/cliente/dashboard'; 
+        // 🔹 1. VALIDAÇÃO LOCAL
+        // Cria um Vetor Dinâmico (Array) vazio para armazenar as strings de erro.
+        // Em C++, seria algo como: std::vector<string> errors;
+        let errors = [];
+
+        // Lógica de decisão: Se o ponteiro 'username_input' existe (não é null),
+        // então o HTML tem campo de usuário, logo é CADASTRO. Senão, é LOGIN.
+        if (username_input) {
+            // Chama validação de cadastro e preenche o vetor 'errors'
+            errors = getSignUpFormErrors(
+                username_input.value,
+                email_input.value,
+                password_input.value,
+                repeatPassword_input.value,
+                telefone_input
+            );
         } else {
-            // Erro vindo do backend
-            error_message.innerText = result.error || 'Erro ao tentar logar.';
+            // Chama validação de login e preenche o vetor 'errors'
+            errors = getLoginFormErrors(
+                indentifier_input.value,
+                password_input.value
+            );
         }
-    } catch (err) {
-        console.error(err);
-        error_message.innerText = 'Erro de conexão com o servidor.';
-    }
-});
+
+        // Se o vetor não estiver vazio (tamanho > 0), temos erros.
+        if (errors.length > 0) {
+            // .join(". ") percorre o vetor, pega todas as strings e junta numa só, separando por ponto.
+            // Exibe no HTML e dá 'return' para MATAR a função aqui. O código para e não envia nada.
+            error_message.innerText = errors.join(". ");
+            return;
+        }
+
+        // 🔹 2. PREPARAÇÃO DOS DADOS (STRUCT)
+        // Cria um objeto vazio para preencher com os dados que vamos enviar.
+        let data = {};
+        let url = ""; // String vazia para guardar o endereço de destino
+
+        if (username_input) {
+            // Preenche struct para Cadastro
+            data.username = username_input.value;
+            data.email = email_input.value;
+            data.telefone = telefone_input.value;
+            data.password = password_input.value;
+            data.repeat_password = repeatPassword_input.value;
+            url = '/account/signup/'; // Rota do Django para criar conta
+        } else {
+            // Preenche struct para Login
+            data.identifier = indentifier_input.value; // Usando chave com erro de digitação conforme seu HTML
+            data.password = password_input.value;
+            url = '/account/login/'; // Rota do Django para logar
+        }
+
+        // 🔹 3. ENVIO (FETCH)
+        // Bloco TRY/CATCH: Tenta executar código perigoso (conectar na internet).
+        // Se a internet cair ou servidor sumir, ele pula pro 'catch' em vez de travar o programa.
+        try {
+            // FETCH: Função que faz a requisição HTTP (bate na porta do servidor).
+            // 'await': Manda o JavaScript PAUSAR a execução nesta linha e esperar o servidor responder.
+            // Sem 'await', o código continuaria rodando sem ter a resposta na mão (ponteiro inválido/undefined).
+            const response = await fetch(url, {
+                method: 'POST', // Método de envio
+                headers: {
+                    'Content-Type': 'application/json', // Avisa que o corpo é JSON
+                    'X-CSRFToken': getCookie('csrftoken') // Anexa o Token de segurança do Django
+                },
+                body: JSON.stringify(data) // Serializa: Transforma o Objeto JS em Texto JSON puro
+            });
+
+            // O servidor respondeu! Mas a resposta vem bruta.
+            // 'response.json()' lê o texto da resposta e Desserializa (transforma de volta em Objeto JS).
+            // Também precisa de 'await' porque ler o corpo da resposta leva tempo.
+            const result = await response.json();
+
+            // response.ok verifica o código HTTP (200 = Sucesso, 400/500 = Erro)
+            if (response.ok) {
+                // SUCESSO:
+                // window.location.href é o comando para o navegador carregar outra URL.
+                // Se o backend mandou 'redirect_url', vai pra lá. Senão, vai pro dashboard padrão.
+                window.location.href = result.redirect_url || '/cliente/dashboard'; 
+            } else {
+                // ERRO DE LÓGICA (Ex: Senha incorreta, Email já existe):
+                // Mostra a mensagem que o Django mandou dentro da chave 'error' do JSON.
+                error_message.innerText = result.error || 'Erro ao tentar logar.';
+            }
+
+        } catch (err) {
+            // CATCH (ERRO CRÍTICO):
+            // Só cai aqui se falhar a conexão física (DNS, Sem Internet, Servidor Offline).
+            // 'err' é a variável que o navegador preenche com os detalhes técnicos do erro.
+            console.error(err);
+            error_message.innerText = 'Erro de conexão com o servidor.';
+        }
+    });
+}
+
+
+
+
+
+
+
 
 // darkmode
 const enableLightMode = () => {
@@ -99,14 +147,16 @@ if (lightmode === 'active') {
     enableLightMode();
 }
 
-themeSwitch.addEventListener('click', () => {
-    lightmode = localStorage.getItem('lightmode');
-    if (lightmode !== 'active') {
-        enableLightMode();
-    } else {
-        disableLightMode();
-    }
-});
+if (themeSwitch) {
+    themeSwitch.addEventListener('click', () => {
+        lightmode = localStorage.getItem('lightmode');
+        if (lightmode !== 'active') {
+            enableLightMode();
+        } else {
+            disableLightMode();
+        }
+    });
+}
 
 // Fução que indentidica se existe ou não erro nos campos de cadastro
 function getSignUpFormErrors(username, email, password, repeatPassword, telefone) { 
@@ -118,10 +168,10 @@ function getSignUpFormErrors(username, email, password, repeatPassword, telefone
         username_input.parentElement.classList.add('incorrect');
     }
 
-    // se o numero de telefone é menor de 11
-    if (telefone_input && telefone_input.value.replace(/\D/g, '').length !== 11) {
-    errors.push('Telefone deve ter 11 dígitos');
-    telefone_input.parentElement.classList.add('incorrect');
+    // (ADICIONADO) Verifica se telefone existe antes de validar
+    if (telefone && telefone.value.replace(/\D/g, '').length !== 11) {
+        errors.push('Telefone deve ter 11 dígitos');
+        telefone.parentElement.classList.add('incorrect');
     }   
 
     // se o email é vazio
@@ -183,16 +233,19 @@ function getLoginFormErrors(indentifier, password) {
     return errors;
 }
 
-// limita o que o campo de telefone recebe para abenas numeros e formata para numero de telefone brasileiro
-telefone_input.addEventListener('input', function(e) {
-    let x = e.target.value.replace(/\D/g, '');
-    if(x.length > 11) x = x.slice(0,11); 
-    
-    x = x.replace(/^(\d{2})(\d)/, '($1) $2');
-    x = x.replace(/(\d)(\d{4})$/, '$1-$2');         
+// (ADICIONADO) O if abaixo é essencial: Se não tiver telefone (Login), o código pula e não trava.
+if (telefone_input) {
+    // limita o que o campo de telefone recebe para abenas numeros e formata para numero de telefone brasileiro
+    telefone_input.addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '');
+        if(x.length > 11) x = x.slice(0,11); 
+        
+        x = x.replace(/^(\d{2})(\d)/, '($1) $2');
+        x = x.replace(/(\d)(\d{4})$/, '$1-$2');         
 
-    e.target.value = x;
-});
+        e.target.value = x;
+    });
+}
 
 // fica atualizando o erro, para verificar se ele foi corrigido ou não
 const allInputs = [username_input, email_input, password_input, repeatPassword_input, indentifier_input, telefone_input].filter(input => input != null);
@@ -205,4 +258,24 @@ allInputs.forEach(input => {
     })
 })
 
-
+// (ADICIONADO) Função obrigatória para o Django aceitar o POST
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+// este getcookie hechamado na hora de enviar json pro servidor, o que ocorre eh o seguinte, o usuario digita a url,
+// o navegador envia um json co ma url q vc digitou pro servidor, que chega em urls.py faz o roetametn oate a views.py correta
+//ela recebe, e ve if == GET retorna entao um HTMl + json com o token crfs, e na proxiam vez q chamar este url mas sendo por POST
+// logo ele verifica se tem o token, se tiver, entao o post pode continaur sendo processado na views.py...
+// ou seja em emetodo GET, mesmo q na views.py tem o decorator em cima da def, ela so eh para qndo vc esta tratando um 
+// rquest.method != GET

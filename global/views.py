@@ -1,21 +1,23 @@
 from django.shortcuts import render,redirect 
 # Create your views here.
-
+import core.constantes as t
 def pagina_inicial_home(request):
     """
     Esta view simplesmente renderiza a página principal (home).
     """
     # Retorna o template localizado em 'templates/core/home.html'
-    return render(request, 'global/home.html')
+    return render(request, t.HOME)
 
 def verficacao_login_agendar(request):
 # O Django já sabe automaticamente se o user tem o cookie sessionid válido atraves do request.user.is_autenticate
 
     if request.user.is_authenticated:
-        return redirect('/clientes/dashboard/')
+        return redirect('clientepagina_inicial_dashboard')
     else:
         # Se não tem, manda pro Login
-        return redirect('/account/login/')# ja o redirect precisa de barra
+        #return redirect('/account/login/')# ja o redirect precisa de barra
+        return redirect('login')# usando este pois de vez colocar a string posso passar o NAME deste caminho
+                                          # definido em urls.py
     
 
 
