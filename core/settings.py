@@ -141,3 +141,8 @@ AUTHENTICATION_BACKENDS = [
 
 
 AUTH_USER_MODEL = 'account.UserPersonalizado'
+
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'

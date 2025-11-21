@@ -13,7 +13,7 @@ O fluxo é exatamente esse: a View chama a função global authenticate(),
 por isso ter este import
 
 '''
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie

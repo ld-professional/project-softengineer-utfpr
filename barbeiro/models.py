@@ -46,6 +46,11 @@ class Barbeiro(models.Model):
     #ate poderia ser de vez settings.auth_user_model, ser User, mas aqui fica flexivel ja
     # e no caso sera msm pq eh mais facil e no padrao o djano n coloca esta linha no settings
     fk_user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,related_name='barber')
+    foto_barbeiro= models.ImageField(
+    upload_to='fotos_barbeiros/',
+    null=True,
+    blank=True,
+    )
 
     class Meta():
 
