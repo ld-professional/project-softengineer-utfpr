@@ -15,5 +15,6 @@ def barbeiro_dashboard(request):
         return redirect('/')
 
 
-    if request.method == 'GET':
-        return render(request,t.BARBEIRO_DASHBOARD) # n pode ter barra !
+    #if request.method == 'GET': como eh uma view simples so pra visualizar e os botoes sao redirecionaveis, logo
+                                    # posso deixa sem este if...
+    return render(request,t.BARBEIRO_DASHBOARD) # n pode ter barra !
