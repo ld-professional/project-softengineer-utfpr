@@ -40,3 +40,35 @@ urlpatterns = [
     path('nova-senha/<uidb64>/<token>/', views.nova_senha, name='password_reset_confirm'),
 ]
     
+
+
+'''
+Você teve que colocar name='password_reset_confirm' por um motivo simples: O PasswordResetForm do Django é "programado"
+ para procurar esse nome exato.
+
+Vou te explicar o que acontece nos bastidores quando você chama form.save():
+
+    A Geração do E-mail: Quando você executa form.save(), o Django começa a montar o e-mail que será enviado para o usuário.
+
+    A Criação do Link: Dentro desse e-mail, o Django precisa escrever o link clicável
+      (algo como seusite.com/nova-senha/Mg/token...). Para construir esse link, o código interno do
+        Django faz uma chamada de função parecida com esta:
+
+        # Código interno do Django (simplificado)
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+
+        
+O Problema: A função reverse funciona como um GPS: você dá o nome do lugar ('password_reset_confirm')
+ e ela te devolve o endereço (/account/nova-senha/...).
+
+    Se no seu urls.py o nome era 'nova_senha', o GPS do Django dizia: "Não conheço nenhum lugar chamado
+      'password_reset_confirm'". E aí estourava o erro NoReverseMatch.
+
+    Ao mudar o nome para 'password_reset_confirm', o GPS encontrou a rota e conseguiu gerar o link.  
+
+
+
+
+    É uma convenção do Django. Como você está usando o formulário pronto deles (PasswordResetForm),
+      você precisa jogar pelas regras deles e usar o nome de rota que eles esperam encontrar.      
+'''
