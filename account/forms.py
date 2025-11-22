@@ -22,15 +22,23 @@ class CadastroClienteForm(forms.Form):
     #  2. Validações Individuais  roda primeiro e salvam numa variavel global chamada cleaned_data
 
     def clean_email(self):
+         
+        email_input = self.cleaned_data.get('email')
 
-        email = self.cleaned_data.get('email')
+        if email_input:
+            # 1. LIMPEZA TOTAL: Tira espaços do começo/fim e transforma em minúsculo
+            # Isso garante que 'Joao@Gmail.com ' vire 'joao@gmail.com'
+            email_limpo = email_input.strip().lower()
 
-        if UserPersonalizado.objects.filter(email=email).exists():
-
-            raise ValidationError("Este e-mail já está cadastrado.")
+            # 2. VALIDAÇÃO DE EXISTÊNCIA
+            # Agora comparamos o e-mail limpo com o que está no banco
+            if UserPersonalizado.objects.filter(email=email_limpo).exists():
+                raise ValidationError("Este e-mail já está cadastrado.")
+            
+            # 3. RETORNO
+            return email_limpo
         
-
-        return email # retorna o conteudo da variavel email, para a chave do cleaned data
+        return email_input # retorna o conteudo da variavel email, para a chave do cleaned data
 
 
 
@@ -42,10 +50,23 @@ class CadastroClienteForm(forms.Form):
         return username
 
     def clean_telefone(self):
-        telefone = self.cleaned_data.get('telefone')
-        if UserPersonalizado.objects.filter(telefone=telefone).exists():
+        telefone_input = self.cleaned_data.get('telefone')
+        
+        # 1. LIMPEZA: Remove tudo que não é número
+        # (Igual você faz no create_user, tem que fazer aqui também para comparar igual)
+        telefone_limpo = ''.join(filter(str.isdigit, str(telefone_input)))
+
+        # 2. VALIDAÇÃO DE EXISTÊNCIA (Agora comparando banana com banana)
+        if UserPersonalizado.objects.filter(telefone=telefone_limpo).exists():
             raise ValidationError("Este telefone já está cadastrado.")
-        return telefone
+        
+        # 3. VALIDAÇÃO DE TAMANHO (Opcional, mas boa prática no form)
+        if len(telefone_limpo) != 11:
+             raise ValidationError("O telefone deve ter 11 dígitos (DDD + Número).")
+
+        # 4. RETORNO: Devolve o telefone JÁ LIMPO.
+        # Assim, o 'dicionario_limpo' na view já vai receber apenas números.
+        return telefone_limpo
 
     #  3. Validação Geral (clean): auqi eh o is_valid() ele roda primeiro cada validacao acima
                                     # e entao roda este clean q eh geral onde fica validacoes complexas como o def clean 
@@ -67,3 +88,23 @@ class CadastroClienteForm(forms.Form):
         
         # IMPORTANTE: Temos que retornar o 'dic_limpo' no final
         return dic_limpo
+    
+
+
+    '''
+    
+    Essa é a regra de ouro do Django:
+
+    JavaScript (Frontend): É apenas "cosmético" (máscaras, avisos rápidos). Não serve para segurança.
+
+    Models.py (Banco): É a última defesa (garante que o dado entre limpo no banco).
+
+    Forms.py (O Porteiro Inteligente): É aqui que a mágica da validação acontece.
+
+    O Problema que você estava tendo: Você limpava no Model, mas não no Form. O Form procurava (41) 9999...,
+    o banco dizia "não tenho esse número (formatado)". O Form deixava passar. Aí o Model limpava para 419999...,
+    tentava salvar, e o banco gritava "JÁ EXISTE!".
+    
+    
+    
+    '''
