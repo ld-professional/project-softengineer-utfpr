@@ -37,6 +37,6 @@ urlpatterns = [
     #    e passar "batata" para a view. A View é quem vai tentar usar esse token
     #    e descobrir que ele é falso.
     # -------------------------------------------------------------------------
-    path('nova-senha/<uidb64>/<token>/', views.nova_senha, name='nova_senha'),
+    path('nova-senha/<uidb64>/<token>/', views.nova_senha, name='password_reset_confirm'),
 ]
     
