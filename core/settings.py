@@ -141,3 +141,23 @@ AUTHENTICATION_BACKENDS = [
 
 
 AUTH_USER_MODEL = 'account.UserPersonalizado'
+
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Configuração de Envio de E-mail Real (Gmail)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Coloque aqui o SEU email do Gmail que vai enviar as mensagens
+EMAIL_HOST_USER = 'ldias.2022@alunos.utfpr.edu.br' 
+
+# Coloque aqui a SENHA DE APP de 16 letras que você gerou no Passo 1
+# (NÃO coloque sua senha normal de login do Google, não vai funcionar!)
+EMAIL_HOST_PASSWORD = 'xfnf wrkn jfmq ercb'

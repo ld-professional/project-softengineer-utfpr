@@ -111,12 +111,25 @@ if (form) {
                 // window.location.href é o comando para o navegador carregar outra URL.
                 // Se o backend mandou 'redirect_url', vai pra lá. Senão, vai pro dashboard padrão.
                 window.location.href = result.redirect_url || '/cliente/dashboard'; 
-            } else {
-                // ERRO DE LÓGICA (Ex: Senha incorreta, Email já existe):
-                // Mostra a mensagem que o Django mandou dentro da chave 'error' do JSON.
-                error_message.innerText = result.error || 'Erro ao tentar logar.';
+                } else {
+                // Se o Django mandou lista de erros (validação do form)
+                if (result.errors) {
+                    // 1. Pega os valores (ex: arrays de erros)
+                    // 2. 'flat()' junta tudo num array só
+                    // 3. 'map' PEGA SÓ O TEXTO DA MENSAGEM (Isso resolve o [object Object])
+                    // 4. 'join' junta os textos com ponto final
+                    const listaErros = Object.values(result.errors)
+                        .flat()
+                        .map(erro => erro.message || erro) // <--- O SEGREDO ESTÁ AQUI
+                        .join(". ");
+                    
+                    error_message.innerText = listaErros;
+                } 
+                // Se for erro genérico
+                else {
+                    error_message.innerText = result.error || 'Erro desconhecido.';
+                }
             }
-
         } catch (err) {
             // CATCH (ERRO CRÍTICO):
             // Só cai aqui se falhar a conexão física (DNS, Sem Internet, Servidor Offline).
