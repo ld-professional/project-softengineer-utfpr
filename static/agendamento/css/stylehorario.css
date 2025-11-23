@@ -1,0 +1,390 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+:root {
+    --color-primary: #f5f5f5;
+    --color-secondary: #DFB042;
+    --color-background: #000000;
+    --color-input-background: #171616;
+    --color-text: #ffffff;
+    --color-incorrect: #de0101;
+    --color-black: #000000;
+    --font-family-primary: 'Roboto', sans-serif;
+    --font-family-secondary: 'Quicksand', sans-serif;
+}
+.lightmode {
+    --color-black: #000000;
+    --color-primary: #000000;
+    --color-secondary: #DFB042;
+    --color-background: #cfcfcf;
+    --color-text: #000000;
+    --color-input-background: #f5f5f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-family: var(--font-family-primary);
+    font-size: 12px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-background);
+    z-index: 100;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 2rem;
+}
+
+.titulo {
+    position: absolute;
+    left: 40%;
+    display: flex;
+    font-size: 2rem;
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    color: var(--color-primary);
+    align-items: center;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.page-header {
+    position: absolute;
+    top: 5px;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+body {
+    min-width: 100vw;
+    background-color: var(--color-input-background);
+    background-size: cover;
+    background-position: right;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    min-height: 100vh;
+}
+
+.wrapper {
+    background-color: var(--color-background);
+    min-height: 93vh;
+    width: max(40%, 600px);
+    border-radius: 0 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 58px;
+}
+
+.page-header {
+    position: absolute;
+    top: 5px;
+    left: 13%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+}
+
+.page-title {
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-family: var(--font-family-primary);
+}
+
+form {
+    width: min(400px, 100%);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+form button {
+    width: 400px;
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 150ms ease;
+}
+
+form button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+}
+
+form button:focus {
+    outline: none;
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+}
+
+.calendar {
+    position: absolute;
+    top: 50px;
+    left: 40%;
+    width: 920px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: var(--color-background);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px var(--color-background), 0px 2px 5px var(--color-input-background);
+
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: var(--color-text);
+    font-weight: bold;
+}
+
+.calendar-header button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+    text-align: center;
+    padding: 5px;
+    color: var(--color-text);
+    font-weight: 1.4rem;
+}
+
+.dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+    color: var(--color-text);
+}
+
+.date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    margin: auto;
+    cursor: pointer;
+    font-weight: 1.8rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    transition: var(--color-secondary) 150ms ease, color 150ms ease;
+}
+
+.date:hover, .date.selected, .date.active {
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+}
+
+.date.inactive {
+    color: var(--color-input-background);
+    cursor: default;
+}
+
+.horarios-container {
+    position: absolute;
+    left: 53%;
+    margin-top: 220px;
+    padding: 20px;
+    background: var(--color-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--color-input-background);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.horarios-container h3 {
+    margin-bottom: 12px;
+    position: relative;
+    font-size: 1.3rem;
+    color: var(--color-text);
+}
+
+.mensagem {
+    display: flex;
+    align-items: center;      /* centraliza verticalmente */
+    font-size: 1rem;
+    margin-bottom: 0px;
+    text-align: center;       /* garante que o texto fique centralizado se quebrar em linhas */
+}
+
+.lista-horarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.horario {
+    padding: 10px 16px;
+    background: var(--color-background);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--color-text);
+    transition: .2s;
+}
+
+.horario:hover {
+    background: var(--color-secondary);
+    color: var(--color-black);
+}
+
+
+#logout-button {
+    height: 35px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 20%;
+    background-color: var(--color-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 12px;
+    right: 80px;
+    color: var(--color-black);
+    font-size: 1.4rem;
+    z-index: 101;
+    font-weight: bold;
+    transition: background-color 150ms ease, transform 150ms ease;
+}
+
+#logout-button:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    transform: scale(1);
+    color: var(--color-input-background);
+}
+
+#theme-switch{
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 5px;
+    right: 20px;
+    transition: background-color 150ms ease, transform 150ms ease;
+}
+
+#theme-switch svg {
+    fill: var(--color-text);
+    transition: fill 150ms ease;
+}
+
+#theme-switch svg:first-child {
+    display: none;
+}
+
+.lightmode #theme-switch svg:last-child {
+    display: none;
+}
+
+.lightmode #theme-switch svg:first-child {
+    display: block;
+}
+
+#theme-switch:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    transform: scale(1);
+}
+
+#theme-switch:hover svg {
+    fill: var(--color-background);
+}
+
+.confirm-button {
+    position: absolute;
+    top: 86%;
+    left: 61%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 150ms ease;
+}
+
+.confirm-button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+}
+
+.confirm-button:focus {
+    outline: none;
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+}
