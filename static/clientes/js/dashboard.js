@@ -96,3 +96,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ... (lógica do logoutButton) ...
+    const logoutButton = document.getElementById('logout-button');
+    // ...
+
+    // 1. Encontrar o botão "Meus Agendamentos" pelo ID
+    const agendamentosButton = document.getElementById('agendar-btn');
+
+    // 2. Adicionar o listener de clique
+    if (agendamentosButton) {
+        agendamentosButton.addEventListener('click', function() {
+            
+            // 3. Redirecionar o navegador para a URL desejada
+            // 💡 Use o prefixo '/clientes/' se for necessário, como no logout.
+            const urlDestino = '/clientes/agendamentos/escolher_servico/'; 
+            
+            // Redireciona o usuário
+            window.location.href = urlDestino;
+        });
+    }
+})
