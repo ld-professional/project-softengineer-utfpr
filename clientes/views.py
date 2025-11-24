@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 import core.constantes as t
 
+from django.views.decorators.csrf import ensure_csrf_cookie
 '''
 
 1. O que é o @login_required? (O Porteiro do Prédio)
@@ -21,7 +22,7 @@ Ele é um Decorador. Em Python, um decorador é uma função que "embrulha" a su
 
 '''
 
-
+@ensure_csrf_cookie
 @login_required(login_url='/account/login/') # chuta vc pra onde definiu aqui nos parenteses...
 def cliente_dashboard(request):
     
@@ -45,10 +46,9 @@ def cliente_dashboard(request):
     
 
 from django.contrib.auth import logout
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpResponse
 
-
-@ensure_csrf_cookie
+#@ensure_csrf_cookie ele tem q ser envaido via get como n foi, logo n da nesta def
 @login_required(login_url='/account/login/') # chuta vc pra onde definiu aqui nos parenteses...
 def logout_view(request):
 
@@ -56,5 +56,7 @@ def logout_view(request):
        
         logout(request)
 
-        return redirect('pagina_inicial')
-    
+        return HttpResponse(status=204)
+
+    # se sem querer foi com get, ele vai rpa tela inciial
+    return redirect('pagina_inicial')
