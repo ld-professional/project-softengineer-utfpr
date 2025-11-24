@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 # Create your models here.
+from django.conf import settings
 
 
 
@@ -18,7 +20,7 @@ colunas_da_tabela_hora_trab=[
 'fk_barbeiro',
 'dia_semana',
 'hora_inicio',
-'hora_fim'
+#'hora_fim' assim permite apenas q n tenham horarios q coemcem no msm
 ]
 
 colunas_da_excecoes=[
@@ -27,7 +29,8 @@ colunas_da_excecoes=[
 # na tabela barbeiro, mas n pode, logo apenas referenciando a horario de trabalho, ja fica compreendido a unicidade
 'fk_barbeiro',
 'data_inicio',
-'data_fim',
+# 'data_fim', assim permite q n pode ter excecoes q estejam no msm comeco
+
 ]
 # pensando melhor mer para modelo fisico usar direto fk_barbeiro ja que estas 2 entidades so definem a regra
 #no mer faz ate sentido usar elas depnedneo uma da outra, mas auqi o melhor caminho nao eh estarem ligadas
@@ -42,7 +45,12 @@ class Barbeiro(models.Model):
     
     #ate poderia ser de vez settings.auth_user_model, ser User, mas aqui fica flexivel ja
     # e no caso sera msm pq eh mais facil e no padrao o djano n coloca esta linha no settings
-    fk_user = models.OneToOneField(User,on_delete=models.CASCADE,null=False,related_name='barber')
+    fk_user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,related_name='barber')
+    foto_barbeiro= models.ImageField(
+    upload_to='fotos_barbeiros/',
+    null=True,
+    blank=True,
+    )
 
     class Meta():
 
@@ -78,13 +86,58 @@ class Horarios_de_trabalho(models.Model):
         #get tenta buscar pela chave self.dia_semana e o resultado salva em dia da semana string
         #se nao achar, o conteudo sera o "desconhecido"
 
+    def clean(self):
+        super().clean()
+        
+        erros = {}
+
+        # PROTEÇÃO DE EXECUÇÃO (Verifica IDs e campos nulos)
+        # Usamos fk_barbeiro_id para não tentar buscar o objeto se o campo estiver vazio
+        if not self.fk_barbeiro_id:
+            erros['fk_barbeiro'] = "É obrigatório selecionar o barbeiro."
+        
+        # Verifica se os horários foram preenchidos (TimeField pode ser None se o form estiver vazio)
+        if self.hora_inicio is None:
+             erros['hora_inicio'] = "É obrigatório informar a hora de início."
+        
+        if self.hora_fim is None:
+             erros['hora_fim'] = "É obrigatório informar a hora de término."
+             
+        if self.dia_semana is None:
+             erros['dia_semana'] = "É obrigatório informar o dia da semana."
+
+        # Se faltou algo básico, para aqui e mostra os erros
+        if erros:
+            raise ValidationError(erros)
+
+
+        if self.hora_inicio and self.hora_fim:
+            if self.hora_inicio >= self.hora_fim:
+                raise ValidationError({
+                                    'hora_inicio': "A hora de término deve ser depois da hora de início."
+                                        })
+
+        conflitos = Horarios_de_trabalho.objects.filter(
+            fk_barbeiro=self.fk_barbeiro_id,
+            dia_semana=self.dia_semana,
+            hora_fim__gt=self.hora_inicio,   
+            hora_inicio__lt=self.hora_fim
+        )
+
+        if self.pk:
+            conflitos = conflitos.exclude(pk=self.pk)
+
+        if conflitos.exists():
+            raise ValidationError('Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.')
+
+
 class Excecoes(models.Model):
 
     id_excecoes= models.AutoField(primary_key=True)
     fk_barbeiro= models.ForeignKey(Barbeiro,on_delete=models.CASCADE)
     
     data_inicio= models.DateTimeField()
-    data_fim= models.DateTimeField()
+    data_fim=models.DateTimeField()
     motivo_da_indisponibilidade= models.CharField(null=True,max_length=200)
     # ou seja supondo o front q ele seleciona o slot 9:30  10:00 10:30 e 11:00
     # logo data inicio sera dia tal vindo do front tb supondo 13/11 9:30 e dt fim 13/11 11:00
@@ -93,4 +146,43 @@ class Excecoes(models.Model):
 
     def __str__(self):
        
-     return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\nDe {self.data_inicio} até {self.data_fim} '
+     return f'Horario indisponivel de: {self.fk_barbeiro.fk_user.username}:\n {self.data_inicio} até {self.data_fim} '
+    
+    def clean(self):
+        super().clean()
+
+        esta_vazio_os_campos = {}
+  
+        #Isso não é bem uma "validação" (tipo dizer "é proibido ser vazio"), é mais uma proteção de execução. 
+        # Você está dizendo: "Só rode a lógica pesada de verificar conflitos no banco
+        #  SE eu tiver os dados básicos na mão".
+
+        if not self.fk_barbeiro_id:
+            esta_vazio_os_campos['fk_barbeiro'] = "É obrigatório selecionar o barbeiro."
+            
+        if not self.data_inicio:
+            esta_vazio_os_campos['data_inicio'] = "É obrigatório informar a data de início."
+        if not self.data_fim:
+            esta_vazio_os_campos['data_fim'] = "É obrigatório informar a data de término."
+
+        if esta_vazio_os_campos:
+            raise ValidationError(esta_vazio_os_campos)
+
+        # Validação lógica
+        if self.data_inicio >= self.data_fim:
+            raise ValidationError({'data_fim': "A data de término deve ser depois da data de início."})
+
+        # Verifica conflitos (Somente se o barbeiro existe)
+        if self.fk_barbeiro_id:
+            conflitos = Excecoes.objects.filter(
+                fk_barbeiro_id=self.fk_barbeiro_id, # Usa o ID
+                data_fim__gt=self.data_inicio,
+                data_inicio__lt=self.data_fim
+            )
+            if self.pk:
+                conflitos = conflitos.exclude(pk=self.pk)
+
+            if conflitos.exists():
+                raise ValidationError(
+                    'Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.'
+                )

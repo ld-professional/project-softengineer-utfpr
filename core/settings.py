@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u9$s6wf8@7eie3f*l81u-_#ej(j00)2!)3i!)yks$gfytg$6-g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #tem q estar true pra rodar
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'agendamentos',
     'barbeiro',
     'clientes',
-    'core',
+    'global',
     'servicos'
 ]
 
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'app.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
@@ -125,4 +125,39 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+# Esta linha diz ao Django para procurar arquivos estáticos
+# na pasta 'static' que está na raiz do projeto (BASE_DIR).
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    'account.backends.Contexto',
+#'django.contrib.auth.backends.ModelBackend',  na vdd tem q comentar pra funfar
+]
+
+
+AUTH_USER_MODEL = 'account.UserPersonalizado'
+
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Configuração de Envio de E-mail Real (Gmail)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Coloque aqui o SEU email do Gmail que vai enviar as mensagens
+EMAIL_HOST_USER = 'ldias.2022@alunos.utfpr.edu.br' 
+
+# Coloque aqui a SENHA DE APP de 16 letras que você gerou no Passo 1
+# (NÃO coloque sua senha normal de login do Google, não vai funcionar!)
+EMAIL_HOST_PASSWORD = 'xfnf wrkn jfmq ercb'

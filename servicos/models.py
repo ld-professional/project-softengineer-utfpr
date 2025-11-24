@@ -20,7 +20,8 @@ class Servicos(models.Model):
     id_servicos = models.AutoField(primary_key=True)
 
     nome_servico= models.CharField(max_length=100)
-    preco_servico= models.PositiveIntegerField()
+    preco_servico= models.DecimalField(max_digits=5,decimal_places=2) # permite agr com 5 ate 999.99
+    # para campo de dinheiro use decimal field
     slot_duracao_servico= models.IntegerField(choices=duracoes)
 
     def __str__(self):
