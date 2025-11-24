@@ -1,20 +1,23 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos</title>
-  <link rel="icon" type="image/svg+xml" href="/static/core/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg">
-  <link rel="stylesheet" href="/static/agendamento/css/styleagendamento.css">
-  <script type="text/javascript" src="/static/agendamento/js/jsagendamento.js" defer></script>
+  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">
+  <link rel="stylesheet" href="{% static 'agendamento/css/styleagendamento.css' %}">
+  <script type="text/javascript" src="{% static 'agendamento/js/jsagendamento.js' %}" defer></script>
 </head>
 
 <body>
 
     <nav>
-        <a href ="../core/home.html">
+        <a href ="{% url 'login' %}">
             <header class="page-header">
-            <img src="../../static/core/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg" alt="Ícone da Barbearia" class="logo-icon">
+            <img src="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}" alt="Ícone da Barbearia" class="logo-icon">
             <h1 class="page-title">Barbearia do Wiese</h1>
             </header>
         </a>

@@ -261,12 +261,17 @@ form button:focus {
     color: var(--color-text);
 }
 
+.horario.selected {
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+}
+
 .mensagem {
     display: flex;
-    align-items: center;      /* centraliza verticalmente */
+    align-items: center;
     font-size: 1rem;
     margin-bottom: 0px;
-    text-align: center;       /* garante que o texto fique centralizado se quebrar em linhas */
+    text-align: center;
 }
 
 .lista-horarios {

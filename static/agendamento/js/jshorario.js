@@ -5,6 +5,7 @@ const prevBtn = document.getElementById('prevButton');
 const nextBtn = document.getElementById('nextButton');
 
 let currentDate = new Date();
+let selectedTime = null;
 
 const updateCalendar = () => {
     const currentYear = currentDate.getFullYear();
@@ -43,14 +44,12 @@ const updateCalendar = () => {
 
     document.querySelectorAll(".date").forEach(day => {
         day.addEventListener("click", () => {
-            if (day.classList.contains("inactive")) return; // desativa meses adjacentes
+            if (day.classList.contains("inactive")) return;
 
             const dayNumber = parseInt(day.dataset.day);
 
-            // Atualiza a data atual para o dia clicado
             currentDate.setDate(dayNumber);
 
-            // Atualiza o calendário para marcar o dia ativo
             updateCalendar();
 
             showStaticTimes(currentDate);
@@ -69,15 +68,27 @@ function showStaticTimes(date) {
     // Horários estáticos
     const horarios = ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "18:00"];
 
-    const dia = date.getDate();
-    const mes = date.getMonth() + 1;
-    const ano = date.getFullYear();
+    horarios.forEach(horario => {
+        const div = document.createElement("div");
+        div.classList.add("horario");
+        div.textContent = horario;
 
-    horarios.forEach(h => {
-        listaHorarios.innerHTML += `<div class="horario">${h}</div>`;
+        if (selectedTime === horario) {
+            div.classList.add("selected");
+        }
+
+        div.addEventListener("click", () => {
+            document.querySelectorAll(".horario").forEach(h => h.classList.remove("selected"));
+            div.classList.add("selected");
+
+            console.log("Horário selecionado:", horario);
+
+            selectedTime = horario;
+        });
+
+        listaHorarios.appendChild(div);
     });
 }
-
 
 prevBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
