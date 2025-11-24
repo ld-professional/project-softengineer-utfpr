@@ -6,6 +6,12 @@ from django.conf import settings
 
 
 
+# estes sao para a logica de edicao e salvamento de excecao
+from django.apps import apps 
+from django.utils import timezone
+import datetime
+
+
 dias_da_semana = [
     (0, 'Segunda'),
     (1, 'Terça'),
@@ -128,7 +134,138 @@ class Horarios_de_trabalho(models.Model):
             conflitos = conflitos.exclude(pk=self.pk)
 
         if conflitos.exists():
-            raise ValidationError('Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.')
+            raise ValidationError('Conflito de horário! Já existe uma jornada de trabalho cadastrada neste intervalo para este barbeiro.')
+        
+        # agora vir a logica sobre edicao por exemplo diminuir o tempo
+        
+        #conflito_intervalo_novo_nao_cobre_mais_agendamentos_deste_weekday
+        
+        # Pega o model Agendamentos dinamicamente
+        # primeiro paarmentro o nome da app e o segundo a tabela
+        Agendamentos = apps.get_model('agendamentos', 'Agendamentos') 
+
+        # Mapa de conversão (0=Segunda ... 6=Domingo) -> (2=Segunda ... 1=Domingo) 
+        # isso pq no banco de dados domingo=1 seg=2 terca=3 ... sabado =7
+        mapa_dias = {0: 2, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7, 6: 1}
+        dia_django = mapa_dias.get(self.dia_semana)
+
+        # Monta os intervalos válidos do dia (Outros Turnos + Este Novo Turno)
+        outros_turnos = Horarios_de_trabalho.objects.filter(
+            fk_barbeiro=self.fk_barbeiro_id,
+            dia_semana=self.dia_semana
+        )
+        # devolve as linhas mas em lista por exemplo Linha36= dia:1,hora iniico=19:00,hora_fim=20:00,linha37=...
+        '''
+        # O que tem dentro de 'outros_turnos':
+        [
+        <Horarios_de_trabalho: ID=36, Inicio=08:00, Fim=12:00>, 
+        <Horarios_de_trabalho: ID=37, Inicio=14:00, Fim=18:00>
+        ]
+        '''
+
+        if self.pk:
+            outros_turnos = outros_turnos.exclude(pk=self.pk) # olhando para os antigos sem ocntaro novo intervalo,
+                                                                #ou msm editando uma existente...
+                                                              # logo eh com ose fosse um novo salvamento...
+                                                              # e se supor q eh edicao de fez ir das 13hrs ate 21hrs
+                                                              #for ate 20hrs, entao fazemso uma lista com este novo +
+                                                              # os outros como das 8 da manha ate as 11 da manha
+
+        intervalos_validos = [(self.hora_inicio, self.hora_fim)] 
+        for turno in outros_turnos:
+            intervalos_validos.append((turno.hora_inicio, turno.hora_fim))
+
+        # Busca agendamentos futuros
+        agendamentos_afetados = Agendamentos.objects.filter(
+            fk_barbeiro=self.fk_barbeiro_id,
+            data_e_horario_inicio__gte=datetime.date.today(), # Pega do hoje para frente
+            data_e_horario_inicio__week_day=dia_django        # Filtra pelo dia da semana mapeado
+        )
+
+        # Valida se cada agendamento cabe no novo cenário
+        for ag in agendamentos_afetados:
+            cabe = False
+
+            #Como o Agendamento é DateTimeField, precisamos extrair 
+            # apenas a parte da HORA (.time()) para comparar com o TimeField deste model
+            ag_inicio = ag.data_e_horario_inicio.time()
+            ag_fim = ag.data_e_horario_fim.time()
+
+            for inicio_trab, fim_trab in intervalos_validos: 
+                # uma lista [(x,y),(x2,y2)] onde no for pegamos o x e y a cada iteracao
+                # Verifica se o horário do agendamento está contido no turno de trabalho
+                if ag_inicio >= inicio_trab and ag_fim <= fim_trab:
+                    cabe = True
+                    break 
+            
+            if not cabe:
+                 # Formatação bonita para a mensagem de erro
+                 dia_str = ag.data_e_horario_inicio.strftime('%d/%m/%Y')
+                 hora_str = ag.data_e_horario_inicio.strftime('%H:%M')
+
+                 raise ValidationError(
+                     f"Ação bloqueada! O cliente {ag.fk_cliente.fk_user.username} agendado para "
+                     f"{dia_str} às {hora_str} ficará sem horário de atendimento."
+                 )
+    
+
+
+
+
+
+    # Removido *args e **kwargs para simplificar, já que não usamos multi-banco
+    def delete(self):
+        Agendamentos = apps.get_model('agendamentos', 'Agendamentos')
+        mapa_dias = {0: 2, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7, 6: 1}
+        dia_django = mapa_dias.get(self.dia_semana)
+
+        # Simula o dia SEM este horário
+        outros_turnos = Horarios_de_trabalho.objects.filter(
+            fk_barbeiro=self.fk_barbeiro_id, dia_semana=self.dia_semana
+        ).exclude(pk=self.pk)
+        
+        intervalos_validos = []
+        for turno in outros_turnos:
+            intervalos_validos.append((turno.hora_inicio, turno.hora_fim))
+
+        agendamentos = Agendamentos.objects.filter(
+            fk_barbeiro=self.fk_barbeiro_id,
+            data_e_horario_inicio__gte=datetime.date.today(),
+            data_e_horario_inicio__week_day=dia_django
+        )
+
+        lista_de_conflitos_delete = [] # <--- Acumulador para o delete
+
+        for ag in agendamentos:
+            cabe = False
+            ag_inicio = ag.data_e_horario_inicio.time()
+            ag_fim = ag.data_e_horario_fim.time()
+
+            for inicio_trab, fim_trab in intervalos_validos:
+                if ag_inicio >= inicio_trab and ag_fim <= fim_trab:
+                    cabe = True
+                    break
+            
+            if not cabe:
+                dia_str = ag.data_e_horario_inicio.strftime('%d/%m/%Y')
+                hora_str = ag.data_e_horario_inicio.strftime('%H:%M')
+                msg = f"Cliente {ag.fk_cliente.fk_user.username} ({dia_str} - {hora_str})"
+                lista_de_conflitos_delete.append(msg)
+        
+        if lista_de_conflitos_delete:
+            # Impede a deleção mostrando todos os afetados
+            raise ValidationError(
+                f"Não pode excluir! Agendamentos ficariam descobertos: {', '.join(lista_de_conflitos_delete)}"
+            )
+        
+        # Chama o delete original sem argumentos
+        super().delete()
+
+
+
+
+
+
 
 
 class Excecoes(models.Model):
@@ -185,4 +322,36 @@ class Excecoes(models.Model):
             if conflitos.exists():
                 raise ValidationError(
                     'Conflito de horário! Já existe uma exceção cadastrada neste intervalo para este barbeiro.'
+                )
+            
+            # agora vir a logica sobre edicao
+
+            # por exemplo estender, ou ir sobre um intervalo de agendamento existente
+            
+            # Pega o model Agendamentos dinamicamente
+            Agendamentos = apps.get_model('agendamentos', 'Agendamentos')
+            
+            # A lógica de colisão é: 
+            # O agendamento começa ANTES da folga terminar E termina DEPOIS da folga começar.
+            # (Intersection Logic)
+            
+            agendamentos_conflitantes = Agendamentos.objects.filter(
+                fk_barbeiro=self.fk_barbeiro_id,
+                data_e_horario_inicio__lt=self.data_fim, 
+                data_e_horario_fim__gt=self.data_inicio
+            )
+            
+            # Se encontrar conflitos, montamos a lista de erros para exibir tudo de uma vez
+            lista_de_conflitos = []
+
+            for ag in agendamentos_conflitantes:
+                dia_str = ag.data_e_horario_inicio.strftime('%d/%m/%Y')
+                hora_str = ag.data_e_horario_inicio.strftime('%H:%M')
+                
+                msg = f"Cliente {ag.fk_cliente.fk_user.username} ({dia_str} às {hora_str})"
+                lista_de_conflitos.append(msg)
+            
+            if lista_de_conflitos:
+                raise ValidationError(
+                    f"Não é possível adicionar esta indisponibilidade! Existem agendamentos marcados: {', '.join(lista_de_conflitos)}"
                 )
