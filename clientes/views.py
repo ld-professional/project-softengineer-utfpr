@@ -42,3 +42,19 @@ def cliente_dashboard(request):
 
 
         return render(request,t.CLIENTE_DASHBOARD, contexto) # n pode ter barra !
+    
+
+from django.contrib.auth import logout
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
+@ensure_csrf_cookie
+@login_required(login_url='/account/login/') # chuta vc pra onde definiu aqui nos parenteses...
+def logout_view(request):
+
+    if request.method== 'POST':
+       
+        logout(request)
+
+        return redirect('pagina_inicial')
+    
