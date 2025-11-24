@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // response.ok é true para status 200-299.
                 // Como a view retorna 204 No Content, response.ok será true no sucesso.
                 if (response.ok) {
-                    window.location.href = '/'; // Redireciona APENAS no sucesso do logout
+                    window.location.href = '/account/login'; // Redireciona APENAS no sucesso do logout
                 } else {
                     // Se falhar (ex: 403 Forbidden por CSRF inválido, ou 404 de novo, ou 500)
                     console.error('Logout falhou com status:', response.status);

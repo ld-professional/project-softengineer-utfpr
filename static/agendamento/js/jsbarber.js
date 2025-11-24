@@ -50,3 +50,21 @@ document.getElementById("next").addEventListener("click", () => {
 document.getElementById("prev").addEventListener("click", () => {
     atualizarSlide((index - 1 + slides.length) % slides.length);
 });
+
+const btnVoltar = document.getElementById('voltar-dash-btn');
+
+if (btnVoltar) {
+    btnVoltar.addEventListener('click', function() {
+        // Aqui tem que ser o caminho exato que está no navegador
+        window.location.href = '/clientes/agendamentos/escolher_servico/'; 
+    });
+}
+
+const btnInicio = document.getElementById('inicio-dash-tbm-btn');
+
+if (btnInicio) {
+    btnInicio.addEventListener('click', function() {
+        // Aqui tem que ser o caminho exato que está no navegador
+        window.location.href = '/clientes/dashboard/'; 
+    });
+}
