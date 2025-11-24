@@ -35,4 +35,10 @@ def cliente_dashboard(request):
 
 
     if request.method == 'GET':
-        return render(request,t.CLIENTE_DASHBOARD) # n pode ter barra !
+
+        usuario_fulando_de_tal= request.user # contem o objeto do usuario logado # uma abstracao ja...
+        nome= str(usuario_fulando_de_tal.username).capitalize()
+        contexto={'nome_do_cara': nome}
+
+
+        return render(request,t.CLIENTE_DASHBOARD, contexto) # n pode ter barra !
