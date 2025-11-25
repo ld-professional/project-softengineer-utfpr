@@ -1,162 +1,347 @@
-const themeSwitch = document.getElementById('theme-switch');
-const monthYearElement = document.getElementById('monthYear');
-const datesElement = document.getElementById('dates');
-const prevBtn = document.getElementById('prevButton');
-const nextBtn = document.getElementById('nextButton');
+/* =========================================================================
+   ENTENDENDO O FLUXO DESTA TELA (DOCUMENTAÇÃO DIDÁTICA)
+   =========================================================================
+   1. O DJANGO (Backend) enviou o HTML com dois campos invisíveis (<input hidden>)
+      contendo o ID do Serviço e o ID do Barbeiro escolhidos anteriormente.
+   
+   2. O JAVASCRIPT (Este arquivo) inicia e desenha o calendário visual na tela.
+   
+   3. QUANDO O USUÁRIO CLICA EM UM DIA (Ex: Dia 25):
+      a. O JS formata essa data para o padrão internacional "2025-11-25".
+      b. O JS pega os IDs dos campos invisíveis.
+      c. O JS envia tudo isso para o Django usando 'fetch' (GET).
+         URL: /api/buscar-horarios/?data=...&id_barbeiro=...&id_servico=...
+   
+   4. O DJANGO RESPONDE:
+      - Devolve uma lista JSON com os horários livres: ['08:00', '08:30', '14:00']
+   
+   5. O JAVASCRIPT ATUALIZA A TELA:
+      - Apaga a lista antiga e desenha botões novos com esses horários.
+      
+   6. AO CONFIRMAR:
+      - O JS envia um POST com todos os dados para salvar no banco.
+========================================================================= */
 
-let currentDate = new Date();
-let selectedTime = null;
+// --- 1. SELEÇÃO DOS ELEMENTOS DO HTML ---
+const botaoTema = document.getElementById('theme-switch');
+const textoMesAno = document.getElementById('monthYear'); // Título "Novembro 2025"
+const containerDias = document.getElementById('dates');   // Onde ficam as bolinhas dos dias
+const btnMesAnterior = document.getElementById('prevButton');
+const btnProximoMes = document.getElementById('nextButton');
+const divListaHorarios = document.getElementById("listaHorarios"); // Onde entram os botões de hora
 
-const updateCalendar = () => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
+// Captura os INPUTS INVISÍVEIS que o Django preencheu no HTML
+const campoOcultoIdServico = document.getElementById('id_servico_hidden');
+const campoOcultoIdBarbeiro = document.getElementById('id_barbeiro_hidden');
 
-    const firstDay = new Date(currentYear, currentMonth, 0);
-    const lastDay = new Date(currentYear, currentMonth + 1, 0);
-    const totalDays = lastDay.getDate();
-    const firstDayIndex = firstDay.getDay();
-    const lastDayIndex = lastDay.getDay();
+// --- 2. VARIÁVEIS DE CONTROLE (MEMÓRIA DO JS) ---
+let dataAtualDoCalendario = new Date(); // Controla qual mês estamos vendo agora
+let horarioFinalEscolhido = null;       // Guarda "14:30" quando o usuário clica
+let dataFormatadaParaApi = null;        // Guarda "2025-11-25" para enviar pro Django
 
-    const monthYearString = currentDate.toLocaleString
-    ('pt-BR', { month: 'long', year: 'numeric' });
-    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-    monthYearElement.textContent = capitalize(monthYearString);
+// =========================================================================
+// 3. FUNÇÃO PRINCIPAL: DESENHAR O CALENDÁRIO
+// =========================================================================
+const renderizarCalendario = () => {
+    const anoAtual = dataAtualDoCalendario.getFullYear();
+    const mesAtual = dataAtualDoCalendario.getMonth();
 
-    let datesHTML = '';
+    // Cálculos matemáticos para saber onde começar e terminar o mês
+    const primeiroDiaDoMes = new Date(anoAtual, mesAtual, 1);
+    const ultimoDiaDoMes = new Date(anoAtual, mesAtual + 1, 0);
+    const totalDiasNoMes = ultimoDiaDoMes.getDate();
+    const diaDaSemanaQueComeca = primeiroDiaDoMes.getDay(); // 0=Dom, 1=Seg...
 
-    for (let i = firstDayIndex; i > 0; i--) {
-        const prevDate = new Date(currentYear, currentMonth, 0 - i + 1);
-        datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
+    // Atualiza o título (Ex: "Novembro 2025")
+    const nomeMesAno = dataAtualDoCalendario.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+    textoMesAno.textContent = nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1);
+
+    let htmlDosDias = '';
+
+    // Ajuste visual: Se o calendário começa na Segunda mas o dia 1 é Domingo
+    // (Se seu CSS .days começa com Segunda, use esta lógica)
+    const diasVaziosAntes = diaDaSemanaQueComeca === 0 ? 6 : diaDaSemanaQueComeca - 1;
+
+    // a) Desenha dias cinzas do mês passado (inativos)
+    for (let i = diasVaziosAntes; i > 0; i--) {
+        const dataPassada = new Date(anoAtual, mesAtual, 1 - i);
+        htmlDosDias += `<div class="date inactive">${dataPassada.getDate()}</div>`;
     }
 
-    for (let i = 1; i <= totalDays; i++) {
-        const date = new Date(currentYear, currentMonth, i);
-        const activeClass = date.toDateString() === currentDate.toDateString() ? 'active' : '';
-        datesHTML += `<div class="date ${activeClass}" data-day="${i}">${i}</div>`;
+    // b) Desenha os dias do mês atual (Bolinhas clicáveis)
+    for (let dia = 1; dia <= totalDiasNoMes; dia++) {
+        const dataVerificada = new Date(anoAtual, mesAtual, dia);
+        
+        // Verifica se é hoje para pintar de cor diferente (opcional)
+        const ehHoje = dataVerificada.toDateString() === new Date().toDateString() ? 'active' : '';
+        
+        // Adiciona o dia no HTML com um atributo especial 'data-dia-numero'
+        htmlDosDias += `<div class="date ${ehHoje}" data-dia-numero="${dia}">${dia}</div>`;
     }
 
-    for (let i = 1; i <= (7 - lastDayIndex); i++) {
-        const nextDate = new Date(currentYear, currentMonth + 1, i);
-        datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
-    }
+    containerDias.innerHTML = htmlDosDias;
 
-    datesElement.innerHTML = datesHTML;
+    // --- AGORA ADICIONAMOS O CLIQUE NOS DIAS ---
+    adicionarEventoCliqueNosDias(anoAtual, mesAtual);
+}
 
-    document.querySelectorAll(".date").forEach(day => {
-        day.addEventListener("click", () => {
-            if (day.classList.contains("inactive")) return;
+// Função separada para organizar o código do clique
+function adicionarEventoCliqueNosDias(ano, mes) {
+    // Pega todas as bolinhas que não são cinzas (inactive)
+    const bolinhasDosDias = document.querySelectorAll(".date:not(.inactive)");
 
-            const dayNumber = parseInt(day.dataset.day);
+    bolinhasDosDias.forEach(bolinha => {
+        bolinha.addEventListener("click", () => {
+            
+            // 1. Visual: Remove o amarelo de todos e coloca no clicado
+            bolinhasDosDias.forEach(d => d.classList.remove("selected"));
+            bolinha.classList.add("selected");
 
-            currentDate.setDate(dayNumber);
+            // 2. Recupera o número do dia clicado (ex: 25)
+            const diaNumero = parseInt(bolinha.dataset.diaNumero);
+            
+            // 3. FORMATAÇÃO MANUAL E SEGURA DA DATA (YYYY-MM-DD)
+            // Isso garante que o Django entenda, independente do navegador
+            const anoStr = ano;
+            // Adiciona zero à esquerda se for menor que 10 (ex: mês 9 vira "09")
+            const mesStr = String(mes + 1).padStart(2, '0'); 
+            const diaStr = String(diaNumero).padStart(2, '0');
+            
+            dataFormatadaParaApi = `${anoStr}-${mesStr}-${diaStr}`; // Ex: "2025-11-24"
 
-            updateCalendar();
+            console.log("O usuário escolheu a data:", dataFormatadaParaApi);
 
-            showStaticTimes(currentDate);
-
-            console.log(currentDate);
+            // 4. Chama a função que conversa com o Backend
+            buscarHorariosDisponiveisNoBackend(dataFormatadaParaApi);
         });
     });
 }
 
-function showStaticTimes(date) {
-    const listaHorarios = document.getElementById("listaHorarios");
+// =========================================================================
+// 4. COMUNICAÇÃO COM O BACKEND (A API GET)
+// =========================================================================
+async function buscarHorariosDisponiveisNoBackend(dataString) {
+    divListaHorarios.innerHTML = '<p class="mensagem">Consultando agenda...</p>';
 
-    // Limpa apenas a lista de horários
-    listaHorarios.innerHTML = "";
+    // Pega os valores dos inputs ocultos no HTML
+    // O .value lê o que o Django escreveu lá: value="3"
+    const idServico = campoOcultoIdServico ? campoOcultoIdServico.value : null;
+    const idBarbeiro = campoOcultoIdBarbeiro ? campoOcultoIdBarbeiro.value : null;
 
-    // Horários estáticos
-    const horarios = ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "18:00"];
+    // Validação de segurança
+    if (!idServico || !idBarbeiro) {
+        divListaHorarios.innerHTML = '<p style="color:red">Erro: IDs do serviço ou barbeiro não encontrados.</p>';
+        return;
+    }
 
-    horarios.forEach(horario => {
-        const div = document.createElement("div");
-        div.classList.add("horario");
-        div.textContent = horario;
+    // --- AQUI ESTÁ O JEITO SIMPLES DE MONTAR A URL ---
+    // O URLSearchParams cria automaticamente: "?data=...&id_barbeiro=...&id_servico=..."
+    const parametrosUrl = new URLSearchParams({
+        data: dataString,
+        id_barbeiro: idBarbeiro,
+        id_servico: idServico
+    });
 
-        if (selectedTime === horario) {
-            div.classList.add("selected");
+    try {
+        // Faz o pedido para o Django (GET)
+        // Atenção para o caminho da URL, deve bater com seu urls.py
+        const resposta = await fetch(`/clientes/agendamentos/api/buscar-horarios/?${parametrosUrl}`);
+        const dadosJson = await resposta.json();
+
+        divListaHorarios.innerHTML = ""; // Limpa a mensagem de "carregando"
+
+        if (resposta.ok) {
+            // Se o Django disse OK (200)
+            if (dadosJson.horarios && dadosJson.horarios.length > 0) {
+                criarBotoesDeHorarioNaTela(dadosJson.horarios);
+            } else {
+                divListaHorarios.innerHTML = `<p class="mensagem">${dadosJson.mensagem || 'Agenda cheia ou barbeiro não trabalha.'}</p>`;
+            }
+        } else {
+            // Se o Django deu erro (400 ou 500)
+            divListaHorarios.innerHTML = `<p class="mensagem" style="color:red">${dadosJson.erro || 'Erro no servidor.'}</p>`;
         }
 
-        div.addEventListener("click", () => {
+    } catch (erro) {
+        console.error(erro);
+        divListaHorarios.innerHTML = '<p class="mensagem" style="color:red">Erro de conexão.</p>';
+    }
+}
+
+// =========================================================================
+// 5. FUNÇÃO QUE CRIA OS BOTÕES VISUAIS DOS HORÁRIOS
+// =========================================================================
+function criarBotoesDeHorarioNaTela(listaDeHorarios) {
+    // Recebe a lista ['08:00', '08:30'] e cria divs para cada um
+    listaDeHorarios.forEach(horarioTexto => {
+        const botaoHorario = document.createElement("div");
+        botaoHorario.classList.add("horario"); // Classe do CSS
+        botaoHorario.textContent = horarioTexto;
+
+        // Adiciona evento de clique no horário
+        botaoHorario.addEventListener("click", () => {
+            // Remove seleção anterior
             document.querySelectorAll(".horario").forEach(h => h.classList.remove("selected"));
-            div.classList.add("selected");
-
-            console.log("Horário selecionado:", horario);
-
-            selectedTime = horario;
+            
+            // Marca este como selecionado
+            botaoHorario.classList.add("selected");
+            
+            horarioFinalEscolhido = horarioTexto; // Salva na memória
+            console.log("Horário final:", horarioFinalEscolhido);
         });
 
-        listaHorarios.appendChild(div);
+        divListaHorarios.appendChild(botaoHorario);
     });
 }
 
-prevBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    updateCalendar();
-})
+// =========================================================================
+// 6. BOTÕES DE NAVEGAÇÃO DO CALENDÁRIO
+// =========================================================================
+btnMesAnterior.addEventListener('click', () => {
+    dataAtualDoCalendario.setMonth(dataAtualDoCalendario.getMonth() - 1);
+    renderizarCalendario();
+});
 
-nextBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    updateCalendar();
-})
+btnProximoMes.addEventListener('click', () => {
+    dataAtualDoCalendario.setMonth(dataAtualDoCalendario.getMonth() + 1);
+    renderizarCalendario();
+});
 
-showStaticTimes(currentDate);
-updateCalendar();
+// Inicia o calendário ao carregar a página
+renderizarCalendario();
 
 
-// pega o estado atual do modo (se esstá claro ou escuro)
-let lightmode = localStorage.getItem('lightmode');
+// =========================================================================
+// 7. TEMA DARK/LIGHT E NAVEGAÇÃO DE PÁGINAS
+// =========================================================================
+let modoEscuroAtivo = localStorage.getItem('lightmode');
 
-// darkmode
-const enableLightMode = () => {
+if (modoEscuroAtivo === 'active') {
     document.body.classList.add('lightmode');
-    localStorage.setItem('lightmode', 'active');
-};
-const disableLightMode = () => {
-    document.body.classList.remove('lightmode');
-    localStorage.setItem('lightmode', null);
-};
-
-if (lightmode === 'active') {
-    enableLightMode();
 }
 
-themeSwitch.addEventListener('click', () => {
-    lightmode = localStorage.getItem('lightmode');
-    if (lightmode !== 'active') {
-        enableLightMode();
+botaoTema.addEventListener('click', () => {
+    modoEscuroAtivo = localStorage.getItem('lightmode');
+    if (modoEscuroAtivo !== 'active') {
+        document.body.classList.add('lightmode');
+        localStorage.setItem('lightmode', 'active');
     } else {
-        disableLightMode();
+        document.body.classList.remove('lightmode');
+        localStorage.setItem('lightmode', null);
     }
 });
 
+// Botão Voltar Inteligente
 const btnVoltar = document.getElementById('voltar-dash-btn');
 
 if (btnVoltar) {
     btnVoltar.addEventListener('click', function(e) {
-        e.preventDefault(); // Evita comportamento padrão
-
-        // 1. Pega os parâmetros da URL ATUAL
-        // (Ex: .../escolher_dia/?id_servico=3&id_barbeiro=6)
+        e.preventDefault(); 
+        
+        // Lê a URL atual para saber qual ID de Serviço devolver para a tela anterior
         const params = new URLSearchParams(window.location.search);
         const idServicoAtual = params.get('id_servico');
 
         if (idServicoAtual) {
-            // 2. Se temos o ID do serviço, voltamos para a tela de barbeiro LEVANDO o ID
-            // Ajuste o caminho '/clientes/escolher_barbeiro/' conforme seu urls.py
+            // Volta para Barbeiros sem perder o ID do Serviço
             window.location.href = `/clientes/agendamentos/escolher_barbeiro/?id_servico=${idServicoAtual}`;
         } else {
-            // Fallback: Se não achar o ID, tenta o histórico do navegador
+            // Se der erro, tenta o histórico normal
             window.history.back();
         }
     });
 }
 
 const btnInicio = document.getElementById('inicio-dash-tbm-btn');
-
 if (btnInicio) {
     btnInicio.addEventListener('click', function() {
-        // Aqui tem que ser o caminho exato que está no navegador
         window.location.href = '/clientes/dashboard/'; 
     });
+}
+
+// =========================================================================
+// 8. BOTÃO CONFIRMAR AGENDAMENTO (POST FINAL)
+// =========================================================================
+const btnConfirmarFinal = document.querySelector('.confirm-button');
+
+if(btnConfirmarFinal) {
+    btnConfirmarFinal.addEventListener('click', async () => {
+        
+        // 1. Validação Básica no Frontend
+        if(!dataFormatadaParaApi || !horarioFinalEscolhido) {
+            alert("Por favor, selecione um dia no calendário e um horário disponível.");
+            return;
+        }
+
+        const idServico = campoOcultoIdServico ? campoOcultoIdServico.value : null;
+        const idBarbeiro = campoOcultoIdBarbeiro ? campoOcultoIdBarbeiro.value : null;
+
+        // 2. Monta o pacote de dados (Payload)
+        const pacoteDeDados = {
+            id_servico: idServico,
+            id_barbeiro: idBarbeiro,
+            data: dataFormatadaParaApi, // YYYY-MM-DD
+            hora: horarioFinalEscolhido // HH:MM
+        };
+
+        // Feedback visual (Desabilita botão para não clicar 2x)
+        btnConfirmarFinal.disabled = true;
+        btnConfirmarFinal.textContent = "Processando...";
+
+        try {
+            // 3. Envia para o Django (POST)
+            const resposta = await fetch('/clientes/agendamentos/api/salvar-agendamento/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': obterTokenCsrf('csrftoken') // Função obrigatória abaixo
+                },
+                body: JSON.stringify(pacoteDeDados)
+            });
+
+            const dados = await resposta.json();
+
+            if (resposta.ok) {
+                alert("Sucesso! " + dados.mensagem);
+                // Redireciona para o Dashboard
+                window.location.href = '/clientes/dashboard/';
+            } else {
+                // Mostra o erro que veio do Python (ex: Conflito de horário)
+                let msgErro = dados.erro;
+                if (typeof msgErro === 'object') {
+                    // Limpa o erro se vier como objeto feio {"erro": "..."}
+                    msgErro = JSON.stringify(msgErro).replace(/[{}"]/g, ''); 
+                }
+                alert("Erro ao agendar: " + msgErro);
+                
+                // Reabilita o botão para tentar de novo
+                btnConfirmarFinal.disabled = false;
+                btnConfirmarFinal.textContent = "Confirmar Agendamento";
+            }
+
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro de conexão com o servidor.");
+            btnConfirmarFinal.disabled = false;
+            btnConfirmarFinal.textContent = "Confirmar Agendamento";
+        }
+    });
+}
+
+// =========================================================================
+// 9. FUNÇÃO AUXILIAR: CSRF TOKEN (Necessária para segurança do Django)
+// =========================================================================
+function obterTokenCsrf(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

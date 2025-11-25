@@ -22,7 +22,7 @@ const btnVoltar = document.getElementById('voltar-dash-btn');
 if (btnVoltar) {
     btnVoltar.addEventListener('click', function() {
         // Usa o histórico para voltar mantendo dados ou vai para a seleção de serviço
-        window.history.back(); 
+        window.location.href = '/clientes/agendamentos/escolher_servico/';  
     });
 }
 
