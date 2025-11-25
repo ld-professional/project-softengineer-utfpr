@@ -68,6 +68,21 @@ body {
     font-size: 1.3rem;
 }
 
+.forgot-password {
+    margin-top: -40px;
+    font-size: 0.9rem;
+}
+
+.login-conta {
+    margin-top: 25px;
+    font-size: 1.3rem;
+}
+
+.already-have-account {
+    margin-top: -30px;
+    font-size: 1.3rem;
+}
+
 .page-header {
     position: absolute;
     top: 5px;

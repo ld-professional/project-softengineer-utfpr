@@ -95,10 +95,10 @@ class UserPersonalizado(AbstractUser):
 
     # Listamos apenas os CAMPOS EXTRAS que o terminal deve pedir.
 
-    REQUIRED_FIELDS = ['email','username'] #'telefone'], LOGO como ja tem telefone para ser o principal, aqui deve ser email e username
+    REQUIRED_FIELDS = ['email','telefone',] #'telefone'], LOGO como ja tem telefone para ser o principal, aqui deve ser email e username
     # lista de pgntas extras pro temrinal criar um superuser em: python manage.py createsuperuser
 
-    USERNAME_FIELD = 'telefone' # na tela de login do /admin USAR telefone para login!
+    USERNAME_FIELD = 'username' # na tela de login do /admin USAR telefone para login!
 
     def __str__(self):
 
