@@ -355,3 +355,85 @@ form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
 }
+
+
+
+
+
+
+
+
+/* O Container que segura: Seta Esquerda + Lista de Cards + Seta Direita */
+.container-carrossel {
+    display: flex;
+    align-items: center;      /* Centraliza verticalmente */
+    justify-content: center;  /* Centraliza na tela */
+    gap: 15px;                /* Espaço entre a seta e os cards */
+    width: 100%;
+    max-width: 1000px;        /* Limite de largura */
+    margin: 20px auto;        /* Margem em cima/baixo e centro nas laterais */
+    position: relative;
+    z-index: 10;              /* Garante que fique na frente do fundo */
+}
+
+/* Força os cards a ficarem em linha (um do lado do outro) e permite rolagem */
+.servicos-agendamento {
+    display: flex !important;      /* Força o display flex */
+    flex-wrap: nowrap !important;  /* Proíbe quebrar linha */
+    overflow-x: auto;              /* Permite rolar horizontalmente */
+    scroll-behavior: smooth;       /* Rolagem suave */
+    width: 100%;
+    padding: 10px 5px;
+    gap: 20px;                     /* Espaço entre os cards */
+    
+    /* Esconde a barra de rolagem (Scrollbar) para ficar bonito */
+    scrollbar-width: none;         /* Firefox */
+    -ms-overflow-style: none;      /* IE e Edge */
+}
+
+/* Esconde barra de rolagem no Chrome/Safari */
+.servicos-agendamento::-webkit-scrollbar {
+    display: none;
+}
+
+/* ESTILO DAS SETAS (Para elas aparecerem amarelas e grandes) */
+.seta {
+    background-color: var(--color-secondary); /* Amarelo da sua marca */
+    color: var(--color-black);                /* Seta preta */
+    border: none;
+    border-radius: 50%;         /* Redonda */
+    width: 50px;                /* Largura */
+    height: 50px;               /* Altura */
+    font-size: 1.5rem;          /* Tamanho do ícone < > */
+    font-weight: bold;
+    cursor: pointer;
+    
+    /* Flexbox para centralizar o ícone < > dentro da bolinha */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Garante que a seta não amasse se a tela for pequena */
+    flex-shrink: 0;
+    transition: transform 0.2s ease, background-color 0.2s;
+    z-index: 20; /* Fica acima de tudo */
+}
+
+.seta:hover {
+    background-color: var(--color-primary); /* Fica branco/claro ao passar o mouse */
+    color: var(--color-background);
+    transform: scale(1.1); /* Aumenta um pouquinho */
+}
+
+/* REDUZINDO O TAMANHO DOS QUADRADINHOS (Para caberem melhor no carrossel) */
+/* Isso vai sobrescrever o tamanho original grande de 300px */
+.corte, .barba, .barba-corte {
+    width: 220px !important;    /* Força largura menor */
+    height: 150px !important;   /* Força altura menor */
+    min-width: 220px;           /* Impede de encolher demais */
+}
+
+/* Ajusta as letras para ficarem boas no card menor */
+.corte h2, .barba h2, .barba-corte h2 {
+    font-size: 1.2rem;
+}

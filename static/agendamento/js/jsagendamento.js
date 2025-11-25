@@ -62,3 +62,35 @@ if (btnInicio) {
     });
 }
 
+
+
+
+
+
+
+// --- LÓGICA DO CARROSSEL COM ANIMAÇÃO SUAVE ---
+
+const scrollContainer = document.getElementById('scroll-container');
+const btnEsq = document.getElementById('btn-esq');
+const btnDir = document.getElementById('btn-dir');
+
+// Valor que vai rolar a cada clique (tamanho do card + espaço)
+const scrollAmount = 200; 
+
+if (btnEsq && btnDir && scrollContainer) {
+    
+    btnEsq.addEventListener('click', () => {
+        // O método scrollTo com behavior 'smooth' faz a animação
+        scrollContainer.scrollTo({
+            left: scrollContainer.scrollLeft - scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    btnDir.addEventListener('click', () => {
+        scrollContainer.scrollTo({
+            left: scrollContainer.scrollLeft + scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+}
