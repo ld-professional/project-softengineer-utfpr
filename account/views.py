@@ -96,90 +96,83 @@ def signup_view(request):
         return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)
     
 
-    
-
-
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-from .models import UserPersonalizado  
 
 
 
-@ensure_csrf_cookie
-def esqueceu_senha(request):
-    
-    
-    if request.method == 'GET':
-        
-        return render(request, 'account/forgot-password.html') 
 
-    
-    if request.method == 'POST':
-        try:
-            
-            data = json.loads(request.body)
-          
-            form = PasswordResetForm(data)
-            
-            if form.is_valid():
-                
-               
-                form.save(
-                    request=request,
-                    use_https=request.is_secure(), 
-                    email_template_name='registration/password_reset_email.html', 
-                    subject_template_name='registration/password_reset_subject.txt'
-                )
-                
-                
-                return JsonResponse({'message': 'Se o e-mail existir, um link foi enviado.'})
-            else:
-                return JsonResponse({'error': 'E-mail inválido ou obrigatório.'}, status=400)
-                
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+import json
+from django.http import JsonResponse
+from django.contrib.auth.views import PasswordResetView,PasswordResetConfirmView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+from core.settings import EMAIL_HOST_USER
+
+@method_decorator(ensure_csrf_cookie, name='dispatch') # para aplicar decorator em uma classe deve usar name = dispatch
+class EsqueceuSenhaView(PasswordResetView):
+
+    # template_name: página "Esqueceu a senha".
+    template_name = 'account/forgot-password.html'
+
+    # email_template_name: - Arquivo de texto puro (.txt) usado como fallback para clientes de e-mail que não suportam HTML.
+    email_template_name = 'registration/password_reset_email.txt'
+
+    # html_email_template_name: - Arquivo HTML (.html) que define o layout bonito do e-mail.
+    html_email_template_name = 'registration/password_reset_email.html'
 
 
-@ensure_csrf_cookie
-def nova_senha(request, uidb64=None, token=None):
-    
-    try:
-            
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        
-        
-        user = UserPersonalizado.objects.get(pk=uid)
-        
-    except (TypeError, ValueError, OverflowError, UserPersonalizado.DoesNotExist):
-        
-        user = None
- 
-    if user is not None and default_token_generator.check_token(user, token):
-        
-        if request.method == 'GET':
-            return render(request, 'account/confirm-new-password.html')
-        
-        if request.method == 'POST':
-            try:
-                data = json.loads(request.body)
-                senha_nova = data.get('password')
+    # subject_template_name: - Define o assunto do e-mail. - Exemplo: "Redefinir senha no nosso site"
+    subject_template_name = 'registration/password_reset_subject.txt'
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        email = data.get('email')
+
+        if not email:
+            return JsonResponse({'error': 'E-mail é obrigatório.'}, status=400)
+
+        # Cria o formulário padrão do Django com o email recebido
+        form = self.form_class({'email': email})
+
+        if form.is_valid():
+            # Gera token, UID, monta link e envia o e-mail automaticamente
+            form.save(
+    request=request,
+    use_https=request.is_secure(),
+    from_email=EMAIL_HOST_USER,
+    html_email_template_name=self.html_email_template_name
+)
+            return JsonResponse({'message': 'Se o e-mail existir, um link foi enviado.'})
+
+        return JsonResponse({'error': 'E-mail inválido.'}, status=400)
 
 
-                form = SetPasswordForm(user, {'new_password1': senha_nova, 'new_password2': senha_nova})
-                
-                if form.is_valid():
-                    form.save() 
-                    return JsonResponse({'message': 'Senha alterada com sucesso!'})
-                else:
 
-                    erros_dict = json.loads(form.errors.as_json())
-                    return JsonResponse({'errors': erros_dict}, status=400)
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class NovaSenhaView(PasswordResetConfirmView):
 
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-    
-    else:
+    # template_name: É a pagina,O Django já chega aqui sabendo quem é o usuário, pois a URL contém uidb64 e token.
+    template_name = 'account/confirm-new-password.html'
 
-        return redirect('/')
+
+    # ---------------------------------------------------------
+    # POST:
+    # - Recebe JSON do seu fetch() contendo a nova senha.
+    # - Monta o formulário interno do Django (SetPasswordForm).
+    # - Já valida complexidade da senha.
+    # - Se tudo OK → salva no banco e invalida o token.
+    # ---------------------------------------------------------
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        senha = data.get('password')
+
+        # Django exige duas senhas, então você preenche igual
+        form = self.get_form(data={
+            'new_password1': senha,
+            'new_password2': senha
+        })
+
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Senha alterada com sucesso!'})
+
+        return JsonResponse({'errors': form.errors}, status=400)
