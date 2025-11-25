@@ -326,20 +326,20 @@ form button:focus {
     color: var(--color-input-background);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
     .wrapper {
         display: none !important;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
 
     .titulo {
         display: none;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
     #theme-switch {
         top: 7px;
         right: 15px;
@@ -347,7 +347,7 @@ form button:focus {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
     .container-carrossel {
         max-width: 100%;
         padding: 0 10px;
@@ -432,7 +432,7 @@ form button:focus {
     fill: var(--color-background);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
     * {
         max-width: 100vw !important;
         box-sizing: border-box;
@@ -444,7 +444,7 @@ form button:focus {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 669px) {
 
     .container-carrossel {
         max-width: 100%;
