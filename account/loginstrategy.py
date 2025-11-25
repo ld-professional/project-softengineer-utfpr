@@ -81,3 +81,30 @@ class TelefoneStrategy(LoginStrategyValidar):
             return None
         
 
+class UsernameStrategy(LoginStrategyValidar):
+
+    def validar(self, identifier):
+        """
+        Valida se PODE ser um username.
+        Lógica:
+        1. Não pode ter '@' (senão seria email).
+        2. Não pode ser puramente numérico de 11 dígitos (senão seria telefone).
+        """
+        if '@' in identifier:
+            return False
+        
+        # Opcional: Evitar conflito com telefone se a string for só números e tiver 11 dígitos
+        numeros = ''.join(filter(str.isdigit, identifier))
+        if identifier.isdigit() and len(numeros) == 11:
+            return False
+
+        # Se passou pelos filtros acima, assumimos que é um username válido (ex: 'admin', 'joao.silva')
+        return True
+
+    def buscar_suposto_usuario(self, identifier):
+        User = get_user_model()
+        try:
+            # Busca exata pelo campo username padrão do Django
+            return User.objects.get(username=identifier)
+        except User.DoesNotExist:
+            return None

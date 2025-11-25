@@ -56,7 +56,7 @@
 
             <div class="servicos-agendamento" id="scroll-container">
                 {% for s in servicos %}
-                <div class="link-bloco" data-id="{{ s.id }}" onclick="selecionarServico(this)">  
+                <div class="link-bloco" data-id="{{ s.pk }}" onclick="selecionarServico(this)">  
                     
                     <div class="{% if s.nome_servico == 'Cabelo' %}corte{% elif s.nome_servico == 'Barba' %}barba{% elif s.nome_servico == 'Barba e Cabelo' %}barba-corte{% else %}corte{% endif %}">
                         

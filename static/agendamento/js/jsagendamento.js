@@ -1,142 +1,74 @@
+// --- LÓGICA DO TEMA (DARK/LIGHT MODE) ---
 const themeSwitch = document.getElementById('theme-switch');
-
-// pega o estado atual do modo (se esstá claro ou escuro)
 let lightmode = localStorage.getItem('lightmode');
 
-// darkmode
-const enableLightMode = () => {
-    document.body.classList.add('lightmode');
-    localStorage.setItem('lightmode', 'active');
-};
-const disableLightMode = () => {
-    document.body.classList.remove('lightmode');
-    localStorage.setItem('lightmode', null);
-};
+if (lightmode === 'active') document.body.classList.add('lightmode');
 
-if (lightmode === 'active') {
-    enableLightMode();
-}
-
-themeSwitch.addEventListener('click', () => {
-    lightmode = localStorage.getItem('lightmode');
-    if (lightmode !== 'active') {
-        enableLightMode();
-    } else {
-        disableLightMode();
-    }
-});
-
-const blocos = document.querySelectorAll('.link-bloco');
-let blocoSelecionado = null;
-
-blocos.forEach(bloco => {
-    bloco.addEventListener('click', () => {
-
-        // Remove seleção anterior
-        blocos.forEach(b => b.classList.remove('selecionado'));
-
-        // Adiciona seleção ao clicado
-        bloco.classList.add('selecionado');
-
-        // Pega o título do serviço (conteúdo do <h2>)
-        blocoSelecionado = bloco.querySelector('h2').textContent;
-    });
-});
-
-
-const btnVoltar = document.getElementById('voltar-dash-btn');
-
-if (btnVoltar) {
-    btnVoltar.addEventListener('click', function() {
-        // Aqui tem que ser o caminho exato que está no navegador
-        window.location.href = '/clientes/dashboard/'; 
+if (themeSwitch) {
+    themeSwitch.addEventListener('click', () => {
+        lightmode = localStorage.getItem('lightmode');
+        if (lightmode !== 'active') {
+            document.body.classList.add('lightmode');
+            localStorage.setItem('lightmode', 'active');
+        } else {
+            document.body.classList.remove('lightmode');
+            localStorage.setItem('lightmode', null);
+        }
     });
 }
 
-const btnInicio = document.getElementById('inicio-dash-tbm-btn');
-
-if (btnInicio) {
-    btnInicio.addEventListener('click', function() {
-        // Aqui tem que ser o caminho exato que está no navegador
-        window.location.href = '/clientes/dashboard/'; 
-    });
-}
-
-
-
-
-
-
-
-// ==========================================
-// 1. LÓGICA DE SELEÇÃO DE SERVIÇO (O 'this')
-// ==========================================
-
-// Variável que guarda o ID na memória
+// --- VARIÁVEL GLOBAL OBRIGATÓRIA ---
 let idSelecionado = null;
 
-// Função chamada pelo onclick="selecionarServico(this)" no HTML
+// --- A FUNÇÃO QUE O SEU HTML CHAMA ---
+// Essa função TEM que existir para o onclick="selecionarServico(this)" funcionar
 function selecionarServico(elementoClicado) {
     
-    // Remove a classe 'selecionado' de todos (limpa seleção anterior)
+    // 1. Limpa a cor de todos os outros
     const todosBlocos = document.querySelectorAll('.link-bloco');
-    todosBlocos.forEach(bloco => {
-        bloco.classList.remove('selecionado');
-    });
+    todosBlocos.forEach(bloco => bloco.classList.remove('selecionado'));
 
-    // Adiciona a classe 'selecionado' na div que foi clicada (o 'this')
+    // 2. Pinta o que você clicou
     elementoClicado.classList.add('selecionado');
 
-    // Pega o ID guardado no atributo data-id
+    // 3. Salva o ID na memória
     idSelecionado = elementoClicado.getAttribute('data-id');
-    
-    console.log("Serviço selecionado ID:", idSelecionado);
+    console.log("Serviço Selecionado ID:", idSelecionado);
 }
 
-
-// ==========================================
-// 2. LÓGICA DO CARROSSEL (SUA VERSÃO)
-// ==========================================
-const scrollContainer = document.getElementById('scroll-container');
-const btnEsq = document.getElementById('btn-esq');
-const btnDir = document.getElementById('btn-dir');
-
-// Valor que vai rolar a cada clique
-const scrollAmount = 200; 
-
-if (btnEsq && btnDir && scrollContainer) {
-    
-    btnEsq.addEventListener('click', () => {
-        scrollContainer.scrollTo({
-            left: scrollContainer.scrollLeft - scrollAmount,
-            behavior: 'smooth'
-        });
-    });
-
-    btnDir.addEventListener('click', () => {
-        scrollContainer.scrollTo({
-            left: scrollContainer.scrollLeft + scrollAmount,
-            behavior: 'smooth'
-        });
-    });
-}
-
-
-// ==========================================
-// 3. BOTÃO CONFIRMAR E REDIRECIONAR
-// ==========================================
+// --- BOTÃO CONFIRMAR ---
 const btnConfirmar = document.querySelector('.confirm-button');
-
 if (btnConfirmar) {
     btnConfirmar.addEventListener('click', (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
 
         if (idSelecionado) {
-            // Se o usuário escolheu algo, manda para a próxima tela com o ID
-            // ATENÇÃO: Verifique se essa URL bate com o seu urls.py
-            window.location.href = `/agendamento/horarios/?id_servico=${idSelecionado}`;
+            // AJUSTE CRÍTICO DE URL:
+            // Baseado no seu dashboard (/clientes/dashboard/), o caminho provável é este:
+            window.location.href = `/clientes/agendamentos/escolher_barbeiro/?id_servico=${idSelecionado}`;
         } else {
             alert("Por favor, selecione um serviço primeiro!");
         }
     });
 }
+
+// --- CARROSSEL ---
+const scrollContainer = document.getElementById('scroll-container');
+const btnEsq = document.getElementById('btn-esq');
+const btnDir = document.getElementById('btn-dir');
+
+if (btnEsq && btnDir && scrollContainer) {
+    btnEsq.addEventListener('click', () => {
+        scrollContainer.scrollTo({ left: scrollContainer.scrollLeft - 200, behavior: 'smooth' });
+    });
+    btnDir.addEventListener('click', () => {
+        scrollContainer.scrollTo({ left: scrollContainer.scrollLeft + 200, behavior: 'smooth' });
+    });
+}
+
+// --- BOTÕES VOLTAR/INICIO ---
+const btnVoltar = document.getElementById('voltar-dash-btn');
+if (btnVoltar) btnVoltar.addEventListener('click', () => window.location.href = '/clientes/dashboard/');
+
+const btnInicio = document.getElementById('inicio-dash-tbm-btn');
+if (btnInicio) btnInicio.addEventListener('click', () => window.location.href = '/clientes/dashboard/');

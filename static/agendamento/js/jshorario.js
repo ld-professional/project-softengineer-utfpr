@@ -133,9 +133,22 @@ themeSwitch.addEventListener('click', () => {
 const btnVoltar = document.getElementById('voltar-dash-btn');
 
 if (btnVoltar) {
-    btnVoltar.addEventListener('click', function() {
-        // Aqui tem que ser o caminho exato que está no navegador
-        window.location.href = '/clientes/agendamentos/escolher_barbeiro/'; 
+    btnVoltar.addEventListener('click', function(e) {
+        e.preventDefault(); // Evita comportamento padrão
+
+        // 1. Pega os parâmetros da URL ATUAL
+        // (Ex: .../escolher_dia/?id_servico=3&id_barbeiro=6)
+        const params = new URLSearchParams(window.location.search);
+        const idServicoAtual = params.get('id_servico');
+
+        if (idServicoAtual) {
+            // 2. Se temos o ID do serviço, voltamos para a tela de barbeiro LEVANDO o ID
+            // Ajuste o caminho '/clientes/escolher_barbeiro/' conforme seu urls.py
+            window.location.href = `/clientes/agendamentos/escolher_barbeiro/?id_servico=${idServicoAtual}`;
+        } else {
+            // Fallback: Se não achar o ID, tenta o histórico do navegador
+            window.history.back();
+        }
     });
 }
 

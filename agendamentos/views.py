@@ -27,3 +27,36 @@ def escolher_servico(request):
         contexto= {'servicos': lista_servicos}
 
         return render(request,ESCOLHER_SERVICO,contexto)
+    
+
+
+@login_required
+@ensure_csrf_cookie
+def escolher_barbeiro(request):
+    # É aqui que a mágica acontece.
+    # O request.GET é um dicionário com tudo que veio na URL depois do ?
+    id_do_servico = request.GET.get('id_servico')
+    
+    # Validação simples: se o usuário tentar entrar direto na URL sem escolher serviço
+    if not id_do_servico:
+        return redirect('escolher_servico') # Manda ele voltar pra tela anterior
+
+
+    lista_barbeiros= Barbeiro.objects.all()
+
+    contexto={'barbeiros': lista_barbeiros}
+
+    contexto['id_servico_escolhido']=id_do_servico
+    # Agora você tem o ID (ex: "1", "5") e pode buscar no banco
+    # Exemplo: trazer só barbeiros que fazem esse serviço
+    # servico = Servico.objects.get(id=id_do_servico)
+    
+    return render(request,ESCOLHER_BARBEIRO, contexto)
+
+
+
+def escolher_dia(request):
+
+    if request.method == 'GET':
+        return render(request,ESCOLHER_DIA)
+
