@@ -68,19 +68,45 @@ if (btnInicio) {
 
 
 
-// --- LÓGICA DO CARROSSEL COM ANIMAÇÃO SUAVE ---
+// ==========================================
+// 1. LÓGICA DE SELEÇÃO DE SERVIÇO (O 'this')
+// ==========================================
 
+// Variável que guarda o ID na memória
+let idSelecionado = null;
+
+// Função chamada pelo onclick="selecionarServico(this)" no HTML
+function selecionarServico(elementoClicado) {
+    
+    // Remove a classe 'selecionado' de todos (limpa seleção anterior)
+    const todosBlocos = document.querySelectorAll('.link-bloco');
+    todosBlocos.forEach(bloco => {
+        bloco.classList.remove('selecionado');
+    });
+
+    // Adiciona a classe 'selecionado' na div que foi clicada (o 'this')
+    elementoClicado.classList.add('selecionado');
+
+    // Pega o ID guardado no atributo data-id
+    idSelecionado = elementoClicado.getAttribute('data-id');
+    
+    console.log("Serviço selecionado ID:", idSelecionado);
+}
+
+
+// ==========================================
+// 2. LÓGICA DO CARROSSEL (SUA VERSÃO)
+// ==========================================
 const scrollContainer = document.getElementById('scroll-container');
 const btnEsq = document.getElementById('btn-esq');
 const btnDir = document.getElementById('btn-dir');
 
-// Valor que vai rolar a cada clique (tamanho do card + espaço)
+// Valor que vai rolar a cada clique
 const scrollAmount = 200; 
 
 if (btnEsq && btnDir && scrollContainer) {
     
     btnEsq.addEventListener('click', () => {
-        // O método scrollTo com behavior 'smooth' faz a animação
         scrollContainer.scrollTo({
             left: scrollContainer.scrollLeft - scrollAmount,
             behavior: 'smooth'
@@ -92,5 +118,25 @@ if (btnEsq && btnDir && scrollContainer) {
             left: scrollContainer.scrollLeft + scrollAmount,
             behavior: 'smooth'
         });
+    });
+}
+
+
+// ==========================================
+// 3. BOTÃO CONFIRMAR E REDIRECIONAR
+// ==========================================
+const btnConfirmar = document.querySelector('.confirm-button');
+
+if (btnConfirmar) {
+    btnConfirmar.addEventListener('click', (e) => {
+        e.preventDefault(); 
+
+        if (idSelecionado) {
+            // Se o usuário escolheu algo, manda para a próxima tela com o ID
+            // ATENÇÃO: Verifique se essa URL bate com o seu urls.py
+            window.location.href = `/agendamento/horarios/?id_servico=${idSelecionado}`;
+        } else {
+            alert("Por favor, selecione um serviço primeiro!");
+        }
     });
 }
