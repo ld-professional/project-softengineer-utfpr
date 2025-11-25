@@ -1,9 +1,15 @@
-from django.contrib import admin
-
-from django.urls import path,include
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
-path('agendar/',views.cliente_realizar_agendamento,name='cliente_realiza_agendamento'),
+    path('escolher_servico/', views.escolher_servico, name='escolher_servico'),
 
+    # Esta linha continua IGUAL, mesmo recebendo ?id_servico=...
+    path('escolher_barbeiro/', views.escolher_barbeiro, name='escolher_barbeiro'),
+    path('escolher_dia/', views.escolher_dia, name='escolher_dia'),
+    # ROTA API (O JavaScript vai chamar esta aqui)
+    path('api/buscar-horarios/', views.buscar_horarios_api, name='api_buscar_horarios'),
+
+    #rota p salvar
+    path('api/salvar-agendamento/', views.salvar_agendamento, name='api_salvar_agendamento'),
 ]

@@ -151,6 +151,32 @@ form button:focus {
     }
 }
 
+#logout-button {
+    height: 35px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 20%;
+    background-color: var(--color-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 12px;
+    right: 80px;
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    transition: background-color 150ms ease, transform 150ms ease;
+}
+
+#logout-button:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    transform: scale(1);
+    color: var(--color-input-background);
+}
+
 #theme-switch{
     height: 50px;
     width: 50px;

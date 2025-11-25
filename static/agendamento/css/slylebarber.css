@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --color-primary: #f5f5f5;
+    --color-secondary: #DFB042;
+    --color-background: #000000;
+    --color-input-background: #171616;
+    --color-text: #ffffff;
+    --color-incorrect: #de0101;
+    --color-black: #000000;
+    --font-family-primary: 'Roboto', sans-serif;
+    --font-family-secondary: 'Quicksand', sans-serif;
+}
+
+.lightmode {
+    --color-black: #000000;
+    --color-primary: #000000;
+    --color-secondary: #DFB042;
+    --color-background: #cfcfcf;
+    --color-text: #000000;
+    --color-input-background: #f5f5f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-family-primary);
+    font-size: 12px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+/* --- NAV (Mantido igual) --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-background);
+    z-index: 100;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 2rem;
+}
+
+.titulo {
+    position: absolute;
+    left: 50%; /* Centralizado melhor */
+    transform: translateX(-50%);
+    display: flex;
+    font-size: 2rem;
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    color: var(--color-primary);
+    align-items: center;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.page-header {
+    position: absolute;
+    top: 5px;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+body {
+    min-width: 100vw;
+    background-color: var(--color-input-background);
+    background-size: cover;
+    background-position: right;
+    overflow-x: hidden; /* Evita rolagem horizontal */
+}
+
+/* ==========================================================================
+   LAYOUT RESPONSIVO (GRID) - IGUAL AO DE HORÁRIOS
+   ==========================================================================
+*/
+
+.container {
+    /* [MUDANÇA] Usamos Grid para dividir a tela: Sidebar (320px) | Conteúdo (Resto) */
+    display: grid;
+    grid-template-columns: 320px 1fr; 
+    min-height: 100vh;
+    padding-top: 60px; /* Espaço para a navbar não cobrir */
+    background-color: var(--color-input-background);
+}
+
+.wrapper {
+    /* [MUDANÇA] Sidebar fixa na esquerda, igual ao do seu amigo */
+    background-color: var(--color-background);
+    width: 320px;
+    height: calc(100vh - 60px); /* Altura total menos navbar */
+    border-radius: 0 20px 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    /* Fixa a posição para não rolar com a página */
+    position: fixed;
+    left: 0;
+    top: 60px;
+    z-index: 10;
+    margin-top: 0; /* Remove margens antigas */
+}
+
+/* Elementos dentro da sidebar */
+.logo-icon { width: 45px; height: 45px; }
+.page-title { font-family: var(--font-family-secondary); font-weight: bold; font-size: 1.5rem; color: var(--color-primary); }
+h1 { font-size: 3rem; font-weight: 600; color: var(--color-primary); font-family: var(--font-family-primary); }
+
+form {
+    width: min(400px, 100%);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+form button {
+    width: 250px; /* Ajustado para caber na sidebar */
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 150ms ease;
+}
+
+form button:hover, form button:focus {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+    outline: none;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL (DIREITA)
+   ==========================================================================
+*/
+
+.user-info {
+    /* [MUDANÇA] Removemos position absolute. Agora flui no Grid (Coluna 2) */
+    position: relative;
+    top: auto; 
+    left: auto;
+    transform: none;
+    
+    grid-column: 2; /* Joga para a direita */
+    margin: 40px auto 20px auto; /* Centraliza com margem */
+    text-align: center;
+}
+
+.user-info p {
+    font-size: 4rem;
+    color: var(--color-secondary);
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    text-align: center;
+}
+
+.carousel-wrapper {
+    /* [MUDANÇA] Flui no Grid */
+    grid-column: 2;
+    margin: 20px auto;
+    
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding-top: 20px;
+}
+
+.carousel {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+    background-color: #000;
+    border: 2px solid transparent; 
+}
+
+.slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    transition: opacity .3s;
+}
+
+.slide.ativo { display: block; }
+
+.arrow {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 10px;
+    color: var(--color-secondary);
+    transition: 0.2s;
+    z-index: 10;
+}
+
+.arrow:hover { transform: scale(1.2); }
+
+.nome-barbeiro {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    font-family: var(--font-family-secondary);
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   BOTÃO CONFIRMAR
+   ==========================================================================
+*/
+
+.confirm-button {
+    /* [MUDANÇA] Removemos absolute. Agora ele fica no final do fluxo da coluna direita */
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    
+    grid-column: 2; /* Alinha na direita */
+    margin: 80px auto 50px auto; /* Margem grande no topo para separar do carrossel */
+    display: block; /* Para o margin auto funcionar */
+    
+    width: 300px;
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 150ms ease;
+    z-index: 20;
+}
+
+.confirm-button:hover, .confirm-button:focus {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+    outline: none;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (MOBILE)
+   ==========================================================================
+*/
+
+@media(max-width: 1100px) {
+    .container {
+        /* [MUDANÇA] Em telas pequenas, vira uma coluna só */
+        grid-template-columns: 1fr; 
+    }
+    
+    .wrapper {
+        /* Sidebar deixa de ser fixa e vira um bloco no topo */
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+        padding: 20px 0;
+        border-radius: 0;
+    }
+    
+    /* Todo o conteúdo vai para a coluna 1 */
+    .user-info, .carousel-wrapper, .confirm-button {
+        grid-column: 1;
+    }
+    
+    .user-info {
+        margin-top: 20px;
+    }
+}
+
+/* --- TEMA E SWITCHES --- */
+#logout-button {
+    height: 35px; width: 50px; padding: 0; border: none; border-radius: 20%;
+    background-color: var(--color-secondary); display: flex; justify-content: center;
+    align-items: center; position: fixed; top: 12px; right: 80px; color: var(--color-black);
+    font-size: 1.4rem; z-index: 101; font-weight: bold; transition: background-color 150ms ease, transform 150ms ease;
+}
+#logout-button:hover {
+    cursor: pointer; background-color: var(--color-primary); transform: scale(1); color: var(--color-input-background);
+}
+#theme-switch{
+    height: 50px; width: 50px; padding: 0; border: none; border-radius: 50%;
+    background-color: var(--color-background); display: flex; justify-content: center;
+    align-items: center; position: fixed; top: 5px; right: 20px; transition: background-color 150ms ease, transform 150ms ease;
+}
+#theme-switch svg { fill: var(--color-text); transition: fill 150ms ease; }
+#theme-switch svg:first-child { display: none; }
+.lightmode #theme-switch svg:last-child { display: none; }
+.lightmode #theme-switch svg:first-child { display: block; }
+#theme-switch:hover { cursor: pointer; background-color: var(--color-primary); transform: scale(1); }
+#theme-switch:hover svg { fill: var(--color-background); }
