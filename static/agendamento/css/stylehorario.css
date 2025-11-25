@@ -387,18 +387,18 @@ form button:focus {
     fill: var(--color-background);
 }
 
-@media(max-width: 1100px) {
+@media(max-width: 600px) {
     .container {
         grid-template-columns: 1fr;
     }
     .wrapper {
-        position: relative;
-        width: 100%;
-        height: auto;
-        padding: 20px 0;
-        top: 0;
-        border-radius: 0;
+        display: none !important;
     }
+
+    .titulo {
+        display: none !important;
+}
+
     .calendar, .horarios-container, .confirm-button {
         grid-column: 1;
         width: 95%;
