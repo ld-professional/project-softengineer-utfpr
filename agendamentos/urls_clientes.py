@@ -12,4 +12,7 @@ urlpatterns = [
 
 
     path('api/salvar-agendamento/', views.salvar_agendamento, name='api_salvar_agendamento'),
+
+    path('agendamento-realizado/', views.agendamentorealizado, name= 'agendamentorealizado'),
+
 ]
