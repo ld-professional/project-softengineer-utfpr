@@ -67,9 +67,16 @@ nav {
     align-items: center;
 }
 
-@media (max-width: 850px) {
-    .page-header {
+@media (max-width: 600px) {
+    footer {
         display: none;
+    }
+}
+
+@media (max-width: 768px) {
+
+    nav .nav-links{
+        display: none !important;
     }
 }
 
@@ -224,12 +231,13 @@ section.active {
 
 .services {
     display: flex;
-     flex-wrap: wrap; 
+    flex-wrap: wrap; 
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 1rem;
     font-size: 1.2rem;
-    gap: 3rem;
+    row-gap: 0rem;
+    column-gap: 3rem;
 }
 
 .link-bloco {
@@ -291,7 +299,7 @@ section.active {
 
 .footer-container {
     display: flex;
-    gap: 10.5rem;
+    gap: 23.5rem;
     justify-content: space-center;
     flex-wrap: wrap;
 }
@@ -300,8 +308,6 @@ section.active {
     margin-bottom: 5px;
     font-size: 1.2rem;
     color: var(--color-secondary);
-    text-align: center;
-    
 }
 
 .footer-section a {
