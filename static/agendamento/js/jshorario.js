@@ -304,7 +304,7 @@ if(btnConfirmarFinal) {
             if (resposta.ok) {
                 alert("Sucesso! " + dados.mensagem);
                 // Redireciona para o Dashboard
-                window.location.href = '/clientes/dashboard/';
+                window.location.href = '/clientes/agendamentos/agendamento-realizado';
             } else {
                 // Mostra o erro que veio do Python (ex: Conflito de horário)
                 let msgErro = dados.erro;
