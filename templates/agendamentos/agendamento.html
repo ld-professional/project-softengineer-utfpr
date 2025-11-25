@@ -54,27 +54,23 @@
         </div>
 
         <div class="servicos-agendamento">
-            <div class="link-bloco">  
-                <div class="corte">
-                    <h2>Cabelo</h2>
-                    <p class="descricao">Corte de cabelo personalizado.</p>
-                    <p class="valor">Valor R$35,00.</p>
-                </div>
-            </div>
-            <div class="link-bloco">  
-                <div class="barba">
-                    <h2>Barba</h2>
-                    <p class="descricao">Corte de barba personalizado.</p>
-                    <p class="valor">Valor R$15,00.</p>
-                </div>
-            </div>
+            <div class="servicos-agendamento">
 
-            <div class="link-bloco">  
-                <div class="barba-corte">
-                    <h2>Barba e Cabelo</h2>
-                    <p class="descricao">Corte de barba e cabelo personalizados.</p>
-                    <p class="valor">Valor R$45,00.</p>
-                </div>
+    {% for s in servicos %}
+        <div class="link-bloco" data-id="{{ s.id }}" onclick="selecionarServico(this)">  
+            
+            <div class="{% if s.nome_servico == 'Cabelo' %}corte{% elif s.nome_servico == 'Barba' %}barba{% elif s.nome_servico == 'Barba e Cabelo' %}barba-corte{% else %}corte{% endif %}">
+                
+                <h2>{{ s.nome_servico }}</h2>
+                
+                <p class="descricao">{{ s.get_slot_duracao_servico_display }}</p>
+                
+                <p class="valor">Valor R${{ s.preco_servico }}</p>
+                
+            </div>
+        </div>
+    {% endfor %}
+
             </div>
         </div>
         
