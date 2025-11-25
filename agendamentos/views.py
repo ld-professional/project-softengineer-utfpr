@@ -76,6 +76,13 @@ def escolher_dia(request):
 
 
 @login_required
+def agendamentorealizado(request):
+
+    if request.method == 'GET':
+        return render(request,'agendamentos/agenda-realizado.html')
+
+
+@login_required
 def buscar_horarios_api(request):
 
     data_texto = request.GET.get('data')
