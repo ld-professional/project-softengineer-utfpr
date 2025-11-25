@@ -66,8 +66,15 @@ form.addEventListener('submit', async (e) => {
     let url = ''; 
 
     if (password_input) {
-        // --- Lógica de Nova Senha ---
-        data.password = password_input.value;
+        //Envia as duas senhas com os nomes do Django ---
+        data.new_password1 = password_input.value;
+        data.new_password2 = repeat_password_input.value;
+        
+        url = window.location.href; 
+
+    } else {
+
+
         
         /* EXPLICACAO IMPORTANTE (TOKEN DA URL):
            O Django enviou um link pro email do usuario tipo: .../reset/UID/TOKEN/
@@ -82,9 +89,7 @@ form.addEventListener('submit', async (e) => {
            confirma que é válido e altera a senha. O Session ID não é usado aqui
            porque o usuário geralmente não está logado.
         */
-        url = window.location.href; 
 
-    } else {
         // --- Lógica de Recuperar Senha ---
         data.email = email_input.value;
         // URL definida no seu urls.py para receber o email e enviar o link
@@ -97,12 +102,6 @@ form.addEventListener('submit', async (e) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                /* EXPLICACAO CSRF (O Crachá de Segurança):
-                   O Django bloqueia qualquer POST que não tenha esse token.
-                   O SessionID mantém o user logado, mas o CSRF protege o formulário.
-                   A função getCookie pega esse código q o Django mandou no HTML
-                   e devolve agora no cabeçalho para provar que o site é confiável.
-                */
                 'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify(data)
@@ -112,17 +111,35 @@ form.addEventListener('submit', async (e) => {
 
         if (response.ok) {
             alert(result.message || "Sucesso!"); 
-            window.location.href = '/account/login/'; // Manda pro login
+            // Redireciona para o login após o sucesso
+            window.location.href = '/account/login/'; 
         } else {
-            // Erro vindo do backend
-            error_message.innerText = result.error || 'Erro ao tentar enviar dados.';
+            // --- CORREÇÃO AQUI ---
+            // O Python pode mandar 'error' (string) ou 'errors' (objeto do Django Form)
+            
+            if (result.error) {
+                // Erro simples (ex: "Email inválido")
+                error_message.innerText = result.error;
+            } 
+            else if (result.errors) {
+                // Erros de validação do Django (ex: Senha muito curta)
+                // O formato vem assim: { "new_password1": ["A senha é muito parecida com o usuário"] }
+                
+                // Pega a primeira mensagem de erro que encontrar
+                const primeiraChave = Object.keys(result.errors)[0];
+                const mensagemErro = result.errors[primeiraChave][0];
+                
+                error_message.innerText = mensagemErro;
+            } 
+            else {
+                error_message.innerText = 'Ocorreu um erro desconhecido.';
+            }
         }
     } catch (err) {
         console.error(err);
         error_message.innerText = 'Erro de conexão com o servidor.';
     }
 });
-
 
 // --- Funções Auxiliares ---
 
