@@ -147,6 +147,7 @@ class EsqueceuSenhaView(PasswordResetView):
 
 
 
+
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class NovaSenhaView(PasswordResetConfirmView):
 
@@ -162,17 +163,27 @@ class NovaSenhaView(PasswordResetConfirmView):
     # - Se tudo OK → salva no banco e invalida o token.
     # ---------------------------------------------------------
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        senha = data.get('password')
+        try:
+            # 1. Recebe o JSON (agora contendo new_password1 e new_password2)
+            dados_json = json.loads(request.body)
 
-        # Django exige duas senhas, então você preenche igual
-        form = self.get_form(data={
-            'new_password1': senha,
-            'new_password2': senha
-        })
+            # 2. Pega a configuração nativa (usuário, token, etc)
+            kwargs_form = self.get_form_kwargs()
+            
+            # 3. Injeta o JSON direto no formulário!
+            # Como o JS agora manda os nomes certos, não precisamos traduzir nada.
+            kwargs_form['data'] = dados_json
 
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'message': 'Senha alterada com sucesso!'})
+            # 4. Cria o formulário
+            form = self.get_form_class()(**kwargs_form)
 
-        return JsonResponse({'errors': form.errors}, status=400)
+            # 5. Valida e Salva
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Senha alterada com sucesso!'})
+
+            # Retorna erros (Ex: "As senhas não conferem")
+            return JsonResponse({'errors': form.errors}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)
