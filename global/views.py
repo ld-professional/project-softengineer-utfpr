@@ -1,12 +1,25 @@
 from django.shortcuts import render,redirect 
 # Create your views here.
 import core.constantes as t
+
+from servicos.models import Servicos
+
 def pagina_inicial_home(request):
     """
     Esta view simplesmente renderiza a página principal (home).
     """
     # Retorna o template localizado em 'templates/core/home.html'
-    return render(request, t.HOME)
+
+    # 1. Busca todos os objetos do modelo Servicos
+    servicos_list = Servicos.objects.all()
+    
+    # 2. Cria o contexto para enviar os dados ao template
+    context = {
+        'servicos': servicos_list,
+    }
+    
+    # 3. Renderiza o template, passando o contexto
+    return render(request, t.HOME, context)
 
 def verficacao_login_agendar(request):
 # O Django já sabe automaticamente se o user tem o cookie sessionid válido atraves do request.user.is_autenticate

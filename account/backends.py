@@ -36,7 +36,7 @@ O fluxo real é este:
 
 
 from django.contrib.auth.backends import ModelBackend
-from .loginstrategy import EmailStrategy, TelefoneStrategy
+from .loginstrategy import EmailStrategy, TelefoneStrategy,UsernameStrategy
 #from .models import UserPersonalizado melhor usar o de baixo pq assim, da erro
 #"o modelo chama o backend, o backend chama o modelo"
 from django.contrib.auth import get_user_model
@@ -71,6 +71,7 @@ class Contexto(ModelBackend):
          
         EmailStrategy(),    # todos os metodos tenho q instacialos aqui como variavel da classe e nao no init
         TelefoneStrategy(), # assim emailstrategy e telefone strategy sao da classe, e se um objeto fizer modificacao
+        UsernameStrategy(),
     ]                       # ai ele modifica a variavel global
 
     '''

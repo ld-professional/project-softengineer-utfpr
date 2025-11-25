@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamentos Horários</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg'}">
+  <link rel="stylesheet" href="{% static 'agendamento/css/stylehorario.css' %}">
+  <link rel="stylesheet" href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' %}">
+  <script type="text/javascript" src="{% static 'agendamento/js/jshorario.js' %}" defer></script>
+</head>
+
+<body>
+
+    <nav>
+        <a href ="{% url 'clientepagina_inicial_dashboard' %}">
+            <header class="page-header">
+            <img src="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}" alt="Ícone da Barbearia" class="logo-icon">
+            <h1 class="page-title">Barbearia do Wiese</h1>
+            </header>
+        </a>
+
+        <p class="titulo">Agendamento</p>
+
+            <!--<button id="logout-button">SAIR</button> -->
+
+        <button id="theme-switch" aria-label="Alternar tema">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+        </button>
+
+    </nav>
+
+    <div class="container">
+        <div class="wrapper">
+
+            <form id="form">
+                <div>
+                    <button type="button" id="voltar-dash-btn">Voltar</button>
+                </div>
+                <div>
+                    <button type="button" id="inicio-dash-tbm-btn">Inicio</button>
+                </div>
+                <div>
+                </div>
+            </form>
+        </div>
+
+        <div class="calendar">
+            <div class="calendar-header">
+                <button id="prevButton" aria-label="PrevButton">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="monthYear" id="monthYear"></div>
+
+                <button id="nextButton" aria-label="NextButton">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="days">
+                <div class="day">Seg</div>
+                <div class="day">Ter</div> 
+                <div class="day">Qua</div> 
+                <div class="day">Qui</div> 
+                <div class="day">Sex</div> 
+                <div class="day">Sáb</div> 
+                <div class="day">Dom</div> 
+            </div>
+
+            <div class="dates" id="dates"></div>
+        </div>
+
+        <div id="horariosContainer" class="horarios-container">
+            <h3>Horários disponíveis</h3>
+            <div id="listaHorarios" class="lista-horarios">
+            </div>
+        </div>
+
+        <button class="confirm-button">Confirmar Agendamento</button>
+
+    </div>
+
+<input type="hidden" id="id_servico_hidden" value="{{ servico_id }}">
+<input type="hidden" id="id_barbeiro_hidden" value="{{ barbeiro_id }}">
+
+
+</body>
+</html>
