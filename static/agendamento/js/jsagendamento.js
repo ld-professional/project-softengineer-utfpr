@@ -1,44 +1,74 @@
+// --- LÓGICA DO TEMA (DARK/LIGHT MODE) ---
 const themeSwitch = document.getElementById('theme-switch');
-
-// pega o estado atual do modo (se esstá claro ou escuro)
 let lightmode = localStorage.getItem('lightmode');
 
-// darkmode
-const enableLightMode = () => {
-    document.body.classList.add('lightmode');
-    localStorage.setItem('lightmode', 'active');
-};
-const disableLightMode = () => {
-    document.body.classList.remove('lightmode');
-    localStorage.setItem('lightmode', null);
-};
+if (lightmode === 'active') document.body.classList.add('lightmode');
 
-if (lightmode === 'active') {
-    enableLightMode();
+if (themeSwitch) {
+    themeSwitch.addEventListener('click', () => {
+        lightmode = localStorage.getItem('lightmode');
+        if (lightmode !== 'active') {
+            document.body.classList.add('lightmode');
+            localStorage.setItem('lightmode', 'active');
+        } else {
+            document.body.classList.remove('lightmode');
+            localStorage.setItem('lightmode', null);
+        }
+    });
 }
 
-themeSwitch.addEventListener('click', () => {
-    lightmode = localStorage.getItem('lightmode');
-    if (lightmode !== 'active') {
-        enableLightMode();
-    } else {
-        disableLightMode();
-    }
-});
+// --- VARIÁVEL GLOBAL OBRIGATÓRIA ---
+let idSelecionado = null;
 
-const blocos = document.querySelectorAll('.link-bloco');
-let blocoSelecionado = null;
+// --- A FUNÇÃO QUE O SEU HTML CHAMA ---
+// Essa função TEM que existir para o onclick="selecionarServico(this)" funcionar
+function selecionarServico(elementoClicado) {
+    
+    // 1. Limpa a cor de todos os outros
+    const todosBlocos = document.querySelectorAll('.link-bloco');
+    todosBlocos.forEach(bloco => bloco.classList.remove('selecionado'));
 
-blocos.forEach(bloco => {
-    bloco.addEventListener('click', () => {
+    // 2. Pinta o que você clicou
+    elementoClicado.classList.add('selecionado');
 
-        // Remove seleção anterior
-        blocos.forEach(b => b.classList.remove('selecionado'));
+    // 3. Salva o ID na memória
+    idSelecionado = elementoClicado.getAttribute('data-id');
+    console.log("Serviço Selecionado ID:", idSelecionado);
+}
 
-        // Adiciona seleção ao clicado
-        bloco.classList.add('selecionado');
+// --- BOTÃO CONFIRMAR ---
+const btnConfirmar = document.querySelector('.confirm-button');
+if (btnConfirmar) {
+    btnConfirmar.addEventListener('click', (e) => {
+        e.preventDefault();
 
-        // Pega o título do serviço (conteúdo do <h2>)
-        blocoSelecionado = bloco.querySelector('h2').textContent;
+        if (idSelecionado) {
+            // AJUSTE CRÍTICO DE URL:
+            // Baseado no seu dashboard (/clientes/dashboard/), o caminho provável é este:
+            window.location.href = `/clientes/agendamentos/escolher_barbeiro/?id_servico=${idSelecionado}`;
+        } else {
+            alert("Por favor, selecione um serviço primeiro!");
+        }
     });
-});
+}
+
+// --- CARROSSEL ---
+const scrollContainer = document.getElementById('scroll-container');
+const btnEsq = document.getElementById('btn-esq');
+const btnDir = document.getElementById('btn-dir');
+
+if (btnEsq && btnDir && scrollContainer) {
+    btnEsq.addEventListener('click', () => {
+        scrollContainer.scrollTo({ left: scrollContainer.scrollLeft - 200, behavior: 'smooth' });
+    });
+    btnDir.addEventListener('click', () => {
+        scrollContainer.scrollTo({ left: scrollContainer.scrollLeft + 200, behavior: 'smooth' });
+    });
+}
+
+// --- BOTÕES VOLTAR/INICIO ---
+const btnVoltar = document.getElementById('voltar-dash-btn');
+if (btnVoltar) btnVoltar.addEventListener('click', () => window.location.href = '/clientes/dashboard/');
+
+const btnInicio = document.getElementById('inicio-dash-tbm-btn');
+if (btnInicio) btnInicio.addEventListener('click', () => window.location.href = '/clientes/dashboard/');
