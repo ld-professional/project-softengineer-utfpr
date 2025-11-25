@@ -88,7 +88,7 @@ form.addEventListener('submit', async (e) => {
         // --- Lógica de Recuperar Senha ---
         data.email = email_input.value;
         // URL definida no seu urls.py para receber o email e enviar o link
-        url = '/account/recuperar-senha/'; 
+        url = '/account/esqueceu-senha/';
     }
 
     // 🔹 3. Envio via fetch
