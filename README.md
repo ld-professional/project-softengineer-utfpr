@@ -1,6 +1,6 @@
 # Site de Barbearia
 
-Este é um projeto de site para uma barbearia, desenvolvido com o objetivo de oferecer uma plataforma simples para apresentar serviços, horários de funcionamento e permitir agendamentos online. O site utiliza tecnologias como HTML, CSS, JavaScript, Django e PostgreSQL.
+Este é um projeto de site para uma barbearia, desenvolvido com o objetivo de oferecer uma plataforma simples para apresentar serviços, horários de funcionamento e permitir agendamentos online. O site utiliza tecnologias como HTML, CSS, JavaScript, Django.
 
 ## Tecnologias Utilizadas
 
