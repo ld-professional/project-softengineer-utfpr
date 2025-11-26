@@ -46,42 +46,47 @@ const renderizarCalendario = () => {
     const anoAtual = dataAtualDoCalendario.getFullYear();
     const mesAtual = dataAtualDoCalendario.getMonth();
 
-    // Cálculos matemáticos para saber onde começar e terminar o mês
     const primeiroDiaDoMes = new Date(anoAtual, mesAtual, 1);
     const ultimoDiaDoMes = new Date(anoAtual, mesAtual + 1, 0);
     const totalDiasNoMes = ultimoDiaDoMes.getDate();
-    const diaDaSemanaQueComeca = primeiroDiaDoMes.getDay(); // 0=Dom, 1=Seg...
+    const diaDaSemanaQueComeca = primeiroDiaDoMes.getDay(); 
 
-    // Atualiza o título (Ex: "Novembro 2025")
     const nomeMesAno = dataAtualDoCalendario.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
     textoMesAno.textContent = nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1);
 
     let htmlDosDias = '';
-
-    // Ajuste visual: Se o calendário começa na Segunda mas o dia 1 é Domingo
-    // (Se seu CSS .days começa com Segunda, use esta lógica)
     const diasVaziosAntes = diaDaSemanaQueComeca === 0 ? 6 : diaDaSemanaQueComeca - 1;
 
-    // a) Desenha dias cinzas do mês passado (inativos)
+    // Dias do mês passado (Padding) - Já nascem 'inactive'
     for (let i = diasVaziosAntes; i > 0; i--) {
         const dataPassada = new Date(anoAtual, mesAtual, 1 - i);
         htmlDosDias += `<div class="date inactive">${dataPassada.getDate()}</div>`;
     }
 
-    // b) Desenha os dias do mês atual (Bolinhas clicáveis)
+    // --- CRIA A DATA DE HOJE (ZERANDO HORAS PARA COMPARAR APENAS O DIA) ---
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    // Loop dos dias do mês atual
     for (let dia = 1; dia <= totalDiasNoMes; dia++) {
-        const dataVerificada = new Date(anoAtual, mesAtual, dia);
-        
-        // Verifica se é hoje para pintar de cor diferente (opcional)
-        const ehHoje = dataVerificada.toDateString() === new Date().toDateString() ? 'active' : '';
-        
-        // Adiciona o dia no HTML com um atributo especial 'data-dia-numero'
-        htmlDosDias += `<div class="date ${ehHoje}" data-dia-numero="${dia}">${dia}</div>`;
+        const dataCheck = new Date(anoAtual, mesAtual, dia);
+        dataCheck.setHours(0, 0, 0, 0);
+
+        let classeExtra = '';
+
+        // VERIFICAÇÃO: Se a data do loop for menor que hoje, recebe 'inactive'
+        if (dataCheck.getTime() < hoje.getTime()) {
+            classeExtra = 'inactive'; 
+        } 
+        // Se for hoje, recebe 'active' (verde)
+        else if (dataCheck.getTime() === hoje.getTime()) {
+            classeExtra = 'active';
+        }
+
+        htmlDosDias += `<div class="date ${classeExtra}" data-dia-numero="${dia}">${dia}</div>`;
     }
 
     containerDias.innerHTML = htmlDosDias;
-
-    // --- AGORA ADICIONAMOS O CLIQUE NOS DIAS ---
     adicionarEventoCliqueNosDias(anoAtual, mesAtual);
 }
 

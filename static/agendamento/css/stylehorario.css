@@ -236,8 +236,9 @@ form button:focus {
 }
 
 .date.active {
-    background-color: var(--color-hoje);
+    background-color: var(--color-secondary); 
     color: var(--color-black);
+    opacity: 0.5; 
 }
 
 .date:hover, .date.selected {
@@ -246,11 +247,11 @@ form button:focus {
 }
 
 .date.inactive {
-    color: var(--color-input-background);
+    color: var(--color-text); 
+    opacity: 0.3;             
+    pointer-events: none;    
     cursor: default;
-    opacity: 0.5;
 }
-
 .horarios-container {
     position: relative;
     left: auto;
