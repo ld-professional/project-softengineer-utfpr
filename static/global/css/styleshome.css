@@ -293,14 +293,17 @@ section.active {
 .footer {
     background: var(--color-background);
     color: var(--color-text);
-    padding: 35px 275px;
+
+    padding: 35px 5%; 
     font-family: var(--font-family-secondary);
 }
 
 .footer-container {
     display: flex;
-    gap: 23.5rem;
-    justify-content: space-center;
+
+    gap: 4rem; 
+
+    justify-content: center; 
     flex-wrap: wrap;
 }
 

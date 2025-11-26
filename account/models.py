@@ -61,9 +61,36 @@ class CriadorUser(BaseUserManager):
     
 
 
-
+from django.core.validators import RegexValidator # ai precisa deste import para sobresscrever user
 
 class UserPersonalizado(AbstractUser):
+
+    '''
+     agora quer sobrescrever username logo so ir na definicao copiar oq tem la, e copiar o validador tbm, e sobrescrever 
+     o validador q eh onde n permite espacos...
+    -> basta apenas copiar e colar da definicao  e onde ta regex, dar um espaco dentro da aspas simples...
+    
+    # obs: se n quiser permitir numeros no username, trouqe \w por: regex=r'^[a-zA-Z_.@+\- ]+$',
+    '''
+
+    validador_com_espaco = RegexValidator(
+        regex=r'^[a-zA-Z_.@+\- ]+$', # coloque uma barra invertida antes do hifen se n ele acha q eh intervalo este espaco
+        message='O nome de usuário pode conter letras, números, ESPAÇOS e caracteres @/./+/-/_',
+        flags=0
+    )
+
+
+    username = models.CharField(
+        'username',
+        max_length=150,
+        unique=True,
+        help_text='Obrigatório. 150 caracteres ou menos. Letras, dígitos, espaços e @/./+/-/_ apenas.',
+        validators=[validador_com_espaco], # <--- Usamos o nosso aqui
+        error_messages={
+            'unique': "Um usuário com este nome já existe.",
+        },
+    )
+
 
     telefone = models.CharField(max_length=11, unique=True) 
 
