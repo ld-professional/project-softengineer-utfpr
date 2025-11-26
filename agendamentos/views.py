@@ -1,166 +1,152 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from datetime import datetime, timedelta
 import json
-from django.views.decorators.http import require_http_methods
 
-
+# Importando seus Models
 from clientes.models import Cliente
 from barbeiro.models import Barbeiro, Horarios_de_trabalho, Excecoes
 from servicos.models import Servicos
-from .models import Agendamentos 
+from .models import Agendamentos
 from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA 
-from datetime import datetime, timedelta
 
-
+# ==============================================================================
+# 1. VIEWS DE NAVEGAÇÃO (RENDERIZAM O HTML)
+# Essas eram as que estavam faltando e causando o erro!
+# ==============================================================================
 
 @login_required
 @ensure_csrf_cookie
 def escolher_servico(request):
-
+    """Renderiza a tela de escolha de serviços."""
     if request.method == 'GET':
-
         lista_servicos = Servicos.objects.all()
-
         contexto = {'servicos': lista_servicos}
-
         return render(request, ESCOLHER_SERVICO, contexto)
-    
-
-
 
 @login_required
 @ensure_csrf_cookie
 def escolher_barbeiro(request):
-
+    """Renderiza a tela de escolha de barbeiros baseada no serviço."""
     id_do_servico = request.GET.get('id_servico')
 
     if not id_do_servico:
-
         return redirect('escolher_servico')
     
     lista_barbeiros = Barbeiro.objects.all()
-
-    contexto = {'barbeiros': lista_barbeiros}
-
-    contexto['id_servico_escolhido'] = id_do_servico
-
+    contexto = {
+        'barbeiros': lista_barbeiros,
+        'id_servico_escolhido': id_do_servico
+    }
     return render(request, ESCOLHER_BARBEIRO, contexto)
-
-
-
 
 @login_required
 @ensure_csrf_cookie
 def escolher_dia(request):
+    """Renderiza o calendário para o usuário escolher o dia."""
+    id_do_serv = request.GET.get('id_servico')
+    id_do_barb = request.GET.get('id_barbeiro')
+    
+    if not id_do_serv or not id_do_barb:
+        return redirect('escolher_servico') 
 
-    if request.method == 'GET':
-
-        id_do_serv = request.GET.get('id_servico')
-
-        id_do_barb = request.GET.get('id_barbeiro')
-        
-        if not id_do_serv or not id_do_barb:
-            return redirect('escolher_servico') 
-
-        contexto = {
-            'barbeiro_id': id_do_barb,
-            'servico_id': id_do_serv
-        }
-
-        return render(request, ESCOLHER_DIA, contexto)
-
-
+    contexto = {
+        'barbeiro_id': id_do_barb,
+        'servico_id': id_do_serv
+    }
+    return render(request, ESCOLHER_DIA, contexto)
 
 @login_required
 def agendamentorealizado(request):
+    """Tela de sucesso."""
+    return render(request, 'agendamentos/agenda-realizado.html')
 
-    if request.method == 'GET':
-        return render(request,'agendamentos/agenda-realizado.html')
 
+# ==============================================================================
+# 2. API: BUSCAR HORÁRIOS (LÓGICA DE CÁLCULO JSON)
+# ==============================================================================
 
 @login_required
+@require_GET
 def buscar_horarios_api(request):
-
     data_texto = request.GET.get('data')
     id_barbeiro = request.GET.get('id_barbeiro')
     id_servico = request.GET.get('id_servico')
 
-    if not data_texto or not id_barbeiro or not id_servico:
+    if not all([data_texto, id_barbeiro, id_servico]):
         return JsonResponse({'erro': 'Faltam dados.'}, status=400)
     
     try:
-        data_desejavel_agendar = datetime.strptime(data_texto, '%Y-%m-%d').date()
-        dia_da_semana_numero = data_desejavel_agendar.weekday()
+        data_base = datetime.strptime(data_texto, '%Y-%m-%d').date()
+        dia_semana = data_base.weekday()
         
-        turnos_de_trabalho = Horarios_de_trabalho.objects.filter(
+        servico = Servicos.objects.get(pk=id_servico)
+        duracao_minutos = servico.slot_duracao_servico * 30 
+        
+        turnos = Horarios_de_trabalho.objects.filter(
             fk_barbeiro_id=id_barbeiro,
-            dia_semana=dia_da_semana_numero
-        )
+            dia_semana=dia_semana
+        ).order_by('hora_inicio')
 
-        if not turnos_de_trabalho.exists():
+        if not turnos.exists():
             return JsonResponse({'horarios': [], 'mensagem': 'Barbeiro não trabalha neste dia.'})
 
-        agendamentos_do_dia = Agendamentos.objects.filter(
+        # Busca ocupações convertendo para Timezone Local se necessário no loop
+        agendamentos_ocupados = Agendamentos.objects.filter(
             fk_barbeiro_id=id_barbeiro,
-            data_e_horario_inicio__date=data_desejavel_agendar
+            data_e_horario_inicio__date=data_base
         )
-
-        excecoes_do_dia = Excecoes.objects.filter(
+        excecoes_ocupadas = Excecoes.objects.filter(
             fk_barbeiro_id=id_barbeiro,
-            data_inicio__date__lte=data_desejavel_agendar,
-            data_fim__date__gte=data_desejavel_agendar
+            data_inicio__date__lte=data_base,
+            data_fim__date__gte=data_base
         )
-
-        servico = Servicos.objects.get(pk=id_servico)
-
-        # duração total do serviço em minutos
-        duracao_servico = servico.slot_duracao_servico * 30  
 
         lista_horarios_livres = []
+        agora = timezone.localtime()
 
-        for turno in turnos_de_trabalho:
+        for turno in turnos:
+            inicio_slot = timezone.make_aware(datetime.combine(data_base, turno.hora_inicio))
+            fim_expediente = timezone.make_aware(datetime.combine(data_base, turno.hora_fim))
 
-            inicio_do_slot = datetime.combine(data_desejavel_agendar, turno.hora_inicio)
-            fim_do_expediente = datetime.combine(data_desejavel_agendar, turno.hora_fim)
-
-            while inicio_do_slot + timedelta(minutes=duracao_servico) <= fim_do_expediente:
-
-                fim_do_slot = inicio_do_slot + timedelta(minutes=duracao_servico)
-                esta_livre = True
-
-                # --- VERIFICAÇÃO COMPLETA DE CONFLITO COM AGENDAMENTOS ---
-                for agendamento in agendamentos_do_dia:
-
-                    inicio_ag = agendamento.data_e_horario_inicio.replace(tzinfo=None)
-                    fim_ag = agendamento.data_e_horario_fim.replace(tzinfo=None)
-
-                    # Se houver QUALQUER interseção completa com o intervalo do serviço → bloqueia
-                    if not (fim_do_slot <= inicio_ag or inicio_do_slot >= fim_ag):
-                        esta_livre = False
-                        break
-
-                if not esta_livre:
-                    inicio_do_slot += timedelta(minutes=30)
+            while inicio_slot + timedelta(minutes=duracao_minutos) <= fim_expediente:
+                fim_slot = inicio_slot + timedelta(minutes=duracao_minutos)
+                
+                # Regra: Ignorar passado
+                if data_base == agora.date() and inicio_slot <= agora:
+                    inicio_slot += timedelta(minutes=30)
                     continue
 
-                # --- VERIFICAÇÃO COMPLETA DE CONFLITO COM EXCEÇÕES / FOLGAS ---
-                for folga in excecoes_do_dia:
+                esta_livre = True
 
-                    inicio_f = folga.data_inicio.replace(tzinfo=None)
-                    fim_f = folga.data_fim.replace(tzinfo=None)
+                # Verifica Agendamentos (com conversão de Timezone)
+                for ag in agendamentos_ocupados:
+                    ag_ini = timezone.localtime(ag.data_e_horario_inicio)
+                    ag_fim = timezone.localtime(ag.data_e_horario_fim)
 
-                    if not (fim_do_slot <= inicio_f or inicio_do_slot >= fim_f):
+                    if inicio_slot < ag_fim and fim_slot > ag_ini:
                         esta_livre = False
-                        break
-
+                        break 
+                
+                # Verifica Exceções
                 if esta_livre:
-                    lista_horarios_livres.append(inicio_do_slot.strftime('%H:%M'))
+                    for ex in excecoes_ocupadas:
+                        ex_ini = timezone.localtime(ex.data_inicio)
+                        ex_fim = timezone.localtime(ex.data_fim)
 
-                inicio_do_slot += timedelta(minutes=30)
+                        if inicio_slot < ex_fim and fim_slot > ex_ini:
+                            esta_livre = False
+                            break
+                
+                if esta_livre:
+                    lista_horarios_livres.append(inicio_slot.strftime('%H:%M'))
+
+                inicio_slot += timedelta(minutes=30)
 
         return JsonResponse({'horarios': lista_horarios_livres})
 
@@ -168,17 +154,13 @@ def buscar_horarios_api(request):
         return JsonResponse({'erro': str(erro)}, status=500)
 
 
-
-
-from django.utils import timezone
-from datetime import datetime, timedelta
+# ==============================================================================
+# 3. API: SALVAR AGENDAMENTO
+# ==============================================================================
 
 @login_required
+@require_POST
 def salvar_agendamento(request):
-    
-    if request.method != 'POST':
-        return JsonResponse({'erro': 'Método não permitido.'}, status=405)
-
     try:
         dados = json.loads(request.body)
         
@@ -190,23 +172,18 @@ def salvar_agendamento(request):
         if not all([id_servico, id_barbeiro, data_str, hora_str]):
             return JsonResponse({'erro': 'Dados incompletos.'}, status=400)
 
-        dt_inicio_naive = datetime.strptime(f"{data_str} {hora_str}", '%Y-%m-%d %H:%M') 
+        dt_naive = datetime.strptime(f"{data_str} {hora_str}", '%Y-%m-%d %H:%M') 
+        data_inicio = timezone.make_aware(dt_naive, timezone.get_current_timezone())
 
-
-        data_e_horario_inicio = timezone.make_aware(
-            dt_inicio_naive, 
-            timezone.get_current_timezone()
-        ) 
-
-        cliente = Cliente.objects.get(fk_user=request.user) 
-        barbeiro = Barbeiro.objects.get(pk=id_barbeiro)
-        servico = Servicos.objects.get(pk=id_servico)
+        cliente = get_object_or_404(Cliente, fk_user=request.user)
+        barbeiro = get_object_or_404(Barbeiro, pk=id_barbeiro)
+        servico = get_object_or_404(Servicos, pk=id_servico)
 
         novo_agendamento = Agendamentos(
             fk_cliente=cliente,
             fk_barbeiro=barbeiro,
             fk_servicos=servico,
-            data_e_horario_inicio=data_e_horario_inicio 
+            data_e_horario_inicio=data_inicio
         )
 
         novo_agendamento.full_clean() 
@@ -215,8 +192,8 @@ def salvar_agendamento(request):
         return JsonResponse({'mensagem': 'Agendamento realizado com sucesso!', 'sucesso': True})
 
     except ValidationError as e:
-        
-        msg = e.message_dict if hasattr(e, 'message_dict') else str(e)
+        msg = list(e.messages)[0] if hasattr(e, 'messages') else str(e)
         return JsonResponse({'erro': msg}, status=400)
+        
     except Exception as e:
-        return JsonResponse({'erro': str(e)}, status=500)
+        return JsonResponse({'erro': f"Erro interno: {str(e)}"}, status=500)
