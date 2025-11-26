@@ -78,6 +78,40 @@ if (nextBtn && prevBtn && slides.length > 0) {
     });
 }
 
+// Gera estrelas baseado na nota
+function gerarEstrelas(nota) {
+    return "★★★★★".slice(0, nota) + "☆☆☆☆☆".slice(nota);
+}
+
+// notas por barbeiro
+const notaBarbeiros = {
+    "vini_jr": 5,
+    "rezende": 1,
+    "ze_felipe": 1
+};
+
+// Função que atualiza a imagem e lê os dados do HTML
+function atualizarSlide(novoIndex) {
+    slides[index].classList.remove("ativo");
+    
+    index = novoIndex;
+    if (index >= slides.length) index = 0;
+    if (index < 0) index = slides.length - 1;
+
+    const slideAtual = slides[index];
+    slideAtual.classList.add("ativo");
+
+    const nomeReal = slideAtual.getAttribute('data-nome');
+
+    if (nomeBarbeiroDisplay) {
+        nomeBarbeiroDisplay.textContent = nomeReal;
+    }
+
+    const ratingDisplay = document.getElementById("ratingBarbeiro");
+    const nota = notaBarbeiros[nomeReal] ?? 0;
+    ratingDisplay.textContent = gerarEstrelas(nota);
+}
+
 
 // ==========================================
 // LÓGICA DO BOTÃO CONFIRMAR
