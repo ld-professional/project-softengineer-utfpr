@@ -193,7 +193,10 @@ form button:focus {
     flex-wrap: nowrap;
     overflow-x: auto;
     scroll-behavior: smooth;
-    width: 100%;
+    
+    width: fit-content; 
+    max-width: 100%; 
+    
     padding: 10px 5px;
     gap: 20px;
     scrollbar-width: none;

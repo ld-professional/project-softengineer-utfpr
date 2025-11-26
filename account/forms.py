@@ -34,6 +34,11 @@ class CadastroClienteForm(forms.Form):
 
         username = self.cleaned_data.get('username')
 
+
+        if any(char.isdigit() for char in username):
+            raise ValidationError("O nome de usuário não pode conter números.")
+
+
         if UserPersonalizado.objects.filter(username=username).exists():
 
             raise ValidationError("Este nome de usuário já está em uso.")

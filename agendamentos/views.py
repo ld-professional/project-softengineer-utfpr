@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 
 # Importando seus Models
@@ -15,24 +15,51 @@ from servicos.models import Servicos
 from .models import Agendamentos
 from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA 
 
-# ==============================================================================
-# 1. VIEWS DE NAVEGAÇÃO (RENDERIZAM O HTML)
-# Essas eram as que estavam faltando e causando o erro!
-# ==============================================================================
+
+
+
+
+def validar_data_hora_futura(data_obj, hora_str=None):
+    hoje = date.today()
+    
+
+    if data_obj < hoje:
+        return False
+
+
+    if hora_str and data_obj == hoje:
+        hora_obj = datetime.strptime(hora_str, '%H:%M').time()
+        agora = datetime.now().time()
+        
+        if hora_obj < agora:
+            return False
+            
+
+    return True
+
+
+
+
+
+
 
 @login_required
 @ensure_csrf_cookie
 def escolher_servico(request):
-    """Renderiza a tela de escolha de serviços."""
+
     if request.method == 'GET':
         lista_servicos = Servicos.objects.all()
         contexto = {'servicos': lista_servicos}
         return render(request, ESCOLHER_SERVICO, contexto)
 
+
+
+
+
 @login_required
 @ensure_csrf_cookie
 def escolher_barbeiro(request):
-    """Renderiza a tela de escolha de barbeiros baseada no serviço."""
+
     id_do_servico = request.GET.get('id_servico')
 
     if not id_do_servico:
@@ -45,10 +72,15 @@ def escolher_barbeiro(request):
     }
     return render(request, ESCOLHER_BARBEIRO, contexto)
 
+
+
+
+
+
 @login_required
 @ensure_csrf_cookie
 def escolher_dia(request):
-    """Renderiza o calendário para o usuário escolher o dia."""
+
     id_do_serv = request.GET.get('id_servico')
     id_do_barb = request.GET.get('id_barbeiro')
     
@@ -63,13 +95,15 @@ def escolher_dia(request):
 
 @login_required
 def agendamentorealizado(request):
-    """Tela de sucesso."""
+
     return render(request, 'agendamentos/agenda-realizado.html')
 
 
-# ==============================================================================
-# 2. API: BUSCAR HORÁRIOS (LÓGICA DE CÁLCULO JSON)
-# ==============================================================================
+
+
+
+
+
 
 @login_required
 @require_GET
@@ -83,6 +117,10 @@ def buscar_horarios_api(request):
     
     try:
         data_base = datetime.strptime(data_texto, '%Y-%m-%d').date()
+
+        if not validar_data_hora_futura(data_base):
+             return JsonResponse({'horarios': [], 'mensagem': 'Data inválida ou passada.'})
+
         dia_semana = data_base.weekday()
         
         servico = Servicos.objects.get(pk=id_servico)
@@ -154,9 +192,12 @@ def buscar_horarios_api(request):
         return JsonResponse({'erro': str(erro)}, status=500)
 
 
-# ==============================================================================
-# 3. API: SALVAR AGENDAMENTO
-# ==============================================================================
+
+
+
+
+
+
 
 @login_required
 @require_POST
@@ -172,7 +213,18 @@ def salvar_agendamento(request):
         if not all([id_servico, id_barbeiro, data_str, hora_str]):
             return JsonResponse({'erro': 'Dados incompletos.'}, status=400)
 
+
+
+        data_obj = datetime.strptime(data_str, '%Y-%m-%d').date()
+
+
+        if not validar_data_hora_futura(data_obj, hora_str):
+            return JsonResponse({'erro': 'Erro: Tentativa de agendar em data ou horário passado.'}, status=400)
+
+
+
         dt_naive = datetime.strptime(f"{data_str} {hora_str}", '%Y-%m-%d %H:%M') 
+        
         data_inicio = timezone.make_aware(dt_naive, timezone.get_current_timezone())
 
         cliente = get_object_or_404(Cliente, fk_user=request.user)
