@@ -233,6 +233,17 @@ form button:hover, form button:focus {
     white-space: nowrap;
 }
 
+.rating {
+    position: absolute;
+    top: 340px;
+    left: 58.5%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    color: gold;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    font-family: var(--font-family-secondary);
+}
 
 .confirm-button {
     position: relative;

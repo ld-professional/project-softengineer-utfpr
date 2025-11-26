@@ -327,8 +327,8 @@ section.active {
 }
 
 
+/*
 
-/* Configuração do Fundo Sigma */
 .sigma-background {
     position: fixed;
     top: 0;
@@ -338,13 +338,14 @@ section.active {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    z-index: -999; /* Garante que fique atrás de todo o conteúdo */
-    filter: blur(4px); /* Desfoque leve solicitado */
-    opacity: 0.8; /* Ajuste opcional para a imagem não brigar com o texto */
+    z-index: -999; 
+    filter: blur(4px); 
+    opacity: 0.8; 
 }
 
-/* IMPORTANTE: Torna os fundos das seções transparentes para ver a imagem */
+
 #home, #services, body {
     background: transparent !important; 
-    background-color: rgba(0, 0, 0, 0.7) !important; /* Mantém um fundo escuro translúcido para leitura */
+    background-color: rgba(0, 0, 0, 0.7) !important; 
 }
+*/
