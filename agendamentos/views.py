@@ -104,34 +104,58 @@ def buscar_horarios_api(request):
         if not turnos_de_trabalho.exists():
             return JsonResponse({'horarios': [], 'mensagem': 'Barbeiro não trabalha neste dia.'})
 
-        agendamentos_do_dia = Agendamentos.objects.filter(fk_barbeiro_id=id_barbeiro, data_e_horario_inicio__date=data_desejavel_agendar)
-        excecoes_do_dia = Excecoes.objects.filter(fk_barbeiro_id=id_barbeiro, data_inicio__date__lte=data_desejavel_agendar, data_fim__date__gte=data_desejavel_agendar)
+        agendamentos_do_dia = Agendamentos.objects.filter(
+            fk_barbeiro_id=id_barbeiro,
+            data_e_horario_inicio__date=data_desejavel_agendar
+        )
+
+        excecoes_do_dia = Excecoes.objects.filter(
+            fk_barbeiro_id=id_barbeiro,
+            data_inicio__date__lte=data_desejavel_agendar,
+            data_fim__date__gte=data_desejavel_agendar
+        )
 
         servico = Servicos.objects.get(pk=id_servico)
-        duracao_em_minutos = servico.slot_duracao_servico * 30 
+
+        # duração total do serviço em minutos
+        duracao_servico = servico.slot_duracao_servico * 30  
+
         lista_horarios_livres = []
 
         for turno in turnos_de_trabalho:
+
             inicio_do_slot = datetime.combine(data_desejavel_agendar, turno.hora_inicio)
             fim_do_expediente = datetime.combine(data_desejavel_agendar, turno.hora_fim)
 
-            while inicio_do_slot + timedelta(minutes=duracao_em_minutos) <= fim_do_expediente:
-                fim_do_slot = inicio_do_slot + timedelta(minutes=duracao_em_minutos)
+            while inicio_do_slot + timedelta(minutes=duracao_servico) <= fim_do_expediente:
+
+                fim_do_slot = inicio_do_slot + timedelta(minutes=duracao_servico)
                 esta_livre = True
 
+                # --- VERIFICAÇÃO COMPLETA DE CONFLITO COM AGENDAMENTOS ---
                 for agendamento in agendamentos_do_dia:
-                    
-                    inicio_agendado = agendamento.data_e_horario_inicio.replace(tzinfo=None)
-                    fim_agendado = agendamento.data_e_horario_fim.replace(tzinfo=None)
-                    if inicio_do_slot < fim_agendado and fim_do_slot > inicio_agendado:
-                        esta_livre = False; break
-                
-                if esta_livre:
-                    for folga in excecoes_do_dia:
-                        inicio_folga = folga.data_inicio.replace(tzinfo=None)
-                        fim_folga = folga.data_fim.replace(tzinfo=None)
-                        if inicio_do_slot < fim_folga and fim_do_slot > inicio_folga:
-                            esta_livre = False; break
+
+                    inicio_ag = agendamento.data_e_horario_inicio.replace(tzinfo=None)
+                    fim_ag = agendamento.data_e_horario_fim.replace(tzinfo=None)
+
+                    # Se houver QUALQUER interseção completa com o intervalo do serviço → bloqueia
+                    if not (fim_do_slot <= inicio_ag or inicio_do_slot >= fim_ag):
+                        esta_livre = False
+                        break
+
+                if not esta_livre:
+                    inicio_do_slot += timedelta(minutes=30)
+                    continue
+
+                # --- VERIFICAÇÃO COMPLETA DE CONFLITO COM EXCEÇÕES / FOLGAS ---
+                for folga in excecoes_do_dia:
+
+                    inicio_f = folga.data_inicio.replace(tzinfo=None)
+                    fim_f = folga.data_fim.replace(tzinfo=None)
+
+                    if not (fim_do_slot <= inicio_f or inicio_do_slot >= fim_f):
+                        esta_livre = False
+                        break
 
                 if esta_livre:
                     lista_horarios_livres.append(inicio_do_slot.strftime('%H:%M'))
@@ -139,9 +163,9 @@ def buscar_horarios_api(request):
                 inicio_do_slot += timedelta(minutes=30)
 
         return JsonResponse({'horarios': lista_horarios_livres})
+
     except Exception as erro:
         return JsonResponse({'erro': str(erro)}, status=500)
-    
 
 
 
