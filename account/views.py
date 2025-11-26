@@ -6,6 +6,12 @@ from django.contrib.auth import authenticate, login
 
 import core.constantes as t
  
+
+
+
+
+
+
 @ensure_csrf_cookie
 def login_view(request):
     
@@ -40,6 +46,9 @@ def login_view(request):
 
             return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)
         
+
+
+
 
 
 
@@ -100,6 +109,8 @@ def signup_view(request):
 
 
 
+
+
 import json
 from django.http import JsonResponse
 from django.contrib.auth.views import PasswordResetView,PasswordResetConfirmView
@@ -148,6 +159,10 @@ class EsqueceuSenhaView(PasswordResetView):
 
 
 
+
+
+
+
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class NovaSenhaView(PasswordResetConfirmView):
 
@@ -186,4 +201,4 @@ class NovaSenhaView(PasswordResetConfirmView):
             return JsonResponse({'errors': form.errors}, status=400)
 
         except Exception as e:
-            return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)
+            return JsonResponse({'error': f'Erro interno: {str(e)}'}, status=500)   
