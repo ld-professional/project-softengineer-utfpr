@@ -14,4 +14,6 @@ urlpatterns = [
     path('api/salvar-agendamento/', views.salvar_agendamento, name='api_salvar_agendamento'),
 
     path('meus-agendamentos/', views.meusagendamentos, name= 'cliente_meus_agendamentos'),
+
+    path('api-cancelar-meus-agendamentos/',views.api_cancelar_meus_agendamentos,name = 'cancelarAgendamentoMeu')
 ]
