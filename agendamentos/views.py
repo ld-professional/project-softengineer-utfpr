@@ -18,6 +18,14 @@ from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA
 
 
 
+def meusagendamentos(request):
+    
+    if request.method == 'GET': 
+        return render(request, 'agendamentos/cliente-meus-agendamentos.html')       
+
+
+
+
 
 def validar_data_hora_futura(data_obj, hora_str=None):
     hoje = date.today()
