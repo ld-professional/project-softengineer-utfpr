@@ -21,7 +21,16 @@ from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA
 def meusagendamentos(request):
     
     if request.method == 'GET': 
-        return render(request, 'agendamentos/cliente-meus-agendamentos.html')       
+
+        meus_agendamentos = Agendamentos.objects.filter(
+            fk_cliente__fk_user=request.user
+        ).order_by('data_e_horario_inicio')
+
+        contexto = {
+            'agendamentos': meus_agendamentos
+            }
+
+        return render(request, 'agendamentos/cliente-meus-agendamentos.html', contexto)       
 
 
 
