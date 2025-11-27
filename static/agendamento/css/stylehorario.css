@@ -241,6 +241,12 @@ form button:focus {
     opacity: 0.5; 
 }
 
+.date.active.selected {
+    opacity: 1; 
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+}
+
 .date:hover, .date.selected {
     background-color: var(--color-secondary);
     color: var(--color-black);

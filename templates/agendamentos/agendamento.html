@@ -52,29 +52,41 @@
 
         <div class="container-carrossel">
             
-            <button type="button" class="seta" id="btn-esq">&#10094;</button>
+            {% if servicos %}
+                {% if servicos|length > 3 %}
+                    <button type="button" class="seta" id="btn-esq">&#10094;</button>
+                {% endif %}
 
-            <div class="servicos-agendamento" id="scroll-container">
-                {% for s in servicos %}
-                <div class="link-bloco" data-id="{{ s.pk }}" onclick="selecionarServico(this)">  
-                    
-                    <div class="{% if s.nome_servico == 'Cabelo' %}corte{% elif s.nome_servico == 'Barba' %}barba{% elif s.nome_servico == 'Barba e Cabelo' %}barba-corte{% else %}corte{% endif %}">
+                <div class="servicos-agendamento" id="scroll-container">
+                    {% for s in servicos %}
+                    <div class="link-bloco" data-id="{{ s.pk }}" onclick="selecionarServico(this)">  
                         
-                        <h2>{{ s.nome_servico }}</h2>
-                        
-                        <p class="descricao">{{ s.get_slot_duracao_servico_display }}</p>
-                        
-                        <p class="valor">Valor R${{ s.preco_servico }}</p>
-                        
+                        <div class="{% if s.nome_servico == 'Cabelo' %}corte{% elif s.nome_servico == 'Barba' %}barba{% elif s.nome_servico == 'Barba e Cabelo' %}barba-corte{% else %}corte{% endif %}">
+                            
+                            <h2>{{ s.nome_servico }}</h2>
+                            
+                            <p class="descricao">{{ s.get_slot_duracao_servico_display }}</p>
+                            
+                            <p class="valor">Valor R${{ s.preco_servico }}</p>
+                            
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
 
-            <button type="button" class="seta" id="btn-dir">&#10095;</button>
+                {% if servicos|length > 3 %}
+                    <button type="button" class="seta" id="btn-dir">&#10095;</button>
+                {% endif %}
+            
+            {% else %}
+                <p class="aviso-sem-servico">sem servicos disponiveis no momento</p>
+            {% endif %}
 
         </div>
-        <button class="confirm-button">Confirmar Serviço</button>
+
+        {% if servicos %}
+            <button class="confirm-button">Confirmar Serviço</button>
+        {% endif %}
 
     </div>
 
