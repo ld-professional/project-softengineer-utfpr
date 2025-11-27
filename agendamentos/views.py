@@ -17,16 +17,48 @@ from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA
 
 
 
-
+@login_required
+@ensure_csrf_cookie
 def meusagendamentos(request):
     
     if request.method == 'GET': 
 
-        lista_servicos = Servicos.objects.all()
+        lista_agendamentos_do_cliente = Agendamentos.objects.filter(
+            fk_cliente__fk_user=request.user,
+        ).order_by('data_e_horario_inicio')
 
-        contexto = {'servicos': lista_servicos}
+        contexto = {'agendamentos': lista_agendamentos_do_cliente}
 
         return render(request, 'agendamentos/cliente-meus-agendamentos.html', contexto)       
+    
+
+@login_required
+@ensure_csrf_cookie
+def api_cancelar_meus_agendamentos(request):
+    try:
+        data = json.loads(request.body)
+        id_a_cancelar = data.get('id_agendamentos') # Nome que enviaremos no JS
+
+        # SEGURANÇA CRÍTICA:
+        # Filtramos pelo ID E pelo usuário logado (fk_cliente__fk_user).
+        # Assim ninguem cancela agendamento dos outros. do q fazer objects.get(pk=pk)
+        agendamento = get_object_or_404(
+            Agendamentos, 
+            pk=id_a_cancelar, 
+            fk_cliente__fk_user=request.user
+        )
+
+        agendamento.delete()
+
+        # Retorna sucesso para o JS recarregar a tela
+        return JsonResponse({'status': 'success', 'message': 'Agendamento cancelado.'})
+
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+
+
 
 def validar_data_hora_futura(data_obj, hora_str=None):
     hoje = date.today()
