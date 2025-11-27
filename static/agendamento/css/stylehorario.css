@@ -241,6 +241,12 @@ form button:focus {
     opacity: 0.5; 
 }
 
+.date.active.selected {
+    opacity: 1; 
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+}
+
 .date:hover, .date.selected {
     background-color: var(--color-secondary);
     color: var(--color-black);
@@ -393,6 +399,33 @@ form button:focus {
 
 #theme-switch:hover svg {
     fill: var(--color-background);
+}
+
+
+.swal2-popup {
+    background: var(--color-input-background) !important;
+    color: var(--color-text) !important;
+    font-family: var(--font-family-secondary) !important;
+    font-size: 1.3rem;
+    border-radius: 20px !important;
+}
+
+.swal2-title {
+    color: var(--color-secondary) !important;
+    font-family: var(--font-family-secondary) !important;
+}
+
+.swal2-confirm {
+    background-color: var(--color-secondary) !important;
+    color: var(--color-black) !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+}
+
+.swal2-cancel {
+    background-color: var(--color-incorrect) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
 }
 
 @media(max-width: 600px) {

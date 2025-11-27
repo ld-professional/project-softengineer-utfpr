@@ -274,8 +274,11 @@ if(btnConfirmarFinal) {
         
         // 1. Validação Básica no Frontend
         if(!dataFormatadaParaApi || !horarioFinalEscolhido) {
-            alert("Por favor, selecione um dia no calendário e um horário disponível.");
-            return;
+            Swal.fire({
+                icon: "warning",
+                title: "Campos obrigatórios",
+                text: "Por favor, selecione um dia no calendário e um horário disponível."
+            });
         }
 
         const idServico = campoOcultoIdServico ? campoOcultoIdServico.value : null;
@@ -307,9 +310,14 @@ if(btnConfirmarFinal) {
             const dados = await resposta.json();
 
             if (resposta.ok) {
-                alert("Sucesso! " + dados.mensagem);
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Agendamento realizado!",
+                        text: dados.mensagem,
+                        confirmButtonText: "OK"
+                    });
                 // Redireciona para o Dashboard
-                window.location.href = '/clientes/agendamentos/agendamento-realizado';
+                window.location.href = '/clientes/dashboard';
             } else {
                 // Mostra o erro que veio do Python (ex: Conflito de horário)
                 let msgErro = dados.erro;
@@ -317,7 +325,11 @@ if(btnConfirmarFinal) {
                     // Limpa o erro se vier como objeto feio {"erro": "..."}
                     msgErro = JSON.stringify(msgErro).replace(/[{}"]/g, ''); 
                 }
-                alert("Erro ao agendar: " + msgErro);
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro ao agendar",
+                    text: msgErro
+                });
                 
                 // Reabilita o botão para tentar de novo
                 btnConfirmarFinal.disabled = false;
@@ -326,7 +338,11 @@ if(btnConfirmarFinal) {
 
         } catch (erro) {
             console.error(erro);
-            alert("Erro de conexão com o servidor.");
+            Swal.fire({
+                icon: "error",
+                title: "Falha de conexão",
+                text: "Não foi possível conectar ao servidor."
+            });
             btnConfirmarFinal.disabled = false;
             btnConfirmarFinal.textContent = "Confirmar Agendamento";
         }
