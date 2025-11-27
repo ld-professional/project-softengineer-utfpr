@@ -85,9 +85,9 @@ function gerarEstrelas(nota) {
 
 // notas por barbeiro
 const notaBarbeiros = {
-    "vini_jr": 5,
+    "vini jr": 5,
     "rezende": 1,
-    "ze_felipe": 1
+    "ze felipe": 1
 };
 
 // Função que atualiza a imagem e lê os dados do HTML

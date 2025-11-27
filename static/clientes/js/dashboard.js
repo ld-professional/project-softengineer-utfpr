@@ -120,4 +120,18 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = urlDestino;
         });
     }
+
+    const meusAgendamentosButton = document.getElementById('meus-agendamentos-btn');
+
+    // 2. Adicionar o listener de clique
+    if (meusAgendamentosButton) {
+        meusAgendamentosButton.addEventListener('click', function() {
+            
+            // 3. Redirecionar para a página correta
+            const urlDestino = '/clientes/agendamentos/meus-agendamentos/';
+
+            // Redireciona o usuário
+            window.location.href = urlDestino;
+        });
+    }
 })

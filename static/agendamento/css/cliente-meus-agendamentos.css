@@ -265,7 +265,7 @@ form button:focus {
 .link-bloco.selecionado .corte,
 .link-bloco.selecionado .barba,
 .link-bloco.selecionado .barba-corte {
-    outline: 3px solid var(--color-secondary);
+    outline: 3px solid var(--color-incorrect);
     z-index: 3;
     outline-offset: 0px;
     transform: scale(1.05);
@@ -310,18 +310,26 @@ form button:focus {
     font-weight: 600;
     font-size: 2rem;
     color: var(--color-black);
-    background-color: var(--color-secondary);
+    background-color: var(--color-incorrect);
     border: none;
     border-radius: 20px;
-    cursor: pointer;
     transition: 150ms ease;
     display: block;
     z-index: 20;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.confirm-button.ativo {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .confirm-button:hover {
+    cursor: pointer;
     background-color: var(--color-primary);
     color: var(--color-input-background);
+    opacity: 1;
 }
 
 .confirm-button:focus {
@@ -363,33 +371,6 @@ form button:focus {
         padding-top: 60px;
     }
     
-}
-
-#logout-button {
-    height: 35px;
-    width: 50px;
-    padding: 0;
-    border: none;
-    border-radius: 20%;
-    background-color: var(--color-secondary);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 12px;
-    right: 80px;
-    color: var(--color-black);
-    font-size: 1.4rem;
-    z-index: 101;
-    font-weight: bold;
-    transition: background-color 150ms ease, transform 150ms ease;
-}
-
-#logout-button:hover {
-    cursor: pointer;
-    background-color: var(--color-primary);
-    transform: scale(1);
-    color: var(--color-input-background);
 }
 
 #theme-switch {
@@ -456,7 +437,7 @@ form button:focus {
         justify-content: center;
     }
 
-.servicos-agendamento {
+    .servicos-agendamento {
         width: fit-content; 
         max-width: 100%;    
         margin: 0 auto;     
@@ -481,8 +462,6 @@ form button:focus {
     .seta {
         display: none !important;
     }
-
-
 
     .user-info, .confirm-button, .container-carrossel {
         grid-column: 1 !important; 
@@ -510,20 +489,5 @@ form button:focus {
         margin-right: auto;
         display: block;   
     }
-
-
-}
-
-
-.aviso-sem-servico {
-    font-family: var(--font-family-secondary);
-    font-size: 2rem; 
-    color: var(--color-secondary);
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    margin-top: 0;
-    text-transform: uppercase; 
-
 
 }
