@@ -71,7 +71,7 @@
                 >
             {% else %}
                 <img 
-                    src="{% static 'agendamento/images/sem_foto.jpg' %}" 
+                    src="/media/fotos_barbeiros/sem_foto.jpg"
                     class="slide {% if forloop.first %}ativo{% endif %}" 
                     data-id="{{ b.id_barbeiro }}"
                     data-nome="{{ b.fk_user.first_name|default:b.fk_user.username }}" 

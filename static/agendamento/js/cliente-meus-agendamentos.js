@@ -20,22 +20,6 @@ if (themeSwitch) {
 // --- VARIÁVEL GLOBAL OBRIGATÓRIA ---
 let idSelecionado = null;
 
-// --- A FUNÇÃO QUE O SEU HTML CHAMA ---
-// Essa função TEM que existir para o onclick="selecionarServico(this)" funcionar
-function selecionarServico(elementoClicado) {
-    
-    // 1. Limpa a cor de todos os outros
-    const todosBlocos = document.querySelectorAll('.link-bloco');
-    todosBlocos.forEach(bloco => bloco.classList.remove('selecionado'));
-
-    // 2. Pinta o que você clicou
-    elementoClicado.classList.add('selecionado');
-
-    // 3. Salva o ID na memória
-    idSelecionado = elementoClicado.getAttribute('data-id');
-    console.log("Serviço Selecionado ID:", idSelecionado);
-}
-
 // --- BOTÃO CONFIRMAR ---
 const btnConfirmar = document.querySelector('.confirm-button');
 if (btnConfirmar) {
@@ -50,6 +34,25 @@ if (btnConfirmar) {
             alert("Por favor, selecione um serviço primeiro!");
         }
     });
+}
+
+// --- A FUNÇÃO QUE O SEU HTML CHAMA ---
+// Essa função TEM que existir para o onclick="selecionarServico(this)" funcionar
+function selecionarServico(elementoClicado) {
+    
+    // 1. Limpa a cor de todos os outros
+    const todosBlocos = document.querySelectorAll('.link-bloco');
+    todosBlocos.forEach(bloco => bloco.classList.remove('selecionado'));
+
+    // 2. Pinta o que você clicou
+    elementoClicado.classList.add('selecionado');
+
+    // 3. Salva o ID na memória
+    idSelecionado = elementoClicado.getAttribute('data-id');
+    console.log("Serviço Selecionado ID:", idSelecionado);
+
+    // 4. Ativa o botão confirmar
+    if (btnConfirmar) btnConfirmar.classList.add('ativo');
 }
 
 // --- CARROSSEL ---
@@ -67,8 +70,8 @@ if (btnEsq && btnDir && scrollContainer) {
 }
 
 // --- BOTÕES VOLTAR/INICIO ---
-const btnVoltar = document.getElementById('agendar-btn');
-if (btnVoltar) btnVoltar.addEventListener('click', () => window.location.href = '/clientes/agendamentos/escolher_servico/');
+const btnVoltar = document.getElementById('voltar-dash-btn');
+if (btnVoltar) btnVoltar.addEventListener('click', () => window.location.href = '/clientes/dashboard/');
 
-const btnInicio = document.getElementById('meus-agendamentos-btn');
+const btnInicio = document.getElementById('inicio-dash-tbm-btn');
 if (btnInicio) btnInicio.addEventListener('click', () => window.location.href = '/clientes/dashboard/');

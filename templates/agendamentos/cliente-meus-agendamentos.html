@@ -1,4 +1,4 @@
-{% load static %}
+<!-- {% load static %} -->
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamentos</title>
   <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">
-  <link rel="stylesheet" href="{% static 'agendamento/css/styleagendamento.css' %}">
-  <script type="text/javascript" src="{% static 'agendamento/js/jsagendamento.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'agendamento/css/cliente-meus-agendamentos.css' %}">
+  <script type="text/javascript" src="{% static 'agendamento/js/cliente-meus-agendamentos.js' %}" defer></script>
 </head>
 
 <body>
@@ -30,6 +30,7 @@
 
     </nav>
 
+
     <div class="container">
         <div class="wrapper">
 
@@ -37,17 +38,16 @@
                 <div>
                     <button type="button" id="voltar-dash-btn">Voltar</button>
                 </div>
+
                 <div>
                     <button type="button" id="inicio-dash-tbm-btn">Inicio</button>
                 </div>
-                <div>
-                   
-                </div>
+
             </form>
         </div>
         
         <div class="user-info">
-            <p>Serviço desejado</p>
+            <p>Meus Agendamentos</p>
         </div>
 
         <div class="container-carrossel">
@@ -85,7 +85,7 @@
         </div>
 
         {% if servicos %}
-            <button class="confirm-button">Confirmar Serviço</button>
+            <button class="confirm-button">Cancelar Agendamento</button>
         {% endif %}
 
     </div>
