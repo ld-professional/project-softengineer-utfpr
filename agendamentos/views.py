@@ -22,19 +22,11 @@ def meusagendamentos(request):
     
     if request.method == 'GET': 
 
-        meus_agendamentos = Agendamentos.objects.filter(
-            fk_cliente__fk_user=request.user
-        ).order_by('data_e_horario_inicio')
+        lista_servicos = Servicos.objects.all()
 
-        contexto = {
-            'agendamentos': meus_agendamentos
-            }
+        contexto = {'servicos': lista_servicos}
 
         return render(request, 'agendamentos/cliente-meus-agendamentos.html', contexto)       
-
-
-
-
 
 def validar_data_hora_futura(data_obj, hora_str=None):
     hoje = date.today()
@@ -54,12 +46,6 @@ def validar_data_hora_futura(data_obj, hora_str=None):
 
     return True
 
-
-
-
-
-
-
 @login_required
 @ensure_csrf_cookie
 def escolher_servico(request):
@@ -68,10 +54,6 @@ def escolher_servico(request):
         lista_servicos = Servicos.objects.all()
         contexto = {'servicos': lista_servicos}
         return render(request, ESCOLHER_SERVICO, contexto)
-
-
-
-
 
 @login_required
 @ensure_csrf_cookie
@@ -88,11 +70,6 @@ def escolher_barbeiro(request):
         'id_servico_escolhido': id_do_servico
     }
     return render(request, ESCOLHER_BARBEIRO, contexto)
-
-
-
-
-
 
 @login_required
 @ensure_csrf_cookie
@@ -114,13 +91,6 @@ def escolher_dia(request):
 def agendamentorealizado(request):
 
     return render(request, 'agendamentos/agenda-realizado.html')
-
-
-
-
-
-
-
 
 @login_required
 @require_GET
@@ -207,13 +177,6 @@ def buscar_horarios_api(request):
 
     except Exception as erro:
         return JsonResponse({'erro': str(erro)}, status=500)
-
-
-
-
-
-
-
 
 
 @login_required
