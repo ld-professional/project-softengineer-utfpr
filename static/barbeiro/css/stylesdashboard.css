@@ -278,4 +278,38 @@ form button:hover, form button:focus {
     .user-info p {
         font-size: 3rem;
     }
+
+    #fundo-dashboard {
+        /* Muda o alinhamento para a ESQUERDA no celular.
+           O !important é necessário porque a regra geral está no final do arquivo
+           e acabaria sobrescrevendo essa sem ele.
+        */
+        background-position: left center !important;
+    }
+    /* --------------------------------------- */
+}
+
+/* --- CONFIGURAÇÃO DO FUNDO COM IMAGEM (CORRIGIDO) --- */
+/* Esta parte fica no final do seu arquivo, não precisa mexer nela */
+#fundo-dashboard {
+    /* ... */
+    background-position: center;
+    /* ... */
+}
+
+/* --- CONFIGURAÇÃO DO FUNDO COM IMAGEM (CORRIGIDO) --- */
+#fundo-dashboard {
+    /* O var(--imagem-fundo) puxa o caminho que você colocou no HTML */
+    background-image: 
+        linear-gradient(rgba(23, 22, 22, 0.90), rgba(23, 22, 22, 0.90)), 
+        var(--imagem-fundo);
+
+    background-size: cover;      /* Cobre todo o espaço */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat;
+    
+    /* IMPORTANTE: Removi o 'background-attachment: fixed' 
+       Isso garante que o fundo fique preso dentro da div .user-info
+       e não vaze para trás do menu lateral */
+    position: relative;
 }
