@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --color-primary: #f5f5f5;
+    --color-secondary: #DFB042;
+    --color-background: #000000;
+    --color-input-background: #171616;
+    --color-text: #ffffff;
+    --color-incorrect: #de0101;
+    --color-black: #000000;
+    --font-family-primary: 'Roboto', sans-serif;
+    --font-family-secondary: 'Quicksand', sans-serif;
+}
+
+.lightmode {
+    --color-black: #000000;
+    --color-primary: #000000;
+    --color-secondary: #DFB042;
+    --color-background: #cfcfcf;
+    --color-text: #000000;
+    --color-input-background: #f5f5f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-family-primary);
+    font-size: 12px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+body {
+    min-width: 100vw;
+    background-color: var(--color-input-background);
+    background-size: cover;
+    background-position: right;
+    overflow-x: hidden;
+}
+
+/* --- BARRA DE NAVEGAÇÃO SUPERIOR --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-background);
+    z-index: 100;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 2rem;
+}
+
+.page-header {
+    position: absolute;
+    top: 5px;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+}
+
+.page-title {
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+/* --- LAYOUT GRID --- */
+.container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    padding-top: 60px;
+    background-color: var(--color-input-background);
+}
+
+/* Menu Lateral */
+.wrapper {
+    background-color: var(--color-background);
+    width: 320px;
+    height: calc(100vh - 60px); 
+    border-radius: 0 20px 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    z-index: 10;
+}
+
+/* Botões do Formulário */
+form {
+    width: min(400px, 100%);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 25px; 
+}
+
+form button {
+    width: 250px;
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black);
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 150ms ease;
+}
+
+form button:hover, form button:focus {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+    outline: none;
+}
+
+/* Área do Usuário (Direita) */
+.user-info {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.user-info p {
+    font-size: 4rem;
+    color: var(--color-secondary);
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- BOTÕES FLUTUANTES --- */
+
+#logout-button {
+    height: 35px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 20%;
+    background-color: var(--color-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 12px; 
+    right: 80px;
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    z-index: 101; 
+    transition: background-color 150ms ease, transform 150ms ease;
+}
+
+#logout-button:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+}
+
+#theme-switch {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 5px; 
+    right: 20px;
+    transition: background-color 150ms ease, transform 150ms ease;
+    z-index: 200;
+}
+
+#theme-switch svg {
+    fill: var(--color-text);
+}
+
+#theme-switch svg:first-child { display: none; }
+.lightmode #theme-switch svg:last-child { display: none; }
+.lightmode #theme-switch svg:first-child { display: block; }
+
+#theme-switch:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+}
+
+#theme-switch:hover svg {
+    fill: var(--color-background);
+}
+
+/* --- RESPONSIVIDADE (CELULAR) --- */
+@media (max-width: 900px) {
+
+    /* CORREÇÃO DO CABEÇALHO */
+    nav {
+        justify-content: center; /* Centraliza o conteúdo */
+        padding-right: 0;
+    }
+
+    .page-header {
+        position: static; /* Tira o absolute para parar de flutuar por cima */
+        margin-right: 120px; /* Empurra o texto para a esquerda para não bater nos botões */
+        width: auto;
+    }
+
+    .page-title {
+        font-size: 1.1rem; /* Fonte menor para caber no celular */
+        white-space: nowrap;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* AJUSTE DOS BOTÕES LATERAIS */
+    #logout-button {
+        right: 75px; /* Ajuste fino da posição */
+        width: 45px;
+        font-size: 1rem;
+    }
+    
+    #theme-switch {
+        right: 15px;
+    }
+
+    /* RESTO DO LAYOUT */
+    .container {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .wrapper {
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: auto;
+        min-height: 40vh;
+        border-radius: 0 0 20px 20px;
+        padding: 30px 0;
+        z-index: 1;
+    }
+
+    .user-info {
+        grid-column: 1;
+        min-height: 50vh;
+    }
+    
+    .user-info p {
+        font-size: 3rem;
+    }
+}
