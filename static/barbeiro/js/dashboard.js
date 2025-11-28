@@ -125,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const meusServicosButton = document.getElementById('servicos-btn');
 
     
-    if (meusAgendamentosButton) {
-        meusAgendamentosButton.addEventListener('click', function() {
+    if (meusServicosButton) {
+        meusServicosButton.addEventListener('click', function() {
             
             
             const urlDestino = '/barbeiro/servicos/meus-servicos/';
@@ -145,7 +145,21 @@ document.addEventListener('DOMContentLoaded', function() {
         meusAgendamentosButton.addEventListener('click', function() {
             
             
-            const urlDestino = '/barbeiro/agendamentos/Todosagendamentos/';
+            const urlDestino = '/barbeiro/agendamentos/';
+
+            
+            window.location.href = urlDestino;
+        });
+    }
+
+    const editarPerfilButton = document.getElementById('editar-perfil-btn');
+
+    
+    if (editarPerfilButton) {
+        editarPerfilButton.addEventListener('click', function() {
+            
+            
+            const urlDestino = '/barbeiro/editar-perfil/';
 
             
             window.location.href = urlDestino;

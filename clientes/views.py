@@ -11,7 +11,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 def cliente_dashboard(request):
     
     if  hasattr(request.user, 'barber'):
-        return redirect('barbeiro_pagina_inicial_dashboard ')
+        return redirect('barbeiro_pagina_inicial_dashboard')
 
     if not hasattr(request.user, 'clientao'):
         return redirect('/account/login')

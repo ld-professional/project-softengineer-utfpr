@@ -40,11 +40,15 @@
                 <div>
                     <button type="button" id="Agendamentos-btn">Agendamentos</button>
                 </div>
+                <div>
+                    <button type="button" id="editar-perfil-btn">Editar perfil</button>
+
+                </div>
             </form>
         </div>
         
         <div class="user-info">
-            <p>Olá, barbeiro<br>{{ nome_do_cara }}!</p>
+            <p>Olá, barbeiro<br>{{ nome_barbeiro.fk_user.username }}!</p>
         </div>
     </div>
 
