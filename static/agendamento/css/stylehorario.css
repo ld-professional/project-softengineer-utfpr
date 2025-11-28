@@ -372,6 +372,7 @@ form button:focus {
     top: 5px;
     right: 20px;
     transition: background-color 150ms ease, transform 150ms ease;
+    z-index: 200;
 }
 
 #theme-switch svg {
@@ -430,25 +431,93 @@ form button:focus {
     font-family: var(--font-family-primary) !important;
 }
 
+/* ========================================= */
+/* MEDIA QUERIES (CELULAR)                   */
+/* ========================================= */
 @media(max-width: 600px) {
-    .container {
-        grid-template-columns: 1fr;
+    /* 1. Header corrigido */
+    nav {
+        justify-content: center;
+        padding-right: 50px; /* Espaço pro botão */
     }
-    .wrapper {
-        display: none !important;
+
+    .page-header {
+        position: static;
+        margin-right: auto;
+        width: auto;
+    }
+    
+    .page-title {
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
+    
+    .logo-icon {
+        width: 35px;
+        height: 35px;
     }
 
     .titulo {
         display: none !important;
-}
-
-    .calendar, .horarios-container, .confirm-button {
-        grid-column: 1;
-        width: 95%;
     }
-    .user-info {
-        position: static;
-        transform: none;
-        margin: 20px 0;
+
+    .wrapper {
+        display: none !important;
+    }
+    
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    /* 2. Calendário Ajustado */
+    .calendar {
+        grid-column: 1;
+        width: 100%; /* Ocupa a largura total */
+        padding: 10px; /* Menos padding lateral */
+        margin-top: 20px;
+    }
+
+    .calendar-header {
+        font-size: 1.2rem; /* Cabeçalho um pouco menor */
+    }
+
+    .dates {
+        gap: 2px; /* Espaço entre bolinhas bem menor para caber tudo */
+    }
+
+    .date {
+        width: 38px; /* Bolinha menor (era 45px) */
+        height: 38px;
+        font-size: 1rem; /* Fonte menor */
+        padding: 0; /* Remove padding interno que atrapalha centralização */
+    }
+    
+    .day {
+        font-size: 0.9rem; /* Dias da semana menores */
+        padding: 2px;
+    }
+
+    /* 3. Ajuste container horários */
+    .horarios-container {
+        grid-column: 1;
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .lista-horarios {
+        gap: 10px;
+    }
+    
+    .horario {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+
+    /* 4. Botão confirmar */
+    .confirm-button {
+        grid-column: 1;
+        width: 90%; /* Botão responsivo */
+        font-size: 1.2rem;
+        height: 60px;
     }
 }

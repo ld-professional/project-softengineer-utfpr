@@ -112,10 +112,6 @@ form {
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    
-    /* AQUI ESTÁ O SEGREDO DO "PULINHO": 
-       Adicionamos este padding para compensar a diferença de altura 
-       em relação à outra página que tem elementos invisíveis a mais. */
     padding-bottom: 25px; 
 }
 
@@ -220,8 +216,43 @@ form button:hover, form button:focus {
     fill: var(--color-background);
 }
 
-/* --- RESPONSIVIDADE --- */
+/* --- RESPONSIVIDADE (CELULAR) --- */
 @media (max-width: 900px) {
+
+    /* CORREÇÃO DO CABEÇALHO */
+    nav {
+        justify-content: center; /* Centraliza o conteúdo */
+        padding-right: 0;
+    }
+
+    .page-header {
+        position: static; /* Tira o absolute para parar de flutuar por cima */
+        margin-right: 120px; /* Empurra o texto para a esquerda para não bater nos botões */
+        width: auto;
+    }
+
+    .page-title {
+        font-size: 1.1rem; /* Fonte menor para caber no celular */
+        white-space: nowrap;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* AJUSTE DOS BOTÕES LATERAIS */
+    #logout-button {
+        right: 75px; /* Ajuste fino da posição */
+        width: 45px;
+        font-size: 1rem;
+    }
+    
+    #theme-switch {
+        right: 15px;
+    }
+
+    /* RESTO DO LAYOUT */
     .container {
         grid-template-columns: 1fr;
         display: flex;

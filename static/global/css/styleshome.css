@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
     --color-primary: #f5f5f5;
     --color-secondary: #DFB042;
@@ -67,19 +68,6 @@ nav {
     align-items: center;
 }
 
-@media (max-width: 600px) {
-    footer {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-
-    nav .nav-links{
-        display: none !important;
-    }
-}
-
 nav a {
     text-decoration: none;
     color: var(--color-text);
@@ -132,8 +120,7 @@ section.active {
 }
 
 .btn {
-    /* Mantém o que você já tinha */
-    width: 250px; /* Tirei o 'width: 100%' duplicado */
+    width: 250px;
     height: 50px;
     font: inherit;
     font-weight: 600;
@@ -144,15 +131,12 @@ section.active {
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 150ms ease, transform 150ms ease;
-
-    /* ADICIONADO PARA O LINK FUNCIONAR IGUAL BOTÃO */
-    text-decoration: none;      /* Tira o sublinhado */
-    display: flex;              /* Permite alinhar o texto */
-    justify-content: center;    /* Centraliza horizontalmente */
-    align-items: center;        /* Centraliza verticalmente */
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Para garantir que a cor do texto não mude sozinha */
 .btn:visited {
     color: var(--color-background);
 }
@@ -199,7 +183,6 @@ section.active {
     right: 20px;
     transition: background-color 150ms ease, transform 150ms ease;
     z-index: 200;
-
 }
 
 #theme-switch svg {
@@ -251,18 +234,15 @@ section.active {
     z-index: 2;
     width: 300px;
     height: 200px;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
     padding: 1.25rem 1.5rem;
     border-radius: 25px;
     background: var(--color-background);
     box-shadow: 0px 4px 10px var(--color-background), 0px 2px 5px var(--color-background-gray);
     text-align: left;
     font-size: 1rem;
-
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -293,16 +273,13 @@ section.active {
 .footer {
     background: var(--color-background);
     color: var(--color-text);
-
     padding: 35px 5%; 
     font-family: var(--font-family-secondary);
 }
 
 .footer-container {
     display: flex;
-
     gap: 4rem; 
-
     justify-content: center; 
     flex-wrap: wrap;
 }
@@ -329,26 +306,75 @@ section.active {
     opacity: 0.7;
 }
 
+/* ========================================= */
+/* MEDIA QUERIES                */
+/* ========================================= */
 
-/*
-
-.sigma-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: -999; 
-    filter: blur(4px); 
-    opacity: 0.8; 
+@media (max-width: 600px) {
+    footer {
+        display: none;
+    }
 }
 
+@media (max-width: 768px) {
 
-#home, #services, body {
-    background: transparent !important; 
-    background-color: rgba(0, 0, 0, 0.7) !important; 
+    /* --- MENU E HEADER MOBILE --- */
+    nav .nav-links {
+        display: none !important;
+    }
+
+    nav {
+        justify-content: center; /* Centraliza o conteúdo */
+        padding-right: 60px; /* Deixa espaço na direita para o botão de tema/sair */
+    }
+
+    .page-header {
+        position: static; /* Remove posição absoluta para não vazar */
+        margin: 0;
+        width: auto;
+    }
+
+    .page-title {
+        font-size: 1.2rem; /* Fonte menor para caber */
+        white-space: nowrap;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* --- SERVIÇOS MOBILE --- */
+    #services {
+        height: auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        align-items: flex-start; /* Alinha no topo */
+    }
+
+    .services {
+        flex-direction: column; /* Um embaixo do outro */
+        gap: 20px;
+        width: 100%;
+    }
+
+    .link-bloco {
+        width: 90%;
+        max-width: 350px;
+        margin: 0 auto; /* Centraliza o bloco */
+        display: flex;
+        justify-content: center;
+    }
+
+    .corte, .barba, .barba-corte {
+        width: 100%; /* Ocupa a largura do pai (link-bloco) */
+        height: auto; /* Altura automática conforme o texto */
+        min-height: 140px; 
+        padding: 1.5rem;
+    }
+
+    .corte h2, .barba h2, .barba-corte h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
 }
-*/
