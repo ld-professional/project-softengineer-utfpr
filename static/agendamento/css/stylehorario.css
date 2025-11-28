@@ -418,14 +418,16 @@ form button:focus {
 .swal2-confirm {
     background-color: var(--color-secondary) !important;
     color: var(--color-black) !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     font-weight: bold !important;
+    font-family: var(--font-family-primary) !important;
 }
 
 .swal2-cancel {
     background-color: var(--color-incorrect) !important;
     color: #fff !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
+    font-family: var(--font-family-primary) !important;
 }
 
 @media(max-width: 600px) {
