@@ -11,8 +11,9 @@ urlpatterns = [
 
     path('account/',include('account.urls')),
     path('clientes/',include('clientes.urls')),
-#    path('barbeiro/',include('barbeiro.urls')),
+    path('barbeiro/',include('barbeiro.urls')),
 
     path('',include('global.urls')),
+    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
