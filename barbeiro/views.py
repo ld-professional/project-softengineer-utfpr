@@ -22,3 +22,18 @@ def barbeiro_dashboard(request):
     contexto= {'nome_barbeiro': barbeiro_nome}
 
     return render(request,t.BARBEIRO_DASHBOARD,contexto) 
+
+
+@ensure_csrf_cookie
+@login_required(login_url='/account/login/')
+def barbeiro_perfil(request):
+        
+    if  hasattr(request.user, 'clientao'):
+        return redirect('/clientes/dashboard/')
+
+    if not hasattr(request.user, 'barber'):
+
+        return redirect('/')
+    
+
+    return render(request,'barbeiro/editar-perfil.html') 

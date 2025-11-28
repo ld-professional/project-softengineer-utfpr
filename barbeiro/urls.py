@@ -11,7 +11,7 @@ path('dashboard/',views.barbeiro_dashboard,name='barbeiro_pagina_inicial_dashboa
 
 path('servicos/',include('servicos.urls')),
 
-#path('/editar-perfil/',views.barbeiro_perfil,name='barbeiro_perfil'),
+path('editar-perfil/',views.barbeiro_perfil,name='barbeiro_perfil'),
 
 
 ]
