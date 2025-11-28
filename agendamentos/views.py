@@ -21,6 +21,16 @@ from core.constantes import ESCOLHER_SERVICO, ESCOLHER_BARBEIRO, ESCOLHER_DIA
 @ensure_csrf_cookie
 def meusagendamentos(request):
     
+
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+    
+
+
     if request.method == 'GET': 
 
         lista_agendamentos_do_cliente = Agendamentos.objects.filter(
@@ -35,6 +45,16 @@ def meusagendamentos(request):
 @login_required
 @ensure_csrf_cookie
 def api_cancelar_meus_agendamentos(request):
+
+
+        
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
     try:
         data = json.loads(request.body)
         id_a_cancelar = data.get('id_agendamentos') # Nome que enviaremos no JS
@@ -82,6 +102,16 @@ def validar_data_hora_futura(data_obj, hora_str=None):
 @ensure_csrf_cookie
 def escolher_servico(request):
 
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
+
+
     if request.method == 'GET':
         lista_servicos = Servicos.objects.all()
         contexto = {'servicos': lista_servicos}
@@ -90,6 +120,17 @@ def escolher_servico(request):
 @login_required
 @ensure_csrf_cookie
 def escolher_barbeiro(request):
+
+
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
+
 
     id_do_servico = request.GET.get('id_servico')
 
@@ -107,6 +148,17 @@ def escolher_barbeiro(request):
 @ensure_csrf_cookie
 def escolher_dia(request):
 
+
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
+
+
     id_do_serv = request.GET.get('id_servico')
     id_do_barb = request.GET.get('id_barbeiro')
     
@@ -119,14 +171,25 @@ def escolher_dia(request):
     }
     return render(request, ESCOLHER_DIA, contexto)
 
-@login_required
-def agendamentorealizado(request):
 
-    return render(request, 'agendamentos/agenda-realizado.html')
+
+
 
 @login_required
 @require_GET
 def buscar_horarios_api(request):
+
+
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
+
+
     data_texto = request.GET.get('data')
     id_barbeiro = request.GET.get('id_barbeiro')
     id_servico = request.GET.get('id_servico')
@@ -214,6 +277,19 @@ def buscar_horarios_api(request):
 @login_required
 @require_POST
 def salvar_agendamento(request):
+
+
+    
+    if  hasattr(request.user, 'barber'):
+        return redirect('barbeiro_pagina_inicial_dashboard ')
+
+    if not hasattr(request.user, 'clientao'):
+        return redirect('/account/login')
+
+
+
+
+
     try:
         dados = json.loads(request.body)
         

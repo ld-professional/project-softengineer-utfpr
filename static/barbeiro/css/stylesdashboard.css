@@ -1,0 +1,347 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --color-primary: #f5f5f5;
+    --color-secondary: #DFB042;
+    --color-background: #000000;
+    --color-input-background: #171616;
+    --color-text: #ffffff;
+    --color-incorrect: #de0101;
+    --color-black: #000000;
+    --font-family-primary: 'Roboto', sans-serif;
+    --font-family-secondary: 'Quicksand', sans-serif;
+}
+
+.lightmode {
+    --color-black: #000000;
+    --color-primary: #000000;
+    --color-secondary: #DFB042;
+    --color-background: #cfcfcf;
+    --color-text: #000000;
+    --color-input-background: #f5f5f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* EFEITO: Adiciona transição de cor para elementos genéricos */
+    transition: color 0.3s ease;
+}
+
+html {
+    font-family: var(--font-family-primary);
+    font-size: 12px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+body {
+    min-width: 100vw;
+    background-color: var(--color-input-background);
+    background-size: cover;
+    background-position: right;
+    overflow-x: hidden;
+    /* EFEITO: Transição de fundo */
+    transition: background-color 0.3s ease;
+}
+
+/* --- BARRA DE NAVEGAÇÃO SUPERIOR --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-background);
+    z-index: 100;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 2rem;
+    /* EFEITO: Transição de fundo */
+    transition: background-color 0.3s ease;
+}
+
+.page-header {
+    position: absolute;
+    top: 5px;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+}
+
+.page-title {
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    /* EFEITO: Transição de cor */
+    transition: color 0.3s ease;
+}
+
+/* --- LAYOUT GRID --- */
+.container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    padding-top: 60px;
+    background-color: var(--color-input-background);
+    /* EFEITO: Transição para cor de fundo */
+    transition: background-color 0.3s ease;
+}
+
+/* Menu Lateral */
+.wrapper {
+    background-color: var(--color-background);
+    width: 320px;
+    height: calc(100vh - 60px); 
+    border-radius: 0 20px 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    z-index: 10;
+    /* EFEITO: Transição para cor de fundo */
+    transition: background-color 0.3s ease;
+}
+
+/* Botões do Formulário */
+form {
+    width: min(400px, 100%);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 25px; 
+}
+
+form button {
+    width: 250px;
+    height: 75px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-black); /* Cor do texto padrão (Preto) */
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    /* EFEITO: Adicionado box-shadow e transform na transição */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+form button:hover, form button:focus {
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+    outline: none;
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
+}
+/* CORREÇÃO DE CORES: Garante contraste no Light Mode durante hover/focus */
+.lightmode form button:hover, .lightmode form button:focus {
+    color: var(--color-black); /* Texto PRETO em hover/focus no Light Mode */
+    background-color: var(--color-input-background); /* Fundo claro para o hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+}
+.lightmode form button {
+    color: var(--color-black); /* Garante texto preto no Light Mode */
+}
+
+
+/* Área do Usuário (Direita) */
+.user-info {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.user-info p {
+    font-size: 4rem;
+    color: var(--color-secondary);
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- BOTÕES FLUTUANTES --- */
+
+#logout-button {
+    height: 35px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 20%;
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 12px; 
+    right: 80px;
+    z-index: 101; 
+    /* EFEITO: Transição completa de hover */
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+#logout-button:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
+    color: var(--color-input-background);
+}
+/* CORREÇÃO APLICADA: Cor do fundo e texto corretos no Light Mode hover do Logout */
+.lightmode #logout-button:hover {
+    color: var(--color-black); /* Texto PRETO */
+    background-color: var(--color-input-background); /* Fundo CLARO (f5f5f5) */
+}
+
+
+#theme-switch {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 5px; 
+    right: 20px;
+    /* EFEITO: Transição completa */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 200;
+}
+
+#theme-switch svg {
+    fill: var(--color-text);
+    transition: fill 0.3s ease;
+}
+
+#theme-switch svg:first-child { display: none; }
+.lightmode #theme-switch svg:last-child { display: none; }
+.lightmode #theme-switch svg:first-child { display: block; }
+
+#theme-switch:hover {
+    cursor: pointer;
+    background-color: var(--color-primary);
+    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
+}
+
+#theme-switch:hover svg {
+    fill: var(--color-background);
+}
+
+/* --- RESPONSIVIDADE (CELULAR) --- */
+@media (max-width: 900px) {
+
+    /* CORREÇÃO DO CABEÇALHO */
+    nav {
+        justify-content: center; /* Centraliza o conteúdo */
+        padding-right: 0;
+    }
+
+    .page-header {
+        position: static; /* Tira o absolute para parar de flutuar por cima */
+        margin-right: 120px; /* Empurra o texto para a esquerda para não bater nos botões */
+        width: auto;
+    }
+
+    .page-title {
+        font-size: 1.1rem; /* Fonte menor para caber no celular */
+        white-space: nowrap;
+    }
+
+    .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* AJUSTE DOS BOTÕES LATERAIS */
+    #logout-button {
+        right: 75px; /* Ajuste fino da posição */
+        width: 45px;
+        font-size: 1rem;
+    }
+    
+    #theme-switch {
+        right: 15px;
+    }
+
+    /* RESTO DO LAYOUT */
+    .container {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .wrapper {
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: auto;
+        min-height: 40vh;
+        border-radius: 0 0 20px 20px;
+        padding: 30px 0;
+        z-index: 1;
+    }
+
+    .user-info {
+        grid-column: 1;
+        min-height: 50vh;
+    }
+    
+    .user-info p {
+        font-size: 3rem;
+    }
+
+    #fundo-dashboard {
+        /* Muda o alinhamento para a ESQUERDA no celular. */
+        background-position: left center !important;
+    }
+}
+
+/* --- CONFIGURAÇÃO DO FUNDO COM IMAGEM (CORRIGIDO) --- */
+#fundo-dashboard {
+    /* O var(--imagem-fundo) puxa o caminho que você colocou no HTML */
+    background-image: 
+        linear-gradient(rgba(23, 22, 22, 0.90), rgba(23, 22, 22, 0.90)), 
+        var(--imagem-fundo);
+
+    background-size: cover;      /* Cobre todo o espaço */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat;
+    
+    position: relative;
+}
+
+/* --- MUDANÇA DE FUNDO ESPECÍFICA PARA O LIGHT MODE --- */
+
+/* Quando o 'body' tiver a classe 'lightmode', aplicamos esta regra ao #fundo-dashboard */
+body.lightmode #fundo-dashboard {
+    /* Removemos o gradiente escuro e aplicamos um gradiente branco suave */
+    background-image:  linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+     url('../images/fundobranco2.png');
+}

@@ -126,21 +126,21 @@ function adicionarEventoCliqueNosDias(ano, mes) {
 // 4. COMUNICAÇÃO COM O BACKEND (A API GET)
 // =========================================================================
 async function buscarHorariosDisponiveisNoBackend(dataString) {
-    divListaHorarios.innerHTML = '<p class="mensagem">Consultando agenda...</p>';
+    // 1. Mensagem de Carregamento (USANDO CLASSE CORRIGIDA)
+    divListaHorarios.innerHTML = '<p class="aviso-horarios">Consultando agenda...</p>'; 
 
     // Pega os valores dos inputs ocultos no HTML
-    // O .value lê o que o Django escreveu lá: value="3"
     const idServico = campoOcultoIdServico ? campoOcultoIdServico.value : null;
     const idBarbeiro = campoOcultoIdBarbeiro ? campoOcultoIdBarbeiro.value : null;
 
     // Validação de segurança
     if (!idServico || !idBarbeiro) {
-        divListaHorarios.innerHTML = '<p style="color:red">Erro: IDs do serviço ou barbeiro não encontrados.</p>';
+        // Mensagem de Erro de IDs (USANDO CLASSE CORRIGIDA)
+        divListaHorarios.innerHTML = '<p class="aviso-horarios" style="color:red">Erro: IDs do serviço ou barbeiro não encontrados.</p>';
         return;
     }
 
     // --- AQUI ESTÁ O JEITO SIMPLES DE MONTAR A URL ---
-    // O URLSearchParams cria automaticamente: "?data=...&id_barbeiro=...&id_servico=..."
     const parametrosUrl = new URLSearchParams({
         data: dataString,
         id_barbeiro: idBarbeiro,
@@ -148,8 +148,6 @@ async function buscarHorariosDisponiveisNoBackend(dataString) {
     });
 
     try {
-        // Faz o pedido para o Django (GET)
-        // Atenção para o caminho da URL, deve bater com seu urls.py
         const resposta = await fetch(`/clientes/agendamentos/api/buscar-horarios/?${parametrosUrl}`);
         const dadosJson = await resposta.json();
 
@@ -160,16 +158,18 @@ async function buscarHorariosDisponiveisNoBackend(dataString) {
             if (dadosJson.horarios && dadosJson.horarios.length > 0) {
                 criarBotoesDeHorarioNaTela(dadosJson.horarios);
             } else {
-                divListaHorarios.innerHTML = `<p class="mensagem">${dadosJson.mensagem || 'Agenda cheia ou barbeiro não trabalha.'}</p>`;
+                // 2. Mensagem de Agenda Cheia/Indisponível (USANDO CLASSE CORRIGIDA)
+                divListaHorarios.innerHTML = `<p class="aviso-horarios">${dadosJson.mensagem || 'Agenda cheia ou barbeiro não trabalha.'}</p>`; 
             }
         } else {
-            // Se o Django deu erro (400 ou 500)
-            divListaHorarios.innerHTML = `<p class="mensagem" style="color:red">${dadosJson.erro || 'Erro no servidor.'}</p>`;
+            // 3. Mensagem de Erro do Django/Servidor (USANDO CLASSE CORRIGIDA)
+            divListaHorarios.innerHTML = `<p class="aviso-horarios" style="color:red">${dadosJson.erro || 'Erro no servidor.'}</p>`; 
         }
 
     } catch (erro) {
         console.error(erro);
-        divListaHorarios.innerHTML = '<p class="mensagem" style="color:red">Erro de conexão.</p>';
+        // 4. Mensagem de Erro de Conexão (USANDO CLASSE CORRIGIDA)
+        divListaHorarios.innerHTML = '<p class="aviso-horarios" style="color:red">Erro de conexão.</p>'; 
     }
 }
 
