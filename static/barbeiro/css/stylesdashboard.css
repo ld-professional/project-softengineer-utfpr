@@ -313,3 +313,22 @@ form button:hover, form button:focus {
        e não vaze para trás do menu lateral */
     position: relative;
 }
+
+/* --- MUDANÇA DE FUNDO ESPECÍFICA PARA O LIGHT MODE --- */
+
+/* Quando o 'body' tiver a classe 'lightmode', aplicamos esta regra ao #fundo-dashboard */
+body.lightmode #fundo-dashboard {
+    /* 1. Removemos o gradiente escuro (rgba 23,22,22).
+       2. Substituímos a variável pela imagem direta 'fundobranco.png'.
+       CERTIFIQUE-SE de que 'fundobranco.png' está na pasta correta do seu projeto.
+    */
+    background-image:  linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+     url('../images/fundobranco2.png');
+}
+    
+    /* OPCIONAL: Se você achar que a imagem 'fundobranco.png' ficou muito "crua" 
+       e quiser um filtro branco suave por cima para ajudar na leitura do texto, 
+       você pode usar a linha abaixo NO LUGAR da linha acima:
+    */
+    /* background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+     url('../images/fundobranco2.png''); */
