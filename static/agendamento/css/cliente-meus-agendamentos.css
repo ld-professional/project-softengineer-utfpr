@@ -50,6 +50,7 @@ nav {
     justify-content: space-between;
     height: 60px;
     padding: 0 2rem;
+    transition: background-color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 .titulo {
@@ -63,6 +64,7 @@ nav {
     color: var(--color-primary);
     align-items: center;
     user-select: none;
+    transition: color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 .page-header {
@@ -81,6 +83,7 @@ nav {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--color-primary);
+    transition: color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 body {
@@ -89,6 +92,7 @@ body {
     background-size: cover;
     background-position: right;
     overflow-x: hidden;
+    transition: background-color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 /* --- LAYOUT GRID --- */
@@ -98,6 +102,7 @@ body {
     min-height: 100vh;
     padding-top: 60px;
     background-color: var(--color-input-background);
+    transition: background-color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 /* MENU LATERAL (WRAPPER) */
@@ -114,6 +119,7 @@ body {
     left: 0;
     top: 60px;
     z-index: 10;
+    transition: background-color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 /* BOTÕES LATERAIS (FORM) */
@@ -141,13 +147,27 @@ form button {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Adicionado box-shadow e transform na transição */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 form button:hover, form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
     outline: none;
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
+}
+
+.lightmode form button:hover, .lightmode form button:focus {
+    color: var(--color-black);
+    /* Força um fundo claro para o hover no Light Mode */
+    background-color: #f5f5f5; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+}
+.lightmode form button {
+    color: var(--color-black); /* Garante texto preto no Light Mode */
 }
 
 /* --- ÁREA PRINCIPAL (DIREITA) --- */
@@ -208,13 +228,17 @@ form button:hover, form button:focus {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: transform 0.2s ease, background-color 0.2s;
+    transition: transform 0.2s ease, background-color 0.2s, color 0.2s; /* EFEITO: Transição completa */
     z-index: 20;
 }
 .seta:hover {
     background-color: var(--color-primary);
     color: var(--color-background);
     transform: scale(1.1);
+}
+.lightmode .seta:hover {
+    background-color: var(--color-primary); 
+    color: var(--color-background);
 }
 
 .link-bloco {
@@ -239,11 +263,19 @@ form button:hover, form button:focus {
     gap: 5px;
     border-radius: 20px;
     background: var(--color-background);
-    box-shadow: 0px 4px 10px var(--color-background), 0px 2px 5px var(--color-input-background);
+    /* EFEITO: Transição de background e box-shadow */
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease; 
+    
+    /* Box shadow inicial para Dark Mode */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8), 0px 2px 5px var(--color-input-background);
     text-align: left;
     font-size: 2rem;
     font-family: var(--font-family-secondary);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.lightmode .corte, .lightmode .barba, .lightmode .barba-corte {
+    background: var(--color-input-background); /* Fundo claro para o card no lightmode */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra mais suave */
 }
 
 /* Quando selecionado, borda vermelha */
@@ -252,8 +284,9 @@ form button:hover, form button:focus {
 .link-bloco.selecionado .barba-corte {
     outline: 3px solid var(--color-incorrect);
     z-index: 3;
-    transform: scale(1.05);
-    box-shadow: none;
+    /* EFEITO: Pulo suave ao selecionar */
+    transform: scale(1.03); 
+    box-shadow: 0 0 10px var(--color-incorrect); /* EFEITO: Brilho vermelho ao selecionar */
 }
 
 /* Título do Serviço */
@@ -272,6 +305,7 @@ form button:hover, form button:focus {
     line-height: 1.7rem;
     margin-bottom: 20px;
     font-weight: bold;
+    transition: color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 /* NOME DO BARBEIRO (Grande e Branco) */
@@ -287,6 +321,7 @@ form button:hover, form button:focus {
     white-space: normal;
     overflow-wrap: break-word;
     word-wrap: break-word;
+    transition: color 0.3s ease; /* EFEITO: Transição suave ao trocar de tema */
 }
 
 /* Preço no Rodapé */
@@ -307,15 +342,19 @@ form button:hover, form button:focus {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-primary); 
+    color: var(--color-primary); /* Texto branco no Dark Mode */
     background-color: var(--color-incorrect); /* Vermelho */
     border: none;
     border-radius: 20px;
-    transition: all 150ms ease;
+    /* EFEITO: Transição de cor e box-shadow */
+    transition: all 150ms ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: block;
     z-index: 20;
     opacity: 0.5;
     pointer-events: none;
+}
+.lightmode .confirm-button {
+    color: white; /* Mantém branco para contraste com o vermelho */
 }
 
 .confirm-button.ativo {
@@ -325,8 +364,9 @@ form button:hover, form button:focus {
 }
 
 .confirm-button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(222, 1, 1, 0.4);
+    transform: scale(1.05); /* EFEITO: Pulo maior no hover */
+    /* EFEITO: Sombra vermelha brilhante no hover */
+    box-shadow: 0 0 20px rgba(222, 1, 1, 0.8); 
 }
 
 .aviso-sem-servico {
@@ -354,18 +394,19 @@ form button:hover, form button:focus {
     position: fixed;
     top: 5px;
     right: 20px;
-    transition: background-color 150ms ease, transform 150ms ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
 
 #theme-switch svg {
     fill: var(--color-text);
-    transition: fill 150ms ease;
+    transition: fill 0.3s ease;
 }
 
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
+    transform: scale(1);
 }
 #theme-switch:hover svg {
     fill: var(--color-background);
@@ -427,6 +468,7 @@ form button:hover, form button:focus {
         max-width: 90vw;
         height: 220px;
         border-radius: 20px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .seta { display: none !important; }
@@ -496,7 +538,7 @@ div:where(.swal2-container) .swal2-html-container {
 div:where(.swal2-container) .swal2-confirm {
     font-family: var(--font-family-primary) !important;
     background-color: var(--color-incorrect) !important; 
-    color: var(--color-black) !important; 
+    color: white !important; /* Texto branco no vermelho */
     border-radius: 10px !important;
     font-weight: bold !important;
     border: none !important;
@@ -512,7 +554,7 @@ div:where(.swal2-container) .swal2-confirm:focus {
 div:where(.swal2-container) .swal2-cancel {
     font-family: var(--font-family-primary) !important;
     background-color: var(--color-secondary) !important; 
-    color: var(--color-black) !important;
+    color: var(--color-black) !important; /* Texto preto no amarelo */
     border-radius: 10px !important;
     border: none !important;
     padding: 10px 24px !important;

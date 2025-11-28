@@ -14,5 +14,6 @@ urlpatterns = [
     path('barbeiro/',include('barbeiro.urls')),
 
     path('',include('global.urls')),
+    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -25,6 +25,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 html {
@@ -34,12 +35,14 @@ html {
     text-align: center;
 }
 
+/* EFEITO: Transição para cor de fundo */
 body {
     min-width: 100vw;
     background-color: var(--color-input-background);
     background-size: cover;
     background-position: right;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
 }
 
 /* --- BARRA DE NAVEGAÇÃO SUPERIOR --- */
@@ -55,6 +58,8 @@ nav {
     justify-content: space-between;
     height: 60px;
     padding: 0 2rem;
+    /* EFEITO: Transição para cor de fundo */
+    transition: background-color 0.3s ease;
 }
 
 .page-header {
@@ -76,6 +81,8 @@ nav {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--color-primary);
+    /* EFEITO: Transição de cor */
+    transition: color 0.3s ease;
 }
 
 /* --- LAYOUT GRID --- */
@@ -85,6 +92,8 @@ nav {
     min-height: 100vh;
     padding-top: 60px;
     background-color: var(--color-input-background);
+    /* EFEITO: Transição para cor de fundo */
+    transition: background-color 0.3s ease;
 }
 
 /* Menu Lateral */
@@ -101,6 +110,8 @@ nav {
     left: 0;
     top: 60px;
     z-index: 10;
+    /* EFEITO: Transição para cor de fundo */
+    transition: background-color 0.3s ease;
 }
 
 /* Botões do Formulário */
@@ -121,18 +132,31 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black);
+    color: var(--color-black); /* Cor do texto padrão (Preto) */
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 form button:hover, form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
     outline: none;
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
+}
+/* CORREÇÃO APLICADA AQUI: Força o texto para preto no Light Mode durante hover/focus */
+.lightmode form button:hover, .lightmode form button:focus {
+    color: var(--color-black); /* Texto PRETO em hover/focus no Light Mode */
+    background-color: #f5f5f5; /* Fundo claro para o hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+}
+.lightmode form button {
+    color: var(--color-black); /* Garante texto preto no Light Mode */
 }
 
 /* Área do Usuário (Direita) */
@@ -163,24 +187,33 @@ form button:hover, form button:focus {
     border: none;
     border-radius: 20%;
     background-color: var(--color-secondary);
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
     top: 12px; 
     right: 80px;
-    color: var(--color-black);
-    font-size: 1.4rem;
-    font-weight: bold;
     z-index: 101; 
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
+    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
     color: var(--color-input-background);
 }
+/* CORREÇÃO APLICADA: Cor do fundo e texto corretos no Light Mode hover do Logout */
+.lightmode #logout-button:hover {
+    color: var(--color-black); /* Texto PRETO */
+    background-color: var(--color-input-background); /* Fundo CLARO (f5f5f5) */
+}
+
 
 #theme-switch {
     height: 50px;
@@ -195,12 +228,14 @@ form button:hover, form button:focus {
     position: fixed;
     top: 5px; 
     right: 20px;
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa */
+    transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
 
 #theme-switch svg {
     fill: var(--color-text);
+    transition: fill 0.3s ease;
 }
 
 #theme-switch svg:first-child { display: none; }
@@ -210,6 +245,7 @@ form button:hover, form button:focus {
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
+    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
 }
 
 #theme-switch:hover svg {

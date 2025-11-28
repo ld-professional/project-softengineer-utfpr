@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (meusServicosButton) {
         meusServicosButton.addEventListener('click', function() {
             
-            
+                
             const urlDestino = '/barbeiro/servicos/meus-servicos/';
 
             
