@@ -36,6 +36,9 @@ def login_view(request):
                          
                 login(request, user) 
 
+                if  hasattr(request.user, 'barber'):
+                    return JsonResponse({'status': 'ok', 'redirect_url': '/barbeiro/dashboard/'})     
+
                 return JsonResponse({'status': 'ok', 'redirect_url': '/clientes/dashboard/'})     
 
             else:

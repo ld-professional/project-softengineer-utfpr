@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Agendamentos</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">
+  <link rel="stylesheet" href="{% static 'agendamento/css/cliente-meus-agendamentos.css' %}">   
+  <script type="text/javascript" src="{% static 'agendamento/js/barbeiro-meus-agendamentos.js' %}" defer></script>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{% url 'clientepagina_inicial_dashboard' %}" style="text-decoration: none;">
+            <header class="page-header">
+                <img src="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}" alt="Ícone da Barbearia" class="logo-icon">
+                <h1 class="page-title">Barbearia do Wiese</h1>
+            </header>
+        </a>
+
+        <p class="titulo">Meus Agendamentos</p>
+
+        <button id="theme-switch" aria-label="Alternar tema">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+        </button>
+    </nav>
+
+    <div class="container">
+        
+        <div class="wrapper">
+            <form id="form">
+                <div>
+                    <button type="button" id="voltar-dash-btn">Voltar</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="user-info">
+            <p>Seus horários marcados</p>
+        </div>
+
+        <div class="container-carrossel">
+            
+            {% if agendamentos %}
+                {% if agendamentos|length > 3 %}
+                    <button type="button" class="seta" id="btn-esq">&#10094;</button>
+                {% endif %}
+
+                <div class="servicos-agendamento" id="scroll-container">
+                    {% for s in agendamentos %}
+                    <div class="link-bloco" data-id="{{ s.pk }}" onclick="selecionarServico(this)">  
+                        
+                        <div class="{% if s.fk_servicos.nome_servico == 'Cabelo' %}corte{% elif s.fk_servicos.nome_servico == 'Barba' %}barba{% elif s.fk_servicos.nome_servico == 'Barba e Cabelo' %}barba-corte{% else %}corte{% endif %}">
+                            
+                            <h2>{{ s.fk_servicos.nome_servico }}</h2>
+                            
+                            <p class="data">
+                                {{ s.data_e_horario_inicio|date:"d/m/Y" }}<br>
+                                às {{ s.data_e_horario_inicio|date:"H:i" }}
+                            </p>
+
+                            <p class="barbeiro-selecionado">
+                                Cliente: {{ s.fk_cliente.fk_user.username }}
+                            </p>
+
+                            <p class="valor">Valor R$ {{ s.fk_servicos.preco_servico }}</p>
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if agendamentos|length > 3 %}
+                    <button type="button" class="seta" id="btn-dir">&#10095;</button>
+                {% endif %}
+            
+            {% else %}
+                <p class="aviso-sem-servico">NENHUM AGENDAMENTO ENCONTRADO</p>
+            {% endif %}
+
+        </div>
+
+        {% if agendamentos %}
+            <button class="confirm-button">Cancelar AGENDAMENTO</button>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

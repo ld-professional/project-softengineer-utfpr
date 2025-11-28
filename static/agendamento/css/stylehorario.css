@@ -20,14 +20,11 @@
     --color-hoje: #25f748;
     --color-background: #cfcfcf;
     --color-text: #000000;
-    --color-input-background: #f5f5f5;
+    --color-input-background: #f5f5f5; /* Fundo claro para elementos internos */
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; transition: color 0.3s ease, background-color 0.3s ease; }
 
 html {
     font-family: var(--font-family-primary);
@@ -36,6 +33,7 @@ html {
     text-align: center;
 }
 
+/* EFEITO: Transição para cores de fundo e texto na troca de tema */
 nav {
     position: fixed;
     top: 0;
@@ -48,6 +46,7 @@ nav {
     justify-content: space-between;
     height: 60px;
     padding: 0 2rem;
+    transition: background-color 0.3s ease;
 }
 
 .titulo {
@@ -62,6 +61,7 @@ nav {
     align-items: center;
     -webkit-user-select: none;
     user-select: none;
+    transition: color 0.3s ease;
 }
 
 .page-header {
@@ -73,22 +73,27 @@ nav {
     gap: 0.75rem;
 }
 
+/* EFEITO: Transição para cor de fundo */
 body {
     min-width: 100vw;
     background-color: var(--color-input-background);
     background-size: cover;
     background-position: right;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
 }
 
+/* EFEITO: Transição para cor de fundo */
 .container {
     display: grid;
     grid-template-columns: 320px 1fr;
     min-height: 100vh;
     padding-top: 60px;
     background-color: var(--color-input-background);
+    transition: background-color 0.3s ease;
 }
 
+/* EFEITO: Transição para cor de fundo */
 .wrapper {
     background-color: var(--color-background);
     width: 320px;
@@ -102,6 +107,7 @@ body {
     left: 0;
     top: 60px;
     z-index: 10;
+    transition: background-color 0.3s ease;
 }
 
 .logo-icon {
@@ -114,6 +120,7 @@ body {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--color-primary);
+    transition: color 0.3s ease;
 }
 
 h1 {
@@ -121,6 +128,7 @@ h1 {
     font-weight: 600;
     color: var(--color-primary);
     font-family: var(--font-family-primary);
+    transition: color 0.3s ease;
 }
 
 form {
@@ -139,24 +147,33 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black);
+    color: var(--color-black); /* Garante texto preto no fundo amarelo */
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-form button:hover {
+form button:hover, form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
-}
-
-form button:focus {
     outline: none;
-    background-color: var(--color-primary);
-    color: var(--color-input-background);
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
 }
+/* Correção de cores para Light Mode no hover do botão do formulário */
+.lightmode form button:hover, .lightmode form button:focus {
+    color: var(--color-black); /* Garante texto preto no hover */
+    background-color: #f5f5f5; /* Força um fundo claro para o hover no Light Mode */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+}
+.lightmode form button {
+    color: var(--color-black); /* Garante texto preto no Light Mode */
+}
+
 
 .calendar {
     position: relative;
@@ -172,7 +189,15 @@ form button:focus {
     padding: 20px;
     background: var(--color-background);
     border-radius: 15px;
+    
+    /* Dark Mode Shadow */
     box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* MODIFICAÇÃO APLICADA: Fundo claro e sombra suave para o Calendário no Light Mode */
+.lightmode .calendar {
+    background: var(--color-input-background); /* Fundo claro (branco) */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
 }
 
 .calendar-header {
@@ -183,6 +208,7 @@ form button:focus {
     color: var(--color-text);
     font-weight: bold;
     font-size: 1.5rem;
+    transition: color 0.3s ease;
 }
 
 .calendar-header button {
@@ -196,7 +222,21 @@ form button:focus {
     cursor: pointer;
     width: 40px;
     height: 40px;
+    /* EFEITO: Transição completa de hover */
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
+
+.calendar-header button:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    transform: scale(1.1);
+}
+/* Correção de cores para Light Mode no hover do botão do calendário */
+.lightmode .calendar-header button:hover {
+    background-color: var(--color-primary); 
+    color: var(--color-background);
+}
+
 
 .days {
     display: grid;
@@ -210,13 +250,13 @@ form button:focus {
     color: var(--color-text);
     font-size: 1.2rem;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
-    margin-top: 10px;
     color: var(--color-text);
 }
 
@@ -232,24 +272,30 @@ form button:focus {
     border-radius: 50%;
     width: 45px;
     height: 45px;
-    transition: var(--color-secondary) 150ms ease, color 150ms ease;
+    /* EFEITO: Transição completa para cores */
+    transition: background-color 150ms ease, color 150ms ease;
 }
 
 .date.active {
     background-color: var(--color-secondary); 
-    color: var(--color-black);
+    color: var(--color-black); /* Texto preto no amarelo */
     opacity: 0.5; 
 }
 
 .date.active.selected {
     opacity: 1; 
     background-color: var(--color-secondary);
-    color: var(--color-black);
+    color: var(--color-black); /* Texto preto no amarelo */
 }
 
 .date:hover, .date.selected {
     background-color: var(--color-secondary);
-    color: var(--color-black);
+    color: var(--color-black); /* Texto preto no amarelo */
+}
+.date.selected {
+    /* EFEITO: Adicionado pulo e sombra sutil ao selecionar */
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(223, 176, 66, 0.5);
 }
 
 .date.inactive {
@@ -269,18 +315,44 @@ form button:focus {
     padding: 20px;
     background: var(--color-background);
     border-radius: 12px;
+    
+    /* Dark Mode Shadow */
     box-shadow: 0 4px 12px var(--color-input-background);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* MODIFICAÇÃO APLICADA: Fundo claro e sombra suave para o Container de Horários no Light Mode */
+.lightmode .horarios-container {
+    background: var(--color-input-background); /* Fundo claro (branco) */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
 }
 
 .horarios-container h3 {
     margin-bottom: 20px;
     font-size: 1.5rem;
     color: var(--color-text);
+    transition: color 0.3s ease;
 }
+
+/* --- NOVO ESTILO PARA A MENSAGEM DE AVISO (CORRIGIDO) --- */
+/* Certifique-se de que o elemento que contém esta mensagem tenha a classe 'aviso-horarios' */
+.aviso-horarios {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-text); /* Cor padrão (Branco no Dark Mode) */
+    opacity: 0.8; 
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+/* 🛑 CORREÇÃO CRÍTICA PARA O LIGHTMODE 🛑 */
+.lightmode .aviso-horarios {
+    color: var(--color-black); /* Cor preta para alto contraste no Light Mode */
+    opacity: 1; /* Remove opacidade para visibilidade total */
+}
+
 
 .lista-horarios {
     display: flex;
@@ -296,13 +368,29 @@ form button:focus {
     border-radius: 8px;
     cursor: pointer;
     color: var(--color-text);
-    transition: .2s;
+    /* EFEITO: Transição completa de hover */
+    transition: 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     font-size: 1.1rem;
 }
+/* Garante que o texto se adapte no Light Mode */
+.lightmode .horario {
+    color: var(--color-text); 
+}
+
 
 .horario:hover, .horario.selected {
     background: var(--color-secondary);
-    color: var(--color-black);
+    color: var(--color-black); /* Texto preto no amarelo */
+}
+.horario:hover {
+    /* EFEITO: Pulo sutil no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(223, 176, 66, 0.4);
+}
+.horario.selected {
+    /* EFEITO: Sombra sutil ao selecionar */
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(223, 176, 66, 0.6);
 }
 
 .confirm-button {
@@ -322,14 +410,24 @@ form button:focus {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: block;
 }
 
 .confirm-button:hover {
     background-color: var(--color-primary);
     color: var(--color-input-background);
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: scale(1.05); /* EFEITO: Pulo maior no hover */
 }
+/* Correção de cores para Light Mode no hover do botão Confirmar */
+.lightmode .confirm-button:hover {
+    color: var(--color-black); /* Garante texto preto no hover */
+    background-color: #f5f5f5;
+}
+
 
 #logout-button {
     height: 35px;
@@ -338,24 +436,30 @@ form button:focus {
     border: none;
     border-radius: 20%;
     background-color: var(--color-secondary);
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
     top: 12px;
     right: 80px;
-    color: var(--color-black);
-    font-size: 1.4rem;
     z-index: 101;
-    font-weight: bold;
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1);
+    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
     color: var(--color-input-background);
+}
+/* Correção de cores para Light Mode no hover do Logout */
+.lightmode #logout-button:hover {
+    color: var(--color-black);
 }
 
 #theme-switch {
@@ -371,12 +475,14 @@ form button:focus {
     position: fixed;
     top: 5px;
     right: 20px;
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 200;
 }
 
 #theme-switch svg {
     fill: var(--color-text);
-    transition: fill 150ms ease;
+    transition: fill 0.3s ease;
 }
 
 #theme-switch svg:first-child {
@@ -394,7 +500,7 @@ form button:focus {
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1);
+    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
 }
 
 #theme-switch:hover svg {
@@ -402,6 +508,9 @@ form button:focus {
 }
 
 
+/* ========================================= */
+/* SWEETALERT2 (MANTIDO E COM CORES CORRIGIDAS) */
+/* ========================================= */
 .swal2-popup {
     background: var(--color-input-background) !important;
     color: var(--color-text) !important;
@@ -417,7 +526,7 @@ form button:focus {
 
 .swal2-confirm {
     background-color: var(--color-secondary) !important;
-    color: var(--color-black) !important;
+    color: var(--color-black) !important; /* Texto preto no amarelo */
     border-radius: 10px !important;
     font-weight: bold !important;
     font-family: var(--font-family-primary) !important;
@@ -425,30 +534,98 @@ form button:focus {
 
 .swal2-cancel {
     background-color: var(--color-incorrect) !important;
-    color: #fff !important;
+    color: #fff !important; /* Texto branco no vermelho */
     border-radius: 10px !important;
     font-family: var(--font-family-primary) !important;
 }
 
+/* ========================================= */
+/* MEDIA QUERIES (CELULAR)                   */
+/* ========================================= */
 @media(max-width: 600px) {
-    .container {
-        grid-template-columns: 1fr;
+    /* 1. Header corrigido */
+    nav {
+        justify-content: center;
+        padding-right: 50px; /* Espaço pro botão */
     }
-    .wrapper {
-        display: none !important;
+
+    .page-header {
+        position: static;
+        margin-right: auto;
+        width: auto;
+    }
+    
+    .page-title {
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
+    
+    .logo-icon {
+        width: 35px;
+        height: 35px;
     }
 
     .titulo {
         display: none !important;
-}
-
-    .calendar, .horarios-container, .confirm-button {
-        grid-column: 1;
-        width: 95%;
     }
-    .user-info {
-        position: static;
-        transform: none;
-        margin: 20px 0;
+
+    .wrapper {
+        display: none !important;
+    }
+    
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    /* 2. Calendário Ajustado */
+    .calendar {
+        grid-column: 1;
+        width: 100%; /* Ocupa a largura total */
+        padding: 10px; /* Menos padding lateral */
+        margin-top: 20px;
+    }
+
+    .calendar-header {
+        font-size: 1.2rem; /* Cabeçalho um pouco menor */
+    }
+
+    .dates {
+        gap: 2px; /* Espaço entre bolinhas bem menor para caber tudo */
+    }
+
+    .date {
+        width: 38px; /* Bolinha menor (era 45px) */
+        height: 38px;
+        font-size: 1rem; /* Fonte menor */
+        padding: 0; /* Remove padding interno que atrapalha centralização */
+    }
+    
+    .day {
+        font-size: 0.9rem; /* Dias da semana menores */
+        padding: 2px;
+    }
+
+    /* 3. Ajuste container horários */
+    .horarios-container {
+        grid-column: 1;
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .lista-horarios {
+        gap: 10px;
+    }
+    
+    .horario {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+
+    /* 4. Botão confirmar */
+    .confirm-button {
+        grid-column: 1;
+        width: 90%; /* Botão responsivo */
+        font-size: 1.2rem;
+        height: 60px;
     }
 }
