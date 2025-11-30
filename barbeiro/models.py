@@ -39,8 +39,8 @@ class Barbeiro(models.Model):
     fk_user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,related_name='barber')
     foto_barbeiro= models.ImageField(
     upload_to='fotos_barbeiros/',
-    null=True,
-    blank=True,
+    null=False,
+    blank=False,
     )
 
     class Meta():

@@ -90,6 +90,10 @@ def barbeiros_editar_servicos(request):
                 
 
                 return redirect('barbeiro_editar_servicos')
+            
+            else:
+                print("❌ Formulário Inválido:", formulario.errors)
+                return redirect('barbeiro_editar_servicos')
 
         except Exception as e:
             print(f"Erro ao salvar serviço: {e}")
