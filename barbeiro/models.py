@@ -41,6 +41,7 @@ class Barbeiro(models.Model):
     upload_to='fotos_barbeiros/',
     null=True,
     blank=True,
+    default='fotos_barbeiros/sem_foto.jpg'
     )
 
     class Meta():
