@@ -1,4 +1,3 @@
-// Obtém elementos do DOM
 const form = document.getElementById('form-editar');
 const username_input = document.getElementById('username');
 const email_input = document.getElementById('email');
@@ -8,7 +7,11 @@ const preview_img = document.getElementById('preview-img');
 const error_message = document.getElementById('error-message');
 const themeSwitch = document.getElementById('theme-switch');
 
-// --- LÓGICA DE DARK/LIGHT MODE (Mantida igual ao validation.js) ---
+// Senhas
+const senha_atual_input = document.getElementById('senha_atual');
+const nova_senha_input = document.getElementById('nova_senha');
+
+// --- LÓGICA DE DARK/LIGHT MODE ---
 let lightmode = localStorage.getItem('lightmode');
 
 const enableLightMode = () => {
@@ -57,7 +60,7 @@ if (telefone_input) {
     });
 }
 
-// --- ENVIO DO FORMULÁRIO (FETCH COM FORMDATA) ---
+// --- ENVIO DO FORMULÁRIO ---
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -74,8 +77,24 @@ if (form) {
             email_input.parentElement.classList.add('incorrect');
         }
         if (telefone_input.value.replace(/\D/g, '').length !== 11) {
-            errors.push('Telefone inválido');
+            errors.push('Telefone inválido (11 dígitos)');
             telefone_input.parentElement.classList.add('incorrect');
+        }
+
+        // Validação Senhas
+        if (senha_atual_input.value || nova_senha_input.value) {
+            if (!senha_atual_input.value) {
+                errors.push('Digite sua senha atual para confirmar a troca');
+                senha_atual_input.parentElement.classList.add('incorrect');
+            }
+            if (!nova_senha_input.value) {
+                errors.push('Digite a nova senha desejada');
+                nova_senha_input.parentElement.classList.add('incorrect');
+            }
+            if (nova_senha_input.value && nova_senha_input.value.length < 8) {
+                errors.push('A nova senha deve ter no mínimo 8 caracteres');
+                nova_senha_input.parentElement.classList.add('incorrect');
+            }
         }
 
         if (errors.length > 0) {
@@ -83,33 +102,29 @@ if (form) {
             return;
         }
 
-        // PREPARAÇÃO DOS DADOS (O Segredo para enviar Foto)
-        // FormData pega todos os inputs do form automaticamente, inclusive arquivos
         const formData = new FormData(form);
 
         try {
             const response = await fetch(window.location.href, {
                 method: 'POST',
                 headers: {
-                    // IMPORTANTE: NÃO definir Content-Type aqui. 
-                    // O navegador define automaticamente como multipart/form-data com o boundary correto.
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                body: formData // Envia o FormData direto
+                body: formData
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                // Sucesso
                 alert(result.message || 'Perfil atualizado!');
+                if (senha_atual_input) senha_atual_input.value = '';
+                if (nova_senha_input) nova_senha_input.value = '';
+                
                 if (result.redirect_url) {
-                    window.location.href = result.redirect_url;
-                } else {
-                    window.location.reload();
+                   // Recarrega para ver a foto nova se mudou
+                   window.location.reload(); 
                 }
             } else {
-                // Erro do Django
                 error_message.innerText = result.error || 'Erro ao atualizar.';
             }
 
@@ -120,8 +135,8 @@ if (form) {
     });
 }
 
-// Remove classe de erro ao digitar
-[username_input, email_input, telefone_input].forEach(input => {
+const inputs = [username_input, email_input, telefone_input, senha_atual_input, nova_senha_input];
+inputs.forEach(input => {
     if(input) {
         input.addEventListener('input', () => {
             if(input.parentElement.classList.contains('incorrect')) {
