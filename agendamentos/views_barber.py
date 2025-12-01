@@ -70,3 +70,48 @@ def api_barbeiro_cancelar_meus_agendamentos(request):
 
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+
+from barbeiro.models import Horarios_de_trabalho,Excecoes
+
+
+def barbeiro_visualizar_agenda(request):
+    
+    if  hasattr(request.user, 'clientao'):
+        return redirect('/clientes/dashboard/')
+
+    if not hasattr(request.user, 'barber'):
+        return redirect('/account/login')
+    
+
+
+    if request.method == 'GET': 
+
+        #list_horarios_trab = Horarios_de_trabalho.objects.filter(
+        #    fk_barbeiro__fk_user=request.user,
+        #).order_by('dia_da_semana','horario_inicio')
+
+
+        #contexto = {'agendamentos': list_horarios_trab}
+
+        return render(request, 'agendamentos/lista-horarios-trab.html',) 
+    
+def barbeiro_editar_agenda(request):
+    
+    if  hasattr(request.user, 'clientao'):
+        return redirect('/clientes/dashboard/')
+
+    if not hasattr(request.user, 'barber'):
+        return redirect('/account/login')
+    
+
+
+    if request.method == 'GET': 
+
+        lista_agendamentos_do_cliente = Agendamentos.objects.filter(
+            fk_barbeiro__fk_user=request.user,
+        ).order_by('data_e_horario_inicio')
+
+        contexto = {'agendamentos': lista_agendamentos_do_cliente}
+
+        return render(request, 'agendamentos/excecao.html', contexto) 
