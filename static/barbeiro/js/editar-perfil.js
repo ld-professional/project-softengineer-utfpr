@@ -1,43 +1,150 @@
-// --- 1. SELEÇÃO DE ELEMENTOS ---
-const fileInput = document.getElementById('foto_perfil');
-const uploadButton = document.getElementById('btn-upload-photo');
-const profileImg = document.getElementById('profile-img');
-const formPerfil = document.getElementById('form-perfil');
-const errorMessage = document.getElementById('error-message');
-const btnSalvar = document.getElementById('btn-salvar');
+const form = document.getElementById('form-editar');
+const username_input = document.getElementById('username');
+const email_input = document.getElementById('email');
+const telefone_input = document.getElementById('telefone');
+const foto_input = document.getElementById('foto-input');
+const preview_img = document.getElementById('preview-img');
+const error_message = document.getElementById('error-message');
 const themeSwitch = document.getElementById('theme-switch');
 
+// Senhas
+const senha_atual_input = document.getElementById('senha_atual');
+const nova_senha_input = document.getElementById('nova_senha');
 
-// --- 2. FUNÇÃO AUXILIAR: PRÉ-VISUALIZAÇÃO DA FOTO ---
-// Carrega a imagem localmente assim que o usuário seleciona um arquivo
-function handleFilePreview() {
-    if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            // Atualiza o src da tag <img> para a pré-visualização
-            profileImg.src = e.target.result;
-        };
-        
-        // Lê o arquivo como URL de dados (Base64)
-        reader.readAsDataURL(fileInput.files[0]);
-    }
-}
-
-// --- 3. EVENTO DE CLIQUE DO BOTÃO DE UPLOAD ---
-// Faz com que o clique no botão visual acione o clique no input file escondido
-if (uploadButton && fileInput) {
-    uploadButton.addEventListener('click', () => {
-        fileInput.click();
+// --- DARK/LIGHT MODE ---
+let lightmode = localStorage.getItem('lightmode');
+const enableLightMode = () => {
+    document.body.classList.add('lightmode');
+    localStorage.setItem('lightmode', 'active');
+};
+const disableLightMode = () => {
+    document.body.classList.remove('lightmode');
+    localStorage.setItem('lightmode', null);
+};
+if (lightmode === 'active') enableLightMode();
+if (themeSwitch) {
+    themeSwitch.addEventListener('click', () => {
+        lightmode = localStorage.getItem('lightmode');
+        if (lightmode !== 'active') enableLightMode();
+        else disableLightMode();
     });
-    
-    // Escuta a mudança no input file (quando o arquivo é escolhido)
-    fileInput.addEventListener('change', handleFilePreview);
 }
 
+// --- PREVIEW IMAGEM ---
+if (foto_input) {
+    foto_input.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) { preview_img.src = e.target.result; }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+}
 
-// --- 4. FUNÇÃO AUXILIAR: CSRF TOKEN (Necessária para segurança do Django) ---
-function obterTokenCsrf(name) {
+// --- MÁSCARA TELEFONE ---
+if (telefone_input) {
+    telefone_input.addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '');
+        if(x.length > 11) x = x.slice(0,11); 
+        x = x.replace(/^(\d{2})(\d)/, '($1) $2');
+        x = x.replace(/(\d)(\d{4})$/, '$1-$2');         
+        e.target.value = x;
+    });
+}
+
+// --- ENVIO DO FORMULÁRIO ---
+// --- ENVIO DO FORMULÁRIO ---
+if (form) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        let errors = [];
+        error_message.innerText = ""; 
+
+        // Validações Visuais (Front-end)
+        if (!username_input.value) {
+            errors.push('Nome de usuário é obrigatório');
+            username_input.parentElement.classList.add('incorrect');
+        }
+        if (!email_input.value) {
+            errors.push('Email é obrigatório');
+            email_input.parentElement.classList.add('incorrect');
+        }
+        
+        // Verifica tamanho visual (com máscara tem 15 chars: (XX) XXXXX-XXXX)
+        // Ou verifica se tem 11 números
+        let numerosTelefone = telefone_input.value.replace(/\D/g, '');
+        if (numerosTelefone.length !== 11) {
+            errors.push('Telefone inválido (precisa de 11 dígitos)');
+            telefone_input.parentElement.classList.add('incorrect');
+        }
+
+        // Validação Senha (Mantida a lógica correta)
+        if (!senha_atual_input.value) {
+            errors.push('Digite sua senha atual para confirmar a alteração');
+            senha_atual_input.parentElement.classList.add('incorrect');
+        }
+
+        if (nova_senha_input.value && nova_senha_input.value.length < 8) {
+            errors.push('A nova senha deve ter no mínimo 8 caracteres');
+            nova_senha_input.parentElement.classList.add('incorrect');
+        }
+
+        if (errors.length > 0) {
+            error_message.innerText = errors.join(". ");
+            return;
+        }
+
+        // --- AQUI ESTÁ A CORREÇÃO MÁGICA ---
+        const formData = new FormData(form);
+        
+        // Pega o valor formatado "(43) 9..."
+        const telefoneSujo = formData.get('telefone');
+        // Limpa tudo que não é número
+        const telefoneLimpo = telefoneSujo.replace(/\D/g, '');
+        // Atualiza o dado que será enviado para o servidor
+        formData.set('telefone', telefoneLimpo);
+
+        try {
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: formData // Agora vai com o telefone limpo (11 dígitos)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Perfil atualizado com sucesso!');
+                if (senha_atual_input) senha_atual_input.value = '';
+                if (nova_senha_input) nova_senha_input.value = '';
+                window.location.reload();
+            } else {
+                const msg = result.error || 'Erro desconhecido ao atualizar.';
+                error_message.innerText = msg;
+                console.log("Erro retornado:", result);
+            }
+
+        } catch (err) {
+            console.error(err);
+            error_message.innerText = 'Erro de conexão com o servidor.';
+        }
+    });
+}
+
+const inputs = [username_input, email_input, telefone_input, senha_atual_input, nova_senha_input];
+inputs.forEach(input => {
+    if(input) {
+        input.addEventListener('input', () => {
+            if(input.parentElement.classList.contains('incorrect')) {
+                input.parentElement.classList.remove('incorrect');
+                error_message.innerText = '';
+            }
+        });
+    }
+});
+
+function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -50,89 +157,4 @@ function obterTokenCsrf(name) {
         }
     }
     return cookieValue;
-}
-
-
-// --- 5. SUBMISSÃO DO FORMULÁRIO ---
-if (formPerfil && btnSalvar) {
-    formPerfil.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        errorMessage.textContent = ''; 
-        
-        // Usa FormData para enviar todos os campos, incluindo o arquivo da foto
-        const formData = new FormData(formPerfil);
-        
-        btnSalvar.disabled = true;
-        btnSalvar.textContent = "Salvando...";
-
-        try {
-            // A rota 'editar-perfil/' deve aceitar requisições POST/PATCH
-            const resposta = await fetch(formPerfil.action, {
-                method: 'POST', 
-                headers: {
-                    'X-CSRFToken': obterTokenCsrf('csrftoken')
-                    // NÃO inclua 'Content-Type' ao enviar FormData com arquivos
-                },
-                body: formData
-            });
-
-            const dados = await resposta.json();
-
-            if (resposta.ok) {
-                // Sucesso
-                Swal.fire({
-                    icon: "success",
-                    title: "Perfil Atualizado!",
-                    text: dados.mensagem || "Suas informações foram salvas com sucesso."
-                });
-                // Recarrega a página para mostrar a nova foto/dados
-                setTimeout(() => { window.location.reload(); }, 1500); 
-
-            } else {
-                // Erro (Ex: Senha atual incorreta, validação de campo)
-                let msg = dados.erro || "Houve um erro ao tentar salvar os dados.";
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro na Edição",
-                    text: msg
-                });
-                errorMessage.textContent = msg; 
-            }
-
-        } catch (erro) {
-            console.error('Erro de conexão ou JS:', erro);
-            Swal.fire({
-                icon: "error",
-                title: "Falha de Conexão",
-                text: "Não foi possível conectar ao servidor para salvar."
-            });
-            errorMessage.textContent = "Falha de conexão.";
-        }
-        
-        // Reabilita o botão
-        btnSalvar.disabled = false;
-        btnSalvar.textContent = "Salvar Alterações";
-    });
-}
-
-
-// --- 6. TEMA DARK/LIGHT (Reutilização da lógica do tema) ---
-const htmlElement = document.documentElement;
-
-const toggleLightMode = (enable) => {
-    if (enable) {
-        htmlElement.classList.add('lightmode');
-        localStorage.setItem('lightmode', 'active');
-    } else {
-        htmlElement.classList.remove('lightmode');
-        localStorage.removeItem('lightmode');
-    }
-};
-
-if (themeSwitch) {
-    themeSwitch.addEventListener('click', () => {
-        const isLightModeActive = htmlElement.classList.contains('lightmode');
-        toggleLightMode(!isLightModeActive);
-    });
 }
