@@ -11,9 +11,8 @@ const themeSwitch = document.getElementById('theme-switch');
 const senha_atual_input = document.getElementById('senha_atual');
 const nova_senha_input = document.getElementById('nova_senha');
 
-// --- LÓGICA DE DARK/LIGHT MODE ---
+// --- DARK/LIGHT MODE ---
 let lightmode = localStorage.getItem('lightmode');
-
 const enableLightMode = () => {
     document.body.classList.add('lightmode');
     localStorage.setItem('lightmode', 'active');
@@ -22,34 +21,27 @@ const disableLightMode = () => {
     document.body.classList.remove('lightmode');
     localStorage.setItem('lightmode', null);
 };
-
 if (lightmode === 'active') enableLightMode();
-
 if (themeSwitch) {
     themeSwitch.addEventListener('click', () => {
         lightmode = localStorage.getItem('lightmode');
-        if (lightmode !== 'active') {
-            enableLightMode();
-        } else {
-            disableLightMode();
-        }
+        if (lightmode !== 'active') enableLightMode();
+        else disableLightMode();
     });
 }
 
-// --- PRÉ-VISUALIZAÇÃO DA IMAGEM ---
+// --- PREVIEW IMAGEM ---
 if (foto_input) {
     foto_input.addEventListener('change', function(e) {
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                preview_img.src = e.target.result;
-            }
+            reader.onload = function(e) { preview_img.src = e.target.result; }
             reader.readAsDataURL(e.target.files[0]);
         }
     });
 }
 
-// --- MÁSCARA DE TELEFONE ---
+// --- MÁSCARA TELEFONE ---
 if (telefone_input) {
     telefone_input.addEventListener('input', function(e) {
         let x = e.target.value.replace(/\D/g, '');
@@ -61,13 +53,15 @@ if (telefone_input) {
 }
 
 // --- ENVIO DO FORMULÁRIO ---
+// --- ENVIO DO FORMULÁRIO ---
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         let errors = [];
+        error_message.innerText = ""; 
 
-        // Validações
+        // Validações Visuais (Front-end)
         if (!username_input.value) {
             errors.push('Nome de usuário é obrigatório');
             username_input.parentElement.classList.add('incorrect');
@@ -76,25 +70,24 @@ if (form) {
             errors.push('Email é obrigatório');
             email_input.parentElement.classList.add('incorrect');
         }
-        if (telefone_input.value.replace(/\D/g, '').length !== 11) {
-            errors.push('Telefone inválido (11 dígitos)');
+        
+        // Verifica tamanho visual (com máscara tem 15 chars: (XX) XXXXX-XXXX)
+        // Ou verifica se tem 11 números
+        let numerosTelefone = telefone_input.value.replace(/\D/g, '');
+        if (numerosTelefone.length !== 11) {
+            errors.push('Telefone inválido (precisa de 11 dígitos)');
             telefone_input.parentElement.classList.add('incorrect');
         }
 
-        // Validação Senhas
-        if (senha_atual_input.value || nova_senha_input.value) {
-            if (!senha_atual_input.value) {
-                errors.push('Digite sua senha atual para confirmar a troca');
-                senha_atual_input.parentElement.classList.add('incorrect');
-            }
-            if (!nova_senha_input.value) {
-                errors.push('Digite a nova senha desejada');
-                nova_senha_input.parentElement.classList.add('incorrect');
-            }
-            if (nova_senha_input.value && nova_senha_input.value.length < 8) {
-                errors.push('A nova senha deve ter no mínimo 8 caracteres');
-                nova_senha_input.parentElement.classList.add('incorrect');
-            }
+        // Validação Senha (Mantida a lógica correta)
+        if (!senha_atual_input.value) {
+            errors.push('Digite sua senha atual para confirmar a alteração');
+            senha_atual_input.parentElement.classList.add('incorrect');
+        }
+
+        if (nova_senha_input.value && nova_senha_input.value.length < 8) {
+            errors.push('A nova senha deve ter no mínimo 8 caracteres');
+            nova_senha_input.parentElement.classList.add('incorrect');
         }
 
         if (errors.length > 0) {
@@ -102,30 +95,34 @@ if (form) {
             return;
         }
 
+        // --- AQUI ESTÁ A CORREÇÃO MÁGICA ---
         const formData = new FormData(form);
+        
+        // Pega o valor formatado "(43) 9..."
+        const telefoneSujo = formData.get('telefone');
+        // Limpa tudo que não é número
+        const telefoneLimpo = telefoneSujo.replace(/\D/g, '');
+        // Atualiza o dado que será enviado para o servidor
+        formData.set('telefone', telefoneLimpo);
 
         try {
             const response = await fetch(window.location.href, {
                 method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: formData
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: formData // Agora vai com o telefone limpo (11 dígitos)
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                alert(result.message || 'Perfil atualizado!');
+                alert('Perfil atualizado com sucesso!');
                 if (senha_atual_input) senha_atual_input.value = '';
                 if (nova_senha_input) nova_senha_input.value = '';
-                
-                if (result.redirect_url) {
-                   // Recarrega para ver a foto nova se mudou
-                   window.location.reload(); 
-                }
+                window.location.reload();
             } else {
-                error_message.innerText = result.error || 'Erro ao atualizar.';
+                const msg = result.error || 'Erro desconhecido ao atualizar.';
+                error_message.innerText = msg;
+                console.log("Erro retornado:", result);
             }
 
         } catch (err) {

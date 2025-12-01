@@ -43,49 +43,45 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # Importe o form que criamos
 from .forms import EditarPerfilBarbeiroForm
 
+
+
+
+
 @ensure_csrf_cookie
 @login_required(login_url='/account/login/')
 def barbeiro_perfil(request):
 
-    # --- GET: Apenas exibe a tela ---
+    # GET: Exibe a tela
     if request.method == 'GET':
         if hasattr(request.user, 'clientao'):
             return redirect('/clientes/dashboard/')
         if not hasattr(request.user, 'barber'):
             return redirect('/')
             
-        # Não precisamos passar o 'form' para o template porque 
-        # seu HTML é feito na mão. Passamos o user para preencher os values.
         contexto = {'barbeiro_tal': request.user} 
         return render(request, 'barbeiro/editar-perfil.html', contexto)
 
-
-    # --- POST: Processa a validação e o salvamento ---
+    # POST: Salva as alterações
     if request.method == 'POST':
         
-        # Instanciamos o form com os dados (POST) e arquivos (FILES)
-        # instance=request.user diz: "Isso é uma EDIÇÃO desse usuário", não uma criação.
+        # Carrega o form com os dados enviados E o usuário atual (instance)
         form = EditarPerfilBarbeiroForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
-            # 1. Prepara o User (commit=False para não salvar ainda)
+            # 1. Prepara o User sem salvar ainda
             user = form.save(commit=False)
             
-            # 2. Verifica se teve troca de senha (logica processada no form.clean)
+            # 2. Verifica se existe NOVA senha para salvar
             nova_senha = form.cleaned_data.get('nova_senha')
             if nova_senha:
                 user.set_password(nova_senha)
-                # Atualiza a sessão para não deslogar
-                update_session_auth_hash(request, user)
+                update_session_auth_hash(request, user) # Mantém logado
             
-            # 3. Salva as alterações do User no Banco (Nome, Email, Telefone, Senha)
+            # 3. Salva User (Nome, Telefone, Email, Senha se mudou)
             user.save()
 
-            # 4. Salva a Foto (Tabela Barbeiro) manualmente
-            # O campo foto_barbeiro não é do model User, então form.save() ignora ele.
-            # Pegamos do cleaned_data onde o form já validou se é imagem mesmo.
+            # 4. Salva a Foto (se foi enviada)
             nova_foto = form.cleaned_data.get('foto_barbeiro')
-            
             if nova_foto:
                 barbeiro = user.barber
                 barbeiro.foto_barbeiro = nova_foto
@@ -97,15 +93,13 @@ def barbeiro_perfil(request):
             })
         
         else:
-            # Se houver erro (telefone duplicado, senha errada, etc)
-            # Pegamos o primeiro erro para mostrar no seu alert
+            # Se houver erro, pega o primeiro da lista e manda pro JS
             errors = form.errors.as_data()
-            msg_erro = "Erro de validação."
+            msg_erro = "Erro desconhecido."
             
-            # Loop simples para pegar a primeira mensagem de erro real
             for field, error_list in errors.items():
-                # error_list[0] é o objeto erro, .message é o texto dele
-                msg_erro = f"{error_list[0].message}"
+                # error_list[0] é o erro. .message é o texto.
+                msg_erro = f"{error_list[0].message}" 
                 break 
 
             return JsonResponse({'error': msg_erro}, status=400)

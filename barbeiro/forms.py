@@ -33,25 +33,27 @@ class HorariosTrabalhoMultiDiaForm(forms.ModelForm):
 
 
 
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
 class EditarPerfilBarbeiroForm(forms.ModelForm):
-    # Definimos os campos extras para validação
     foto_barbeiro = forms.ImageField(required=False)
-    senha_atual = forms.CharField(required=False)
-    nova_senha = forms.CharField(required=False)
+    
+    # Senha atual obrigatória na validação lógica
+    senha_atual = forms.CharField(
+        required=False, # Deixamos False aqui para tratar a mensagem no clean()
+        widget=forms.PasswordInput
+    )
+    nova_senha = forms.CharField(
+        required=False, 
+        widget=forms.PasswordInput
+    )
 
     class Meta:
         model = User
         fields = ['username', 'email', 'telefone']
-
-    # NÃO PRECISA DO __INIT__  ...
-    # O form só vai ser usado no POST para validar o que chegou.
-    # No GET, seu HTML manual já resolve a exibição dos dados.
 
     def clean_telefone(self):
         telefone = self.cleaned_data.get('telefone')
@@ -82,16 +84,17 @@ class EditarPerfilBarbeiroForm(forms.ModelForm):
         senha_atual = cleaned_data.get('senha_atual')
         nova_senha = cleaned_data.get('nova_senha')
 
-        if senha_atual or nova_senha:
-            if not senha_atual:
-                self.add_error('senha_atual', "Digite a senha atual.")
-            if not nova_senha:
-                self.add_error('nova_senha', "Digite a nova senha.")
-            
-            if senha_atual and nova_senha:
-                if not self.instance.check_password(senha_atual):
-                    self.add_error('senha_atual', "Senha atual incorreta.")
-                if len(nova_senha) < 8:
-                     self.add_error('nova_senha', "Mínimo 8 caracteres.")
+        # REGRA RIGIDA: Senha Atual é OBRIGATÓRIA para qualquer coisa
+        if not senha_atual:
+            self.add_error('senha_atual', "Digite sua senha atual para salvar as alterações.")
+        else:
+            # Se digitou, verifica se está certa
+            if not self.instance.check_password(senha_atual):
+                self.add_error('senha_atual', "A senha atual está incorreta.")
+
+        # Validação da nova senha (apenas se digitou algo nela)
+        if nova_senha:
+            if len(nova_senha) < 8:
+                self.add_error('nova_senha', "A nova senha deve ter no mínimo 8 caracteres.")
 
         return cleaned_data
