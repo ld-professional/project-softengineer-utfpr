@@ -266,10 +266,10 @@ def barbeiro_exceccao(request):
 
     if request.method == 'GET': 
 
-        lista_agendamentos_do_cliente = Agendamentos.objects.filter(
+        lista_excecao_do_cliente = Excecoes.objects.filter(
             fk_barbeiro__fk_user=request.user,
         ).order_by('data_e_horario_inicio')
 
-        contexto = {'agendamentos': lista_agendamentos_do_cliente}
+        contexto = {'agendamentos': lista_excecao_do_cliente}
 
         return render(request, 'agendamentos/excecao.html', contexto) 
