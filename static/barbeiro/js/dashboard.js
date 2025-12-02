@@ -165,4 +165,19 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = urlDestino;
         });
     }
+
+
+    const excecaoButton = document.getElementById('excecao-btn');
+
+    
+    if (excecaoButton) {
+        excecaoButton.addEventListener('click', function() {
+            
+            
+            const urlDestino = '/barbeiro/agendamentos/exceccao/';
+
+            
+            window.location.href = urlDestino;
+        });
+    }
 })

@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Horários</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">
+  <link rel="stylesheet" href="{% static 'agendamento/css/stylelista-horarios-trab.css' %}"> 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="text/javascript" src="{% static 'agendamento/js/lista-horarios-trab.js' %}" defer></script>
+</head>
+
+<body>
+    
+    <nav>
+        <a href="{% url 'barbeiro_pagina_inicial_dashboard' %}" class="nav-logo">
+            <img src="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}" alt="Logo" class="logo-icon">
+            <h1 class="page-title">Barbearia do Wiese</h1>
+        </a>
+        
+        <button id="theme-switch" aria-label="Alternar tema">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+        </button>
+    </nav>
+
+    <div class="container">
+        
+        <div class="wrapper">
+            <h2>Jornada de Trabalho</h2>
+            <p id="error-message" class="error-msg"></p>
+
+            <form id="form-servico" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id_servico" id="id_servico" value="">
+
+                <div>
+                    <div id="dias_semana" class="dias-semana-chips">
+                        <input type="hidden" name="dias_semana" id="dias_semana_input">
+
+                        <button type="button" data-value="0">Seg</button>
+                        <button type="button" data-value="1">Ter</button>
+                        <button type="button" data-value="2">Qua</button>
+                        <button type="button" data-value="3">Qui</button>
+                        <button type="button" data-value="4">Sex</button>
+                        <button type="button" data-value="5">Sáb</button>
+                        <button type="button" data-value="6">Dom</button>
+                    </div>
+                </div>
+
+                <p class="horario-text">Horario Início</p>
+                <div>
+                    <label for="horario_inicio">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
+                    </label>
+                    <input type="time" name="horario_inicio" id="horario_inicio" required step="1800">
+                </div>
+
+                <p class="horario-text">Horario Fim</p>
+                <div>
+                    <label for="horario_fim">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
+                    </label>
+                    <input type="time" name="horario_fim" id="horario_fim" required step="1800">
+                </div>
+                
+                <div class="botoes-acao">
+                    <button type="submit" id="btn-salvar" class="confirm-button">Salvar Horários</button>
+                    <button type="button" id="btn-excluir" class="btn-excluir">Excluir Turno</button>
+                </div>
+
+            </form> 
+            <div class="back-text">
+                 <a href="{% url 'barbeiro_pagina_inicial_dashboard' %}" class="btn-voltar-link">
+                    <button type="button">Voltar</button>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="content-right">
+            <h2 class="section-title">Horários Cadastrados</h2>
+            <p class="section-subtitle">Gerencie suas jornadas de trabalho</p>
+
+            <div class="lista-servicos">
+
+                {% if lista_horarios %}
+                    {% for horario in lista_horarios %}
+                    <label class="item-lista">
+                        <input 
+                            type="checkbox" 
+                            class="checkbox-horario"
+                            data-id="{{ horario.pk }}"
+                            data-dia="{{ horario.dia_semana }}"
+                        >
+
+                        <div class="texto-servico">
+                            <h3>{{ horario.get_dia_semana_display }}</h3>
+                            <p class="descricao">Início: {{ horario.hora_inicio|time:"H:i" }}</p>
+                            <p class="valor">Término: {{ horario.hora_fim|time:"H:i" }}</p>
+                        </div>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <p class="aviso-sem-servico">Nenhum horário de trabalho cadastrado.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
