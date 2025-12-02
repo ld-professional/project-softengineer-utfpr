@@ -19,7 +19,7 @@ class Servicos(models.Model):
 
     id_servicos = models.AutoField(primary_key=True)
 
-    nome_servico= models.CharField(max_length=100)
+    nome_servico= models.CharField(max_length=25)
     preco_servico= models.DecimalField(max_digits=5,decimal_places=2,validators=[MinValueValidator(0)]) 
     
     slot_duracao_servico= models.IntegerField(choices=duracoes)

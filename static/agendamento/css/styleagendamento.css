@@ -34,6 +34,7 @@ html {
     text-align: center;
 }
 
+/* EFEITO: Adicionado transição para cores de fundo e texto na troca de tema */
 nav {
     position: fixed;
     top: 0;
@@ -46,6 +47,7 @@ nav {
     justify-content: space-between;
     height: 60px;
     padding: 0 2rem;
+    transition: background-color 0.3s ease;
 }
 
 .titulo {
@@ -60,6 +62,7 @@ nav {
     align-items: center;
     -webkit-user-select: none;
     user-select: none;
+    transition: color 0.3s ease;
 }
 
 .page-header {
@@ -71,22 +74,27 @@ nav {
     gap: 0.75rem;
 }
 
+/* EFEITO: Adicionado transição para cor de fundo */
 body {
     min-width: 100vw;
     background-color: var(--color-input-background);
     background-size: cover;
     background-position: right;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
 }
 
+/* EFEITO: Adicionado transição para cor de fundo */
 .container {
     display: grid;
     grid-template-columns: 320px 1fr;
     min-height: 100vh;
     padding-top: 60px;
     background-color: var(--color-input-background);
+    transition: background-color 0.3s ease;
 }
 
+/* EFEITO: Adicionado transição para cor de fundo */
 .wrapper {
     background-color: var(--color-background);
     width: 320px;
@@ -100,6 +108,7 @@ body {
     left: 0;
     top: 60px;
     z-index: 10;
+    transition: background-color 0.3s ease;
 }
 
 
@@ -113,6 +122,7 @@ body {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--color-primary);
+    transition: color 0.3s ease;
 }
 
 h1 {
@@ -120,6 +130,7 @@ h1 {
     font-weight: 600;
     color: var(--color-primary);
     font-family: var(--font-family-primary);
+    transition: color 0.3s ease;
 }
 
 form {
@@ -138,23 +149,39 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black);
+    color: var(--color-black); /* Cor do texto no Dark Mode (Black no fundo amarelo) */
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Adicionado box-shadow e transform na transição */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 form button:hover {
+    /* Troca para cor de fundo principal e cor de texto escura */
     background-color: var(--color-primary);
     color: var(--color-input-background);
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
+}
+/* Correção de cores para Light Mode no hover */
+.lightmode form button:hover, .lightmode form button:focus {
+    color: var(--color-black); /* Garante texto preto no hover */
+    background-color: #f5f5f5; /* Força um fundo claro para o hover no Light Mode */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
+}
+.lightmode form button {
+    color: var(--color-black); /* Garante texto preto no Light Mode */
 }
 
 form button:focus {
     outline: none;
     background-color: var(--color-primary);
     color: var(--color-input-background);
+    /* EFEITO: Box-shadow no focus */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
 }
 
 .user-info {
@@ -222,7 +249,8 @@ form button:focus {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: transform 0.2s ease, background-color 0.2s;
+    /* EFEITO: Transição completa de hover */
+    transition: transform 0.2s ease, background-color 0.2s, color 0.2s;
     z-index: 20;
 }
 
@@ -230,6 +258,11 @@ form button:focus {
     background-color: var(--color-primary);
     color: var(--color-background);
     transform: scale(1.1);
+}
+/* Correção de cores para Light Mode no hover da seta */
+.lightmode .seta:hover {
+    background-color: var(--color-primary); 
+    color: var(--color-background);
 }
 
 .link-bloco {
@@ -255,12 +288,22 @@ form button:focus {
     padding: 1rem;
     border-radius: 20px;
     background: var(--color-background);
-    box-shadow: 0px 4px 10px var(--color-background), 0px 2px 5px var(--color-input-background);
+    
+    /* Box shadow inicial para Dark Mode */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8), 0px 2px 5px var(--color-input-background);
     text-align: left;
     font-size: 1.2rem;
     font-family: var(--font-family-secondary);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    /* EFEITO: Transição de transform, box-shadow e background */
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
 }
+
+/* Correção de cores e sombra para Cards no Light Mode */
+.lightmode .corte, .lightmode .barba, .lightmode .barba-corte {
+    background: var(--color-input-background); /* Fundo claro para o card no lightmode */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra mais suave */
+}
+
 
 .link-bloco.selecionado .corte,
 .link-bloco.selecionado .barba,
@@ -268,8 +311,10 @@ form button:focus {
     outline: 3px solid var(--color-secondary);
     z-index: 3;
     outline-offset: 0px;
-    transform: scale(1.05);
-    box-shadow: none;
+    /* EFEITO: Pulo suave ao selecionar */
+    transform: scale(1.03); 
+    /* EFEITO: Brilho na cor secundária ao selecionar */
+    box-shadow: 0 0 10px rgba(223, 176, 66, 0.8);
 }
 
 .corte h2, .barba h2, .barba-corte h2 {
@@ -286,6 +331,7 @@ form button:focus {
     font-weight: bold;
     color: var(--color-text);
     font-size: 0.9rem;
+    transition: color 0.3s ease;
 }
 
 .corte .valor, .barba .valor, .barba-corte .valor {
@@ -314,7 +360,8 @@ form button:focus {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    transition: 150ms ease;
+    /* EFEITO: Transição completa */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: block;
     z-index: 20;
 }
@@ -322,13 +369,23 @@ form button:focus {
 .confirm-button:hover {
     background-color: var(--color-primary);
     color: var(--color-input-background);
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: scale(1.05); /* EFEITO: Pulo maior no hover */
 }
+/* Correção de cores para Light Mode no hover do botão Confirmar */
+.lightmode .confirm-button:hover {
+    color: var(--color-black); /* Garante texto preto no hover */
+    background-color: #f5f5f5;
+}
+
 
 .confirm-button:focus {
     outline: none;
     background-color: var(--color-primary);
     color: var(--color-input-background);
 }
+
 
 @media (max-width: 669px) {
     .wrapper {
@@ -372,25 +429,32 @@ form button:focus {
     border: none;
     border-radius: 20%;
     background-color: var(--color-secondary);
+    color: var(--color-black);
+    font-size: 1.4rem;
+    font-weight: bold;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
     top: 12px;
     right: 80px;
-    color: var(--color-black);
-    font-size: 1.4rem;
     z-index: 101;
-    font-weight: bold;
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa de hover */
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1);
+    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
     color: var(--color-input-background);
 }
+/* Correção de cores para Light Mode no hover do Logout */
+.lightmode #logout-button:hover {
+    color: var(--color-black);
+}
+
 
 #theme-switch {
     height: 50px;
@@ -405,13 +469,14 @@ form button:focus {
     position: fixed;
     top: 5px;
     right: 20px;
-    transition: background-color 150ms ease, transform 150ms ease;
+    /* EFEITO: Transição completa */
+    transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
 
 #theme-switch svg {
     fill: var(--color-text);
-    transition: fill 150ms ease;
+    transition: fill 0.3s ease;
 }
 
 #theme-switch svg:first-child {
@@ -476,6 +541,7 @@ form button:focus {
         max-width: 90vw;
         height: 200px;
         border-radius: 20px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .seta {

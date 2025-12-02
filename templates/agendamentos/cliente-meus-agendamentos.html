@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meus Agendamentos</title>
-  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'global/images/content_cut_24dp_E3E3E3_FILL1_wght400_GRAD0_opsz24.svg' %}">  
   <link rel="stylesheet" href="{% static 'agendamento/css/cliente-meus-agendamentos.css' %}">   
   <script type="text/javascript" src="{% static 'agendamento/js/cliente-meus-agendamentos.js' %}" defer></script>
 </head>
@@ -36,9 +36,6 @@
             <form id="form">
                 <div>
                     <button type="button" id="voltar-dash-btn">Voltar</button>
-                </div>
-                <div>
-                    <button type="button" id="inicio-dash-tbm-btn">Início</button>
                 </div>
             </form>
         </div>
@@ -89,7 +86,7 @@
         </div>
 
         {% if agendamentos %}
-            <button class="confirm-button">Cancelar Selecionado</button>
+            <button class="confirm-button">Cancelar AGENDAMENTO</button>
         {% endif %}
 
     </div>
