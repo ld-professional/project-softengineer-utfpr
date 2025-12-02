@@ -31,7 +31,11 @@
 }
 
 /* RESET */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; 
+    padding: 0; 
+    box-sizing: 
+    border-box; 
+}
 
 body {
     background-color: var(--color-input-background);
@@ -101,7 +105,7 @@ nav {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: flex-start; /* ALINHA AO TOPO */
+    justify-content: center; /* ALINHA AO TOPO */
     padding: 40px 20px 20px; /* Mais padding no topo */
     z-index: 10;
     overflow-y: auto;
@@ -109,7 +113,9 @@ nav {
     transition: background-color 0.3s ease;
 }
 
-.lightmode .wrapper { border-right: 1px solid #ccc; }
+.lightmode .wrapper { 
+    border-right: 1px solid #ccc; 
+}
 
 .wrapper h2 { 
     color: var(--color-secondary); 
@@ -125,7 +131,10 @@ form {
     gap: 15px; 
 }
 
-form > div { display: flex; width: 100%; }
+form > div { 
+    display: flex; 
+    width: 100%; 
+}
 
 form label {
     width: 50px; 
@@ -138,7 +147,9 @@ form label {
     border-radius: 10px 0 0 10px;
 }
 
-form label svg { fill: var(--color-black); }
+form label svg { 
+    fill: var(--color-black); 
+}
 
 form input,
 form select {
@@ -203,10 +214,11 @@ form select:focus {
 }
 
 /* Efeito Hover nos botões de ação */
-.botoes-acao button:hover { 
-    filter: brightness(1.1); 
-    transform: scale(1.02); 
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+.botoes-acao button:hover,
+#btn-salvar:hover,
+#btn-excluir:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
 }
 
 
@@ -226,18 +238,27 @@ form select:focus {
 .back-text button {
     width: 100%;
     height: 40px;
-    background-color: var(--color-input-background); /* Fundo escuro */
-    color: var(--color-secondary);
-    border: 1px solid var(--color-secondary);
+    background-color: var(--color-secondary); /* Fundo escuro */
+    color: var(--color-black); /* Texto preto */
     border-radius: 10px;
     font-weight: 500;
     font-size: 1rem;
     transition: 0.2s ease;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
 }
 
 .back-text button:hover {
-    background-color: var(--color-secondary);
-    color: var(--color-black);
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.horario-text {
+    width: 100%;
+    font-family: var(--font-family-secondary);
+    font-weight: bold;
+    margin-bottom: -10px;
 }
 
 
@@ -262,6 +283,12 @@ form select:focus {
     font-size: 0.9rem;
     font-family: var(--font-family-secondary);
     transition: 0.2s ease;
+    font-weight: bold;
+}
+
+.dias-semana-chips button:hover {
+    background: var(--color-secondary);
+    color: var(--color-black);
 }
 
 .dias-semana-chips button.selected {
@@ -382,9 +409,17 @@ form select:focus {
     transition: fill 150ms ease;
 }
 
-#theme-switch svg:first-child { display: none; }
-.lightmode #theme-switch svg:last-child { display: none; }
-.lightmode #theme-switch svg:first-child { display: block; }
+#theme-switch svg:first-child { 
+    display: none; 
+}
+
+.lightmode #theme-switch svg:last-child { 
+    display: none; 
+}
+
+.lightmode #theme-switch svg:first-child { 
+    display: block; 
+}
 
 #theme-switch:hover {
     background-color: var(--color-primary);
@@ -395,7 +430,9 @@ form select:focus {
 }
 
 /* SweetAlert */
-div:where(.swal2-container) { z-index: 2000 !important; }
+div:where(.swal2-container) { 
+    z-index: 2000 !important; 
+}
 
 div:where(.swal2-container) .swal2-popup {
     background-color: var(--color-input-background) !important; 
@@ -431,14 +468,16 @@ div:where(.swal2-container) .swal2-cancel {
 /* ========================= */
 
 @media (max-width: 900px) {
-    .container { display: block; padding-top: 60px; }
+    .container { display: block;}
     
     .wrapper {
         position: relative; 
+        top : 0;
         width: 100%; 
         height: auto;
         padding: 30px 20px;
         border-bottom: 2px solid #333;
+        justify-content: flex-start !important;
     }
 
     .lightmode .wrapper { border-bottom: 2px solid #ccc; }

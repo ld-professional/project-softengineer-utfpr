@@ -29,93 +29,106 @@
     <div class="container">
         
         <div class="wrapper">
-            <h2>Gerenciar Serviço</h2>
+            <h2>Dia de Exceção</h2>
             <p id="error-message" class="error-msg"></p>
 
             <form id="form-servico" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="id_servico" id="id_servico" value="">
 
+                <!-- DIA DA EXCEÇÃO -->
+                <p class="horario-text">Dia da Exceção</p>
                 <div>
-                    <label for="dias_semana">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="M200-120v-640q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v640L480-240 200-120Zm80-122 200-86 200 86v-598H280v598Zm0-598v598-598Z"/></svg>
+                    <label for="dia_excecao">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                            <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/>
+                        </svg>
                     </label>
-                    <select name="dias_semana" id="dias_semana" multiple required>
-                        <option value="segunda">Segunda-feira</option>
-                        <option value="terca">Terça-feira</option>
-                        <option value="quarta">Quarta-feira</option>
-                        <option value="quinta">Quinta-feira</option>
-                        <option value="sexta">Sexta-feira</option>
-                        <option value="sabado">Sábado</option>
-                        <option value="domingo">Domingo</option>
-                    </select>
+
+                    <input type="date" name="dia_excecao" id="dia_excecao" required>
                 </div>
 
+
+                <!-- HORÁRIO INÍCIO -->
+                <p class="horario-text">Horário Início</p>
                 <div>
-                    <label for="horario_dia">
+                    <label for="horario_inicio">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
                     </label>
-                    <input type="time" name="horario_dia" id="horario_dia" required>
+                    <input type="time" name="horario_inicio" id="horario_inicio" required step="1800">
                 </div>
 
+                <!-- HORÁRIO FIM -->
+                <p class="horario-text">Horário Fim</p>
                 <div>
-                    <label for="duracao">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="M441-120v-86q-53-12-91.5-46T293-348l74-30q15 48 44.5 73t77.5 25q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 41.5-99t108.5-47v-80h74v80q50 10 82.5 37t43.5 77l-72 32q-11-37-37-57t-63-20q-37 0-61.5 19t-24.5 47q0 31 23 52.5t97 45.5q77 24 113.5 61T674-358q0 72-46.5 107.5T515-206v86h-74Z"/></svg>
+                    <label for="horario_fim">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg>
                     </label>
-                    <select name="duracao" id="duracao" required>
-                        <option value="" disabled selected>Duração</option>
-                        <option value="30">30 minutos</option>
-                        <option value="60">1 hora</option>
-                        <option value="90">1 hora e 30 minutos</option>
-                    </select>
+                    <input type="time" name="horario_fim" id="horario_fim" required step="1800">
                 </div>
 
-
-                <div class="form-actions">
-                    <button type="submit" id="btn-salvar">Salvar Serviço</button>
-                    <button type="button" id="btn-limpar" style="display: none;">Cancelar</button>
+                <!-- MOTIVO DA EXCEÇÃO -->
+                <p class="horario-text">Motivo da Exceção</p>
+                <div>
+                    <label for="motivo_excecao">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000ff">
+                            <path d="M120-120v-720 720Zm120-120v-80h480v80H240Zm0-200v-80h480v80H240Zm0-200v-80h480v80H240Z"/>
+                        </svg>
+                    </label>
+                    <textarea 
+                        name="motivo_excecao" 
+                        id="motivo_excecao" 
+                        maxlength="200" 
+                        placeholder="Descreva o motivo (máx. 200 caracteres)"
+                        required
+                    ></textarea>
                 </div>
-            </form>
-            
-            <p class="back-text">
-                <a href="{% url 'barbeiro_pagina_inicial_dashboard' %}">Voltar</a>
-            </p>
+
+                <!-- BOTÕES -->
+                <div class="botoes-acao">
+                    <button type="submit" id="btn-salvar" class="confirm-button">Salvar Exceção</button>
+                    <button type="button" id="btn-excluir" class="btn-excluir">Excluir</button>
+                </div>
+
+            </form> 
+
+            <div class="back-text">
+                <a href="{% url 'barbeiro_pagina_inicial_dashboard' %}" class="btn-voltar-link">
+                    <button type="button">Voltar</button>
+                </a>
+            </div>
+
         </div>
 
         <div class="content-right">
-            <h2 class="section-title">Serviços Existentes</h2>
-            <p class="section-subtitle">Clique em um card para editar</p>
+            <h2 class="section-title">Exceções Cadastradas</h2>
+            <p class="section-subtitle">Gerencie suas indisponibilidades</p>
 
-            <div class="container-carrossel">
-                <button type="button" class="seta" id="btn-esq">&#10094;</button>
+            <div class="lista-servicos">
 
-                <div class="servicos-agendamento" id="scroll-container">
-                    {% if servicos %}
-                        {% for s in servicos %}
-                        <div class="link-bloco" 
-                             data-id="{{ s.pk }}" 
-                             data-nome="{{ s.nome_servico }}" 
-                             data-preco="{{ s.preco_servico }}" 
-                             data-duracao="{{ s.slot_duracao_servico }}"
-                             onclick="preencherFormulario(this)">  
-                            
-                            <div class="card-servico">
-                                <h2>{{ s.nome_servico }}</h2>
-                                <p class="descricao">{{ s.get_slot_duracao_servico_display }}</p>
-                                <p class="valor">R$ {{ s.preco_servico }}</p>
-                            </div>
+                {% if lista_horarios %}
+                    {% for horario in lista_horarios %}
+                    <label class="item-lista">
+                        <input 
+                            type="checkbox" 
+                            class="checkbox-horario"
+                            data-id="{{ horario.pk }}"
+                            data-dia="{{ horario.dia_excecao }}"
+                        >
+
+                        <div class="texto-servico">
+                            <h3>{{ horario.dia_excecao|date:"d/m/Y" }}</h3>
+                            <p class="descricao">Início: {{ horario.hora_inicio|time:"H:i" }}</p>
+                            <p class="valor">Término: {{ horario.hora_fim|time:"H:i" }}</p>
+                            <p class="descricao"><strong>Motivo:</strong> {{ horario.motivo }}</p>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="aviso-sem-servico">Nenhum serviço cadastrado.</p>
-                    {% endif %}
-                </div>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <p class="aviso-sem-servico">Nenhuma exceção cadastrada.</p>
+                {% endif %}
 
-                <button type="button" class="seta" id="btn-dir">&#10095;</button>
             </div>
-
-            <button class="confirm-button">Excluir Serviço</button>
-
         </div>
 
     </div>
