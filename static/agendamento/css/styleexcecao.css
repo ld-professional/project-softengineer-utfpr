@@ -31,11 +31,7 @@
 }
 
 /* RESET */
-* { margin: 0; 
-    padding: 0; 
-    box-sizing: 
-    border-box; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     background-color: var(--color-input-background);
@@ -50,29 +46,15 @@ body {
 /* ========================= */
 
 nav {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 60px;
+    position: fixed; top: 0; left: 0; width: 100%; height: 60px;
     background: var(--color-background);
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    padding: 0 2rem; 
-    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 2rem; z-index: 100;
     transition: background-color 0.3s ease;
 }
 
-.nav-logo { 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    text-decoration: none; 
-}
-
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .logo-icon { width: 45px; height: 45px; }
-
 .page-title { 
     font-family: var(--font-family-secondary); 
     font-size: 1.2rem; 
@@ -99,24 +81,17 @@ nav {
     background-color: var(--color-background);
     height: calc(100vh - 60px);
     position: fixed;
-    left: 0; 
-    top: 60px; 
-    width: 350px;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; /* ALINHA AO TOPO */
-    padding: 40px 20px 20px; /* Mais padding no topo */
+    left: 0; top: 60px; width: 350px;
+    display: flex; flex-direction: column; 
+    align-items: center; justify-content: center;
+    padding: 40px 20px 20px;
     z-index: 10;
     overflow-y: auto;
     border-radius: 0 20px 20px 0;
     transition: background-color 0.3s ease;
 }
 
-.lightmode .wrapper { 
-    border-right: 1px solid #ccc; 
-}
-
+.lightmode .wrapper { border-right: 1px solid #ccc; }
 .wrapper h2 { 
     color: var(--color-secondary); 
     margin-bottom: 20px; 
@@ -124,177 +99,116 @@ nav {
     text-align: center; 
 }
 
-form { 
-    width: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 15px; 
-}
-
-form > div { 
-    display: flex; 
-    width: 100%; 
-}
+form { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+form > div { display: flex; width: 100%; }
 
 form label {
-    width: 50px; 
-    height: 50px; 
-    flex-shrink: 0;
+    width: 50px; height: 50px; flex-shrink: 0;
     background-color: var(--color-secondary);
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
+    display: flex; justify-content: center; align-items: center;
     border-radius: 10px 0 0 10px;
 }
 
-form label svg { 
-    fill: var(--color-black); 
-}
+form label svg { fill: var(--color-black); }
 
-form input,
-form select {
-    flex-grow: 1;
-    height: 50px;
-    padding: 0 15px;
+form input, form select {
+    flex-grow: 1; height: 50px; padding: 0 15px;
     background: var(--color-input-background);
-    border: 1px solid #333; 
-    border-left: none;
+    border: 1px solid #333; border-left: none;
     border-radius: 0 10px 10px 0;
-    color: var(--color-text); 
-    font-size: 1rem; 
-    outline: none;
+    color: var(--color-text); font-size: 1rem; outline: none;
     min-width: 0;
 }
 
-.lightmode form input,
-.lightmode form select {
-    border: 1px solid #ccc;
-    border-left: none;
+.lightmode form input, .lightmode form select {
+    border: 1px solid #ccc; border-left: none;
 }
+form input:focus, form select:focus { border-color: var(--color-secondary); }
 
-form input:focus,
-form select:focus {
-    border-color: var(--color-secondary);
-}
-
-/* Estilos dos Botões de Ação na Sidebar */
+/* BOTOES DE AÇÃO */
 .botoes-acao { 
-    width: 100%;
-    display: flex; 
-    flex-direction: column; 
-    gap: 15px; 
-    align-items: center; 
-    margin-top: 20px; 
+    width: 100%; display: flex; flex-direction: column; 
+    gap: 15px; align-items: center; margin-top: 20px; 
 }
 
 .botoes-acao button {
-    width: 250px; /* Tamanho fixo para melhor alinhamento */
-    height: 55px; 
-    font-weight: 600; 
-    font-size: 1.1rem;
-    border: none; 
-    border-radius: 10px; 
-    cursor: pointer; 
-    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-    text-align: center;
+    width: 250px; height: 55px; font-weight: 600; font-size: 1.1rem;
+    border: none; border-radius: 10px; cursor: pointer; 
+    transition: 0.2s ease; text-align: center;
 }
 
-/* Botão Salvar (Criação) */
-#btn-salvar { 
-    background-color: var(--color-secondary); 
-    color: var(--color-black); 
-    /* Estilo de botão principal */
+#btn-salvar { background-color: var(--color-secondary); color: var(--color-black); }
+#btn-excluir { background-color: var(--color-incorrect); color: var(--color-primary); }
+
+.botoes-acao button:hover {
+    background-color: var(--color-primary); color: var(--color-background);
 }
 
-/* Botão Excluir (Deleção) */
-#btn-excluir {
-    background-color: var(--color-incorrect); 
-    color: var(--color-primary); /* Texto branco para contraste */
-    /* Este botão é escondido/mostrado via JS */
-}
-
-/* Efeito Hover nos botões de ação */
-.botoes-acao button:hover,
-#btn-salvar:hover,
-#btn-excluir:hover {
-    background-color: var(--color-primary);
-    color: var(--color-background);
-}
-
-
-/* Botão Voltar (Link/Botão neutro) */
-.back-text { 
-    margin-top: 15px; 
-    font-size: 0.9rem; 
-    text-align: center;
-    width: 250px; /* Alinhado com os botões de ação */
-}
-
-.back-text a {
-    text-decoration: none;
-    display: block;
-}
-
+.back-text { margin-top: 15px; width: 250px; text-align: center; }
+.back-text a { text-decoration: none; display: block; }
 .back-text button {
-    width: 100%;
-    height: 40px;
-    background-color: var(--color-secondary); /* Fundo escuro */
-    color: var(--color-black); /* Texto preto */
-    border-radius: 10px;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: 0.2s ease;
-    cursor: pointer;
-    border: none;
-    font-weight: bold;
+    width: 100%; height: 40px; background-color: var(--color-secondary);
+    color: var(--color-black); border-radius: 10px; font-weight: bold; border: none; cursor: pointer;
 }
-
-.back-text button:hover {
-    background-color: var(--color-primary);
-    color: var(--color-background);
-}
+.back-text button:hover { background-color: var(--color-primary); color: var(--color-background); }
 
 .horario-text {
-    width: 100%;
-    font-family: var(--font-family-secondary);
-    font-weight: bold;
-    margin-bottom: -10px;
+    width: 100%; font-family: var(--font-family-secondary);
+    font-weight: bold; margin-bottom: -10px;
 }
 
+/* ================================================= */
+/* TOGGLE PROLONGAR (BOTÃO ESTILO CHIP / PILULA)     */
+/* ================================================= */
 
-/* ========================= */
-/* CHIPS DIAS DA SEMANA     */
-/* ========================= */
-
-.dias-semana-chips {
+.linha-titulo-toggle {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    margin-bottom: -5px; 
 }
 
-.dias-semana-chips button {
-    padding: 8px 16px;
-    border-radius: 25px;
-    border: 1px solid var(--color-secondary);
-    background: var(--color-input-background);
-    color: var(--color-text);
-    cursor: pointer;
-    font-size: 0.9rem;
+/* Estilo Base (Dark Mode) */
+.btn-chip-toggle {
+    background-color: transparent; /* Fundo transparente */
+    color: var(--color-text);      /* Texto Branco */
+    border: 1px solid var(--color-secondary); /* Borda fina Amarela */
+    border-radius: 50px;           /* Borda totalmente arredondada (Oval) */
+    padding: 5px 20px;
     font-family: var(--font-family-secondary);
-    transition: 0.2s ease;
     font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.dias-semana-chips button:hover {
-    background: var(--color-secondary);
-    color: var(--color-black);
+/* Estado Ativo/Hover (Dark Mode) */
+.btn-chip-toggle:hover,
+.btn-chip-toggle.checked {
+    background-color: var(--color-secondary); /* Preenche Amarelo */
+    color: var(--color-black);                /* Texto Preto */
 }
 
-.dias-semana-chips button.selected {
-    background: var(--color-secondary);
-    color: var(--color-black);
+/* Ajustes para Light Mode */
+.lightmode .btn-chip-toggle {
+    color: var(--color-black); 
+    border-color: var(--color-black);
 }
+
+.lightmode .btn-chip-toggle:hover,
+.lightmode .btn-chip-toggle.checked {
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+    border-color: var(--color-secondary);
+}
+
+
+
 
 
 /* ========================= */
@@ -302,248 +216,156 @@ form select:focus {
 /* ========================= */
 
 .content-right {
-    grid-column: 2; 
-    padding: 40px;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center;
-    background-image: 
-        linear-gradient(var(--overlay-color), var(--overlay-color)), 
-        url('../../global/images/scissors.jpg');
-    background-size: cover; 
-    background-position: center;
+    grid-column: 2; padding: 40px;
+    display: flex; flex-direction: column; align-items: center;
+    background-image: linear-gradient(var(--overlay-color), var(--overlay-color)), url('../../global/images/scissors.jpg');
+    background-size: cover; background-position: center;
     min-height: calc(100vh - 60px);
 }
 
 .section-title {
-    font-size: 2.5rem; 
-    color: var(--color-secondary);
-    font-family: var(--font-family-secondary); 
-    margin-bottom: 5px; 
-    text-align: center;
+    font-size: 2.5rem; color: var(--color-secondary);
+    font-family: var(--font-family-secondary); margin-bottom: 5px; text-align: center;
 }
 
-.section-subtitle { 
-    color: var(--color-primary); 
-    opacity: 0.7; 
-    margin-bottom: 40px; 
-    text-align: center;
-}
+.section-subtitle { color: var(--color-primary); opacity: 0.7; margin-bottom: 40px; text-align: center;}
 
 /* ========================= */
-/* LISTA DE SERVIÇOS (CHECK)*/
+/* LISTA DE SERVIÇOS         */
 /* ========================= */
 
 .lista-servicos {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 600px; /* Adiciona limite de largura para a lista ficar centralizada */
+    display: flex; flex-direction: column; gap: 10px;
+    width: 100%; max-width: 600px;
 }
 
 .item-lista {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 12px;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; border-radius: 12px;
     background: var(--color-input-background);
-    cursor: pointer;
-    transition: 0.2s;
+    cursor: pointer; transition: 0.2s;
     border: 2px solid transparent;
 }
-
-.item-lista:hover {
-    filter: brightness(1.1);
-}
-
-.item-lista.editando {
-    border-color: var(--color-secondary); /* Borda amarela quando selecionado */
-}
-
-
-.item-lista input[type="checkbox"] {
-    transform: scale(1.3);
-    cursor: pointer;
-    margin-top: 4px; /* Alinha o checkbox com o texto */
-}
-
-.texto-servico h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: var(--color-primary);
-}
-
-.texto-servico p {
-    margin: 0;
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
+.item-lista:hover { filter: brightness(1.1); }
+.item-lista.editando { border-color: var(--color-secondary); }
+.item-lista input[type="checkbox"] { transform: scale(1.3); cursor: pointer; margin-top: 4px; }
+.texto-servico h3 { margin: 0; font-size: 1.2rem; color: var(--color-primary); }
+.texto-servico p { margin: 0; font-size: 0.9rem; opacity: 0.7; }
 
 /* ========================= */
-/* SWEETALERT / THEME SWITCH */
+/* THEME SWITCH / SWEETALERT */
 /* ========================= */
-
-/* ... (O restante do CSS para o theme-switch e sweetalert permanece igual) ... */
 
 #theme-switch {
-    height: 50px; 
-    width: 50px; 
-    padding: 0;
-    border: none; 
-    border-radius: 50%;
+    height: 50px; width: 50px; border: none; border-radius: 50%;
     background-color: var(--color-background);
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    position: fixed; 
-    top: 5px; 
-    right: 20px;
-    transition: background-color 150ms ease, transform 150ms ease;
-    z-index: 200;
+    display: flex; justify-content: center; align-items: center;
+    position: fixed; top: 5px; right: 20px; z-index: 200;
 }
+#theme-switch svg { fill: var(--color-text); }
+#theme-switch svg:first-child { display: none; }
+.lightmode #theme-switch svg:last-child { display: none; }
+.lightmode #theme-switch svg:first-child { display: block; }
+#theme-switch:hover { background-color: var(--color-primary); }
+#theme-switch:hover svg { fill: var(--color-background); }
 
-#theme-switch svg {
-    fill: var(--color-text);
-    transition: fill 150ms ease;
-}
-
-#theme-switch svg:first-child { 
-    display: none; 
-}
-
-.lightmode #theme-switch svg:last-child { 
-    display: none; 
-}
-
-.lightmode #theme-switch svg:first-child { 
-    display: block; 
-}
-
-#theme-switch:hover {
-    background-color: var(--color-primary);
-}
-
-#theme-switch:hover svg { 
-    fill: var(--color-background); 
-}
-
-/* SweetAlert */
-div:where(.swal2-container) { 
-    z-index: 2000 !important; 
-}
-
+div:where(.swal2-container) { z-index: 2000 !important; }
 div:where(.swal2-container) .swal2-popup {
     background-color: var(--color-input-background) !important; 
     color: var(--color-text) !important; 
     font-family: var(--font-family-secondary) !important;
-    font-size: 1rem !important;
-    width: 25em !important;
-    padding: 1.5em !important;
     border-radius: 20px !important;
 }
-
-div:where(.swal2-container) .swal2-title { 
-    color: var(--color-secondary) !important; 
-}
-
+div:where(.swal2-container) .swal2-title { color: var(--color-secondary) !important; }
 div:where(.swal2-container) .swal2-confirm {
     background-color: var(--color-incorrect) !important; 
     color: var(--color-black) !important; 
-    border-radius: 10px !important; 
-    font-weight: bold !important;
 }
-
 div:where(.swal2-container) .swal2-cancel {
     background-color: var(--color-secondary) !important;
     color: var(--color-black) !important;
-    border-radius: 10px !important; 
-    font-weight: bold !important;
 }
 
-/* ============================= */
-/* ESTILO DO TEXTAREA (MOTIVO)   */
-/* ============================= */
+/* ======================================= */
+/* TEXTAREA (MOTIVO) - AJUSTADO PARA 50PX  */
+/* ======================================= */
 
 .wrapper form div textarea {
-    flex-grow: 1;
-    height: 120px;
+    flex-grow: 1; 
+    height: 50px; /* Mesma altura dos inputs */
     padding: 12px 15px;
     background: var(--color-input-background);
-    border: 1px solid #333;
+    border: 1px solid #333; 
     border-left: none;
     border-radius: 0 10px 10px 0;
-    color: var(--color-text);
+    color: var(--color-text); 
     font-size: 1rem;
-    font-family: var(--font-family-primary);
-    resize: none;
-    outline: none;
+    resize: none; 
+    outline: none; 
     line-height: 1.4;
-    transition: 0.2s;
+    overflow: hidden;
 }
 
-/* Thema light */
-.lightmode .wrapper form div textarea {
-    border: 1px solid #ccc;
-    border-left: none;
+.lightmode .wrapper form div textarea { 
+    border: 1px solid #ccc; 
+    border-left: none; 
 }
 
-/* Efeito foco */
-.wrapper form div textarea:focus {
-    border-color: var(--color-secondary);
-    background-color: rgba(255,255,255,0.04);
+.wrapper form div textarea:focus { 
+    border-color: var(--color-secondary); 
 }
 
-/* Placeholder suave */
-.wrapper form div textarea::placeholder {
-    color: var(--color-primary);
-    opacity: 0.6;
-}
-
-/* Ajuste do label com ícone */
+/* Ajuste do ícone para altura 50px */
 .wrapper form div label[for="motivo_excecao"] {
-    height: 90px;
-    padding-top: 12px;
-    background: var(--color-secondary);
+    height: 50px; 
+    padding-top: 0;
     border-radius: 10px 0 0 10px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
-.wrapper form div label[for="motivo_excecao"] svg {
-    width: 28px;
-    height: 28px;
-    fill: var(--color-black);
+.wrapper form div label[for="motivo_excecao"] svg { 
+    width: 24px; 
+    height: 24px; 
 }
 
-
-/* ========================= */
-/* RESPONSIVE                */
-/* ========================= */
-
+/* RESPONSIVE */
 @media (max-width: 900px) {
-    .container { display: block;}
-    
+    .container { display: block; }
     .wrapper {
-        position: relative; 
-        top : 0;
-        width: 100%; 
-        height: auto;
-        padding: 30px 20px;
-        border-bottom: 2px solid #333;
+        position: relative; top: 0; width: 100%; height: auto;
+        padding: 30px 20px; border-bottom: 2px solid #333;
         justify-content: flex-start !important;
     }
-
-    .lightmode .wrapper { border-bottom: 2px solid #ccc; }
-
-    .content-right { 
-        width: 100%; 
-        padding: 30px 10px; 
-    }
-    
-    .botoes-acao button {
-        width: 100%;
-    }
+    .content-right { width: 100%; padding: 30px 10px; }
+    .botoes-acao button { width: 100%; }
 }
+
+
+
+#container_dia_fim {
+    display: none;               /* deixa o JS funcionar */
+    flex-direction: column;      /* mantém layout vertical */
+    gap: 8px;
+    width: 100%;
+}
+
+#container_dia_fim > div {
+    height: 50px;
+    display: flex;
+}
+
+form > #container_dia_fim {
+    display: none;               /* ***IMPORTANTE*** estado inicial */
+    flex-direction: column !important;
+    height: auto !important;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+#container_dia_fim p {
+    margin: 0;
+    padding-left: 4px;
+}
+
