@@ -244,6 +244,31 @@ form button:hover {
     color: var(--color-black);
 }
 
+
+form button {
+    width: 250px;
+    height: 50px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--color-black); /* Cor do texto no Dark Mode (Black no fundo amarelo) */
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    /* EFEITO: Adicionado box-shadow e transform na transição */
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+form button:hover {
+    /* Troca para cor de fundo principal e cor de texto escura */
+    background-color: var(--color-primary);
+    color: var(--color-input-background);
+    /* EFEITO: Box-shadow no hover para dar profundidade */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+    transform: translateY(-2px);
+}
+
 /* ========================= */
 /* RIGHT SIDE CONTENT        */
 /* ========================= */
