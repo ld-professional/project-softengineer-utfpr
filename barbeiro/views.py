@@ -93,13 +93,33 @@ def barbeiro_perfil(request):
             })
         
         else:
-            # Se houver erro, pega o primeiro da lista e manda pro JS
+            # Pegamos todos os erros do formulário no formato "bruto".
+            # Cada item da dict tem: campo -> [lista de ValidationErrors]
             errors = form.errors.as_data()
-            msg_erro = "Erro desconhecido."
-            
-            for field, error_list in errors.items():
-                # error_list[0] é o erro. .message é o texto.
-                msg_erro = f"{error_list[0].message}" 
-                break 
 
+            # Mensagem padrão caso não consigamos pegar uma mensagem específica
+            msg_erro = "Erro desconhecido."
+
+            # Percorremos os erros (campo por campo)
+            for field, error_list in errors.items():
+
+                # error_list é uma lista de ValidationErrors.
+                # Vamos pegar APENAS o primeiro erro dessa lista.
+                error_obj = error_list[0]
+
+                # Alguns erros possuem atributo .message (erro único)
+                # Outros possuem .messages (lista de mensagens)
+                # Por isso tratamos ambos os casos:
+                if hasattr(error_obj, 'message'):
+                    # Caso o erro tenha .message (mais comum nos nossos clean_x())
+                    msg_erro = error_obj.message
+
+                elif hasattr(error_obj, 'messages'):
+                    # Caso tenha .messages (lista), pegamos a primeira mensagem
+                    msg_erro = error_obj.messages[0]
+
+                # Paramos após o primeiro erro
+                break
+
+            # Enviamos o erro para o frontend em formato JSON
             return JsonResponse({'error': msg_erro}, status=400)

@@ -35,7 +35,7 @@ from .forms import ServicoForm
 
 @login_required
 @ensure_csrf_cookie
-def barbeiros_editar_servicos(request):
+def barbeiros_editar_servicos(request): 
 
 
     if hasattr(request.user, 'clientao'):

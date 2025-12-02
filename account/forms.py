@@ -33,7 +33,9 @@ class CadastroClienteForm(forms.Form):
     def clean_username(self):
 
         username = self.cleaned_data.get('username')
-
+        if len(username) > 33:
+            raise ValidationError("O nome de usuário deve ter no maximo 33 caracteres (contando os espaços.)")
+            # nem adianta isso mas coloquei, qp por ja ter tal regra no models. ele roda antes e nem chega aqui
 
         if any(char.isdigit() for char in username):
             raise ValidationError("O nome de usuário não pode conter números.")
