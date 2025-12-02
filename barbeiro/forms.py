@@ -1,5 +1,8 @@
 from django import forms
 from .models import Horarios_de_trabalho, dias_da_semana
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
 
 class HorariosTrabalhoMultiDiaForm(forms.ModelForm):
 
@@ -12,29 +15,17 @@ class HorariosTrabalhoMultiDiaForm(forms.ModelForm):
 
     class Meta:
         model = Horarios_de_trabalho
-        
         fields = ['fk_barbeiro', 'dias', 'hora_inicio', 'hora_fim']
-       
 
     def _post_clean(self):
         """
         Sobrescrevemos este método para IMPEDIR que o Django tente validar 
         a instância do Model agora. Como o campo 'dia_semana' não existe 
         neste form, a validação padrão quebraria o código.
-        Deixaremos para validar manualmente no admin.py, dia por dia.
         """
         pass
 
 
-
-
-
-
-
-
-
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -43,7 +34,7 @@ class EditarPerfilBarbeiroForm(forms.ModelForm):
     
     # Senha atual obrigatória na validação lógica
     senha_atual = forms.CharField(
-        required=False, # Deixamos False aqui para tratar a mensagem no clean()
+        required=False, 
         widget=forms.PasswordInput
     )
     nova_senha = forms.CharField(
@@ -54,6 +45,13 @@ class EditarPerfilBarbeiroForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'telefone']
+        
+        # Definimos a mensagem de erro para o limite de caracteres ---
+        error_messages = {
+            'username': {
+                'max_length': "O nome de usuário deve ter no maximo 33 caracteres (contando os espaços.)",
+            }
+        }
 
     def clean_telefone(self):
         telefone = self.cleaned_data.get('telefone')
@@ -69,8 +67,14 @@ class EditarPerfilBarbeiroForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+
+        # REMOVIDO: if len(username) > 33... 
+        # MOTIVO: A validação automática do Django (configurada no Meta acima) 
+        # já vai barrar e mostrar a sua mensagem antes de chegar aqui.
+
         if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
             raise ValidationError("Este nome de usuário já está em uso.")
+        
         return username
 
     def clean_email(self):
