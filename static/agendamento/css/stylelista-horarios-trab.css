@@ -1,15 +1,15 @@
-/* ========================= */
-/* VARIÁVEIS / ROOT          */
-/* ========================= */
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
     --color-primary: #f5f5f5;
-    --color-secondary: #DFB042; /* Amarelo principal */
+    --color-secondary: #DFB042; 
     --color-background: #000000;
     --color-input-background: #171616;
     --color-text: #ffffff;
-    --color-incorrect: #de0101; /* Vermelho para Excluir */
+    --color-incorrect: #de0101; 
     --color-hoje: #25f748;
     --color-black: #000000;
     --overlay-color: rgba(23, 22, 22, 0.90);
@@ -17,7 +17,7 @@
     --font-family-secondary: 'Quicksand', sans-serif;
 }
 
-/* LIGHTMODE */
+
 .lightmode {
     --color-black: #000000;
     --color-primary: #000000; 
@@ -30,7 +30,7 @@
     --overlay-color: rgba(245, 245, 245, 0.85);
 }
 
-/* RESET */
+
 * { margin: 0; 
     padding: 0; 
     box-sizing: 
@@ -45,9 +45,9 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* ========================= */
-/* NAVBAR                    */
-/* ========================= */
+
+
+
 
 nav {
     position: fixed; 
@@ -80,9 +80,9 @@ nav {
     transition: color 0.3s ease;
 }
 
-/* ========================= */
-/* GRID PRINCIPAL            */
-/* ========================= */
+
+
+
 
 .container {
     display: grid;
@@ -91,9 +91,9 @@ nav {
     padding-top: 60px;
 }
 
-/* ========================= */
-/* LEFT SIDE (FORM)          */
-/* ========================= */
+
+
+
 
 .wrapper {
     background-color: var(--color-background);
@@ -105,8 +105,8 @@ nav {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center; /* ALINHA AO TOPO */
-    padding: 40px 20px 20px; /* Mais padding no topo */
+    justify-content: center; 
+    padding: 40px 20px 20px; 
     z-index: 10;
     overflow-y: auto;
     border-radius: 0 20px 20px 0;
@@ -177,7 +177,7 @@ form select:focus {
     border-color: var(--color-secondary);
 }
 
-/* Estilos dos Botões de Ação na Sidebar */
+
 .botoes-acao { 
     width: 100%;
     display: flex; 
@@ -188,7 +188,7 @@ form select:focus {
 }
 
 .botoes-acao button {
-    width: 250px; /* Tamanho fixo para melhor alinhamento */
+    width: 250px; 
     height: 55px; 
     font-weight: 600; 
     font-size: 1.1rem;
@@ -199,21 +199,21 @@ form select:focus {
     text-align: center;
 }
 
-/* Botão Salvar (Criação) */
+
 #btn-salvar { 
     background-color: var(--color-secondary); 
     color: var(--color-black); 
-    /* Estilo de botão principal */
+    
 }
 
-/* Botão Excluir (Deleção) */
+
 #btn-excluir {
     background-color: var(--color-incorrect); 
-    color: var(--color-primary); /* Texto branco para contraste */
-    /* Este botão é escondido/mostrado via JS */
+    color: var(--color-primary); 
+    
 }
 
-/* Efeito Hover nos botões de ação */
+
 .botoes-acao button:hover,
 #btn-salvar:hover,
 #btn-excluir:hover {
@@ -222,12 +222,12 @@ form select:focus {
 }
 
 
-/* Botão Voltar (Link/Botão neutro) */
+
 .back-text { 
     margin-top: 15px; 
     font-size: 0.9rem; 
     text-align: center;
-    width: 250px; /* Alinhado com os botões de ação */
+    width: 250px; 
 }
 
 .back-text a {
@@ -238,8 +238,8 @@ form select:focus {
 .back-text button {
     width: 100%;
     height: 40px;
-    background-color: var(--color-secondary); /* Fundo escuro */
-    color: var(--color-black); /* Texto preto */
+    background-color: var(--color-secondary); 
+    color: var(--color-black); 
     border-radius: 10px;
     font-weight: 500;
     font-size: 1rem;
@@ -262,9 +262,9 @@ form select:focus {
 }
 
 
-/* ========================= */
-/* CHIPS DIAS DA SEMANA     */
-/* ========================= */
+
+
+
 
 .dias-semana-chips {
     display: flex;
@@ -297,9 +297,9 @@ form select:focus {
 }
 
 
-/* ========================= */
-/* RIGHT SIDE CONTENT        */
-/* ========================= */
+
+
+
 
 .content-right {
     grid-column: 2; 
@@ -330,16 +330,16 @@ form select:focus {
     text-align: center;
 }
 
-/* ========================= */
-/* LISTA DE SERVIÇOS (CHECK)*/
-/* ========================= */
+
+
+
 
 .lista-servicos {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    max-width: 600px; /* Adiciona limite de largura para a lista ficar centralizada */
+    max-width: 600px; 
 }
 
 .item-lista {
@@ -359,14 +359,14 @@ form select:focus {
 }
 
 .item-lista.editando {
-    border-color: var(--color-secondary); /* Borda amarela quando selecionado */
+    border-color: var(--color-secondary); 
 }
 
 
 .item-lista input[type="checkbox"] {
     transform: scale(1.3);
     cursor: pointer;
-    margin-top: 4px; /* Alinha o checkbox com o texto */
+    margin-top: 4px; 
 }
 
 .texto-servico h3 {
@@ -381,11 +381,11 @@ form select:focus {
     opacity: 0.7;
 }
 
-/* ========================= */
-/* SWEETALERT / THEME SWITCH */
-/* ========================= */
 
-/* ... (O restante do CSS para o theme-switch e sweetalert permanece igual) ... */
+
+
+
+
 
 #theme-switch {
     height: 50px; 
@@ -429,7 +429,7 @@ form select:focus {
     fill: var(--color-background); 
 }
 
-/* SweetAlert */
+
 div:where(.swal2-container) { 
     z-index: 2000 !important; 
 }
@@ -463,9 +463,9 @@ div:where(.swal2-container) .swal2-cancel {
 }
 
 
-/* ========================= */
-/* RESPONSIVE                */
-/* ========================= */
+
+
+
 
 @media (max-width: 900px) {
     .container { display: block;}

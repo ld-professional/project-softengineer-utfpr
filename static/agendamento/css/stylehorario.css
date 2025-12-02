@@ -20,10 +20,10 @@
     --color-hoje: #25f748;
     --color-background: #cfcfcf;
     --color-text: #000000;
-    --color-input-background: #f5f5f5; /* Fundo claro para elementos internos */
+    --color-input-background: #f5f5f5; 
 }
 
-/* RESET */
+
 * { margin: 0; padding: 0; box-sizing: border-box; transition: color 0.3s ease, background-color 0.3s ease; }
 
 html {
@@ -33,7 +33,7 @@ html {
     text-align: center;
 }
 
-/* EFEITO: Transição para cores de fundo e texto na troca de tema */
+
 nav {
     position: fixed;
     top: 0;
@@ -73,7 +73,7 @@ nav {
     gap: 0.75rem;
 }
 
-/* EFEITO: Transição para cor de fundo */
+
 body {
     min-width: 100vw;
     background-color: var(--color-input-background);
@@ -83,7 +83,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* EFEITO: Transição para cor de fundo */
+
 .container {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -93,7 +93,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* EFEITO: Transição para cor de fundo */
+
 .wrapper {
     background-color: var(--color-background);
     width: 320px;
@@ -147,12 +147,12 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black); /* Garante texto preto no fundo amarelo */
+    color: var(--color-black); 
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    /* EFEITO: Transição completa de hover */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -160,18 +160,18 @@ form button:hover, form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
     outline: none;
-    /* EFEITO: Box-shadow no hover para dar profundidade */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
     transform: translateY(-2px);
 }
-/* Correção de cores para Light Mode no hover do botão do formulário */
+
 .lightmode form button:hover, .lightmode form button:focus {
-    color: var(--color-black); /* Garante texto preto no hover */
-    background-color: #f5f5f5; /* Força um fundo claro para o hover no Light Mode */
+    color: var(--color-black); 
+    background-color: #f5f5f5; 
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
 }
 .lightmode form button {
-    color: var(--color-black); /* Garante texto preto no Light Mode */
+    color: var(--color-black); 
 }
 
 
@@ -190,14 +190,14 @@ form button:hover, form button:focus {
     background: var(--color-background);
     border-radius: 15px;
     
-    /* Dark Mode Shadow */
+    
     box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-/* MODIFICAÇÃO APLICADA: Fundo claro e sombra suave para o Calendário no Light Mode */
+
 .lightmode .calendar {
-    background: var(--color-input-background); /* Fundo claro (branco) */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    background: var(--color-input-background); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); 
 }
 
 .calendar-header {
@@ -222,7 +222,7 @@ form button:hover, form button:focus {
     cursor: pointer;
     width: 40px;
     height: 40px;
-    /* EFEITO: Transição completa de hover */
+    
     transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
@@ -231,7 +231,7 @@ form button:hover, form button:focus {
     color: var(--color-background);
     transform: scale(1.1);
 }
-/* Correção de cores para Light Mode no hover do botão do calendário */
+
 .lightmode .calendar-header button:hover {
     background-color: var(--color-primary); 
     color: var(--color-background);
@@ -272,28 +272,28 @@ form button:hover, form button:focus {
     border-radius: 50%;
     width: 45px;
     height: 45px;
-    /* EFEITO: Transição completa para cores */
+    
     transition: background-color 150ms ease, color 150ms ease;
 }
 
 .date.active {
     background-color: var(--color-secondary); 
-    color: var(--color-black); /* Texto preto no amarelo */
+    color: var(--color-black); 
     opacity: 0.5; 
 }
 
 .date.active.selected {
     opacity: 1; 
     background-color: var(--color-secondary);
-    color: var(--color-black); /* Texto preto no amarelo */
+    color: var(--color-black); 
 }
 
 .date:hover, .date.selected {
     background-color: var(--color-secondary);
-    color: var(--color-black); /* Texto preto no amarelo */
+    color: var(--color-black); 
 }
 .date.selected {
-    /* EFEITO: Adicionado pulo e sombra sutil ao selecionar */
+    
     transform: scale(1.05);
     box-shadow: 0 0 8px rgba(223, 176, 66, 0.5);
 }
@@ -316,7 +316,7 @@ form button:hover, form button:focus {
     background: var(--color-background);
     border-radius: 12px;
     
-    /* Dark Mode Shadow */
+    
     box-shadow: 0 4px 12px var(--color-input-background);
     display: flex;
     flex-direction: column;
@@ -324,10 +324,10 @@ form button:hover, form button:focus {
     align-items: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-/* MODIFICAÇÃO APLICADA: Fundo claro e sombra suave para o Container de Horários no Light Mode */
+
 .lightmode .horarios-container {
-    background: var(--color-input-background); /* Fundo claro (branco) */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    background: var(--color-input-background); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); 
 }
 
 .horarios-container h3 {
@@ -337,20 +337,20 @@ form button:hover, form button:focus {
     transition: color 0.3s ease;
 }
 
-/* --- NOVO ESTILO PARA A MENSAGEM DE AVISO (CORRIGIDO) --- */
-/* Certifique-se de que o elemento que contém esta mensagem tenha a classe 'aviso-horarios' */
+
+
 .aviso-horarios {
     margin-top: 10px;
     font-size: 1.1rem;
     font-weight: 500;
-    color: var(--color-text); /* Cor padrão (Branco no Dark Mode) */
+    color: var(--color-text); 
     opacity: 0.8; 
     transition: color 0.3s ease, opacity 0.3s ease;
 }
-/* 🛑 CORREÇÃO CRÍTICA PARA O LIGHTMODE 🛑 */
+
 .lightmode .aviso-horarios {
-    color: var(--color-black); /* Cor preta para alto contraste no Light Mode */
-    opacity: 1; /* Remove opacidade para visibilidade total */
+    color: var(--color-black); 
+    opacity: 1; 
 }
 
 
@@ -368,11 +368,11 @@ form button:hover, form button:focus {
     border-radius: 8px;
     cursor: pointer;
     color: var(--color-text);
-    /* EFEITO: Transição completa de hover */
+    
     transition: 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     font-size: 1.1rem;
 }
-/* Garante que o texto se adapte no Light Mode */
+
 .lightmode .horario {
     color: var(--color-text); 
 }
@@ -380,15 +380,15 @@ form button:hover, form button:focus {
 
 .horario:hover, .horario.selected {
     background: var(--color-secondary);
-    color: var(--color-black); /* Texto preto no amarelo */
+    color: var(--color-black); 
 }
 .horario:hover {
-    /* EFEITO: Pulo sutil no hover */
+    
     transform: translateY(-2px);
     box-shadow: 0 2px 8px rgba(223, 176, 66, 0.4);
 }
 .horario.selected {
-    /* EFEITO: Sombra sutil ao selecionar */
+    
     transform: scale(1.05);
     box-shadow: 0 2px 8px rgba(223, 176, 66, 0.6);
 }
@@ -410,7 +410,7 @@ form button:hover, form button:focus {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    /* EFEITO: Transição completa de hover */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: block;
 }
@@ -418,13 +418,13 @@ form button:hover, form button:focus {
 .confirm-button:hover {
     background-color: var(--color-primary);
     color: var(--color-input-background);
-    /* EFEITO: Box-shadow no hover para dar profundidade */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
-    transform: scale(1.05); /* EFEITO: Pulo maior no hover */
+    transform: scale(1.05); 
 }
-/* Correção de cores para Light Mode no hover do botão Confirmar */
+
 .lightmode .confirm-button:hover {
-    color: var(--color-black); /* Garante texto preto no hover */
+    color: var(--color-black); 
     background-color: #f5f5f5;
 }
 
@@ -447,17 +447,17 @@ form button:hover, form button:focus {
     top: 12px;
     right: 80px;
     z-index: 101;
-    /* EFEITO: Transição completa de hover */
+    
     transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.05); 
     color: var(--color-input-background);
 }
-/* Correção de cores para Light Mode no hover do Logout */
+
 .lightmode #logout-button:hover {
     color: var(--color-black);
 }
@@ -475,7 +475,7 @@ form button:hover, form button:focus {
     position: fixed;
     top: 5px;
     right: 20px;
-    /* EFEITO: Transição completa */
+    
     transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
@@ -500,7 +500,7 @@ form button:hover, form button:focus {
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.1); 
 }
 
 #theme-switch:hover svg {
@@ -508,9 +508,9 @@ form button:hover, form button:focus {
 }
 
 
-/* ========================================= */
-/* SWEETALERT2 (MANTIDO E COM CORES CORRIGIDAS) */
-/* ========================================= */
+
+
+
 .swal2-popup {
     background: var(--color-input-background) !important;
     color: var(--color-text) !important;
@@ -526,7 +526,7 @@ form button:hover, form button:focus {
 
 .swal2-confirm {
     background-color: var(--color-secondary) !important;
-    color: var(--color-black) !important; /* Texto preto no amarelo */
+    color: var(--color-black) !important; 
     border-radius: 10px !important;
     font-weight: bold !important;
     font-family: var(--font-family-primary) !important;
@@ -534,19 +534,19 @@ form button:hover, form button:focus {
 
 .swal2-cancel {
     background-color: var(--color-incorrect) !important;
-    color: #fff !important; /* Texto branco no vermelho */
+    color: #fff !important; 
     border-radius: 10px !important;
     font-family: var(--font-family-primary) !important;
 }
 
-/* ========================================= */
-/* MEDIA QUERIES (CELULAR)                   */
-/* ========================================= */
+
+
+
 @media(max-width: 600px) {
-    /* 1. Header corrigido */
+    
     nav {
         justify-content: center;
-        padding-right: 50px; /* Espaço pro botão */
+        padding-right: 50px; 
     }
 
     .page-header {
@@ -577,35 +577,35 @@ form button:hover, form button:focus {
         grid-template-columns: 1fr;
     }
 
-    /* 2. Calendário Ajustado */
+    
     .calendar {
         grid-column: 1;
-        width: 100%; /* Ocupa a largura total */
-        padding: 10px; /* Menos padding lateral */
+        width: 100%; 
+        padding: 10px; 
         margin-top: 20px;
     }
 
     .calendar-header {
-        font-size: 1.2rem; /* Cabeçalho um pouco menor */
+        font-size: 1.2rem; 
     }
 
     .dates {
-        gap: 2px; /* Espaço entre bolinhas bem menor para caber tudo */
+        gap: 2px; 
     }
 
     .date {
-        width: 38px; /* Bolinha menor (era 45px) */
+        width: 38px; 
         height: 38px;
-        font-size: 1rem; /* Fonte menor */
-        padding: 0; /* Remove padding interno que atrapalha centralização */
+        font-size: 1rem; 
+        padding: 0; 
     }
     
     .day {
-        font-size: 0.9rem; /* Dias da semana menores */
+        font-size: 0.9rem; 
         padding: 2px;
     }
 
-    /* 3. Ajuste container horários */
+    
     .horarios-container {
         grid-column: 1;
         width: 100%;
@@ -621,10 +621,10 @@ form button:hover, form button:focus {
         padding: 8px 15px;
     }
 
-    /* 4. Botão confirmar */
+    
     .confirm-button {
         grid-column: 1;
-        width: 90%; /* Botão responsivo */
+        width: 90%; 
         font-size: 1.2rem;
         height: 60px;
     }
