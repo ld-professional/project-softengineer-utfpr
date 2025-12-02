@@ -247,7 +247,9 @@ def buscar_horarios_api(request):
                 # Verifica Agendamentos (com conversão de Timezone)
                 for ag in agendamentos_ocupados:
                     ag_ini = timezone.localtime(ag.data_e_horario_inicio)
-                    ag_fim = timezone.localtime(ag.data_e_horario_fim)
+                    duracao_ag = ag.fk_servicos.slot_duracao_servico * 30
+                    ag_fim = ag_ini + timedelta(minutes=duracao_ag)
+
 
                     if inicio_slot < ag_fim and fim_slot > ag_ini:
                         esta_livre = False

@@ -24,7 +24,7 @@
     --overlay-color: rgba(245, 245, 245, 0.85);
 }
 
-/* RESET */
+
 * { 
     margin: 0; 
     padding: 0; 
@@ -35,11 +35,11 @@ body {
     background-color: var(--color-input-background);
     color: var(--color-text);
     font-family: var(--font-family-primary);
-    overflow: hidden; /* Evita barra de rolagem geral */
+    overflow: hidden; 
     transition: background-color 0.3s ease;
 }
 
-/* NAVBAR */
+
 nav {
     position: fixed; 
     top: 0; 
@@ -75,15 +75,15 @@ nav {
     transition: color 0.3s ease; 
 }
 
-/* GRID PRINCIPAL (Igual editar-servicos) */
+
 .container {
     display: grid;
-    grid-template-columns: 350px 1fr; /* Esquerda fixa 350px, Direita resto */
+    grid-template-columns: 350px 1fr; 
     min-height: 100vh;
     padding-top: 60px;
 }
 
-/* --- LADO ESQUERDO (FORM) --- */
+
 .wrapper {
     background-color: var(--color-background);
     height: calc(100vh - 60px);
@@ -94,11 +94,11 @@ nav {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center; /* Centraliza verticalmente */
-    padding: 10px 20px; /* Padding reduzido */
+    justify-content: center; 
+    padding: 10px 20px; 
     border-radius: 0 20px 20px 0;
     z-index: 10;
-    overflow-y: auto; /* Permite scroll só aqui se precisar mt */
+    overflow-y: auto; 
     transition: background-color 0.3s ease;
 }
 
@@ -108,17 +108,17 @@ nav {
 
 .wrapper h2 { 
     color: var(--color-secondary); 
-    margin-bottom: 10px; /* Reduzido */
+    margin-bottom: 10px; 
     font-family: var(--font-family-secondary); 
     text-align: center;
-    font-size: 1.5rem; /* Fonte menor */
+    font-size: 1.5rem; 
 }
 
 form { 
     width: 100%; 
     display: flex; 
     flex-direction: column; 
-    gap: 8px; /* Gap bem menor (era 15) */ 
+    gap: 8px; 
 }
 
 form > div { 
@@ -126,10 +126,10 @@ form > div {
     width: 100%; 
 }
 
-/* INPUTS E LABELS COMPACTOS */
+
 form label {
     width: 40px; 
-    height: 40px; /* Reduzido de 50px */
+    height: 40px; 
     flex-shrink: 0;
     background-color: var(--color-secondary);
     display: flex; 
@@ -145,7 +145,7 @@ form label svg {
 
 form input {
     flex-grow: 1; 
-    height: 40px; /* Reduzido de 50px */
+    height: 40px; 
     padding: 0 10px;
     background: var(--color-input-background);
     border: 1px solid #333; 
@@ -167,12 +167,12 @@ form input:focus {
     border-color: var(--color-secondary); 
 }
 
-/* FOTO DE PERFIL COMPACTA */
+
 .profile-pic-container { 
     position: relative; 
-    width: 100px !important; /* Reduzido de 120px */
+    width: 100px !important; 
     height: 100px !important; 
-    margin-bottom: 5px; /* Reduzido */
+    margin-bottom: 5px; 
     cursor: pointer; 
     background-color: transparent !important; 
     border-radius: 50% !important; 
@@ -212,7 +212,7 @@ form input:focus {
     height: 16px; 
 }
 
-/* BOTÕES COMPACTOS */
+
 .form-actions { 
     display: flex; 
     flex-direction: row; 
@@ -222,7 +222,7 @@ form input:focus {
 
 #btn-salvar, #btn-limpar {
     flex: 1; 
-    height: 40px; /* Reduzido */
+    height: 40px; 
     font-weight: bold; 
     font-size: 0.9rem;
     border: none; 
@@ -258,19 +258,19 @@ form input:focus {
     font-size: 0.8rem;
 }
 
-/* --- LADO DIREITO (IMAGEM) --- */
+
 .content-right {
     grid-column: 2; 
-    /* Imagem de fundo recuperada */
+    
     background-image: 
         linear-gradient(var(--overlay-color), var(--overlay-color)), 
-        url('../../account/images/scissors.jpg'); /* Caminho corrigido */
+        url('../../account/images/scissors.jpg'); 
     background-size: cover; 
     background-position: center;
     min-height: calc(100vh - 60px);
 }
 
-/* SWITCH TEMA */
+
 #theme-switch {
     height: 50px; 
     width: 50px; 
@@ -322,6 +322,6 @@ form input:focus {
     }
 
     .content-right { 
-        display: none; /* Esconde a imagem no mobile pra focar no form */ 
+        display: none; 
     }
 }
