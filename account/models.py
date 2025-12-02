@@ -82,7 +82,7 @@ class UserPersonalizado(AbstractUser):
 
     username = models.CharField(
         'username',
-        max_length=34,
+        max_length=33,
         unique=True,
         help_text='Obrigatório. 150 caracteres ou menos. Letras, dígitos, espaços e @/./+/-/_ apenas.',
         validators=[validador_com_espaco], # <--- Usamos o nosso aqui
