@@ -18,5 +18,10 @@ path('excluir-horario/',views_barber.barbeiro_excluir_horario,name='barbeiro_edi
 
 path('exceccao/',views_barber.barbeiro_exceccao,name='barbeiro_exceccao'),
 
+path('salvar-excecao/',views_barber.barbeiro_salvar_exceccao,name='barbeiro_sexceccao'),
+
+path('excluir-excecao/',views_barber.barbeiro_excluir_exceccao,name='barbeiro_eexceccao'),
+
+
 
 ]

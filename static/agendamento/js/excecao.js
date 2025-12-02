@@ -39,17 +39,23 @@ function getCookie(name) {
     return cookieValue;
 }
 
-/* VARIÁVEL GLOBAL para rastrear o ID de um bloco de horário para exclusão */
+/* VARIÁVEL GLOBAL para rastrear o ID de um bloco para exclusão */
 let idParaExcluir = null;
 
 /* =========================================================================
    3. FUNÇÃO PARA LIMPAR FORMULÁRIO E RESETAR O ESTADO
    ========================================================================= */
 function limparFormulario() {
-    document.getElementById('form-servico').reset();
+    const form = document.getElementById('form-servico');
+    if(form) form.reset();
     
-    document.querySelectorAll(".dias-semana-chips button")
-        .forEach(chip => chip.classList.remove('selected'));
+    // Reseta visibilidade do campo data fim
+    const containerDiaFim = document.getElementById('container_dia_fim');
+    if (containerDiaFim) containerDiaFim.style.display = 'none';
+
+    // Reseta visualmente o botão de prolongar
+    const btnProlongar = document.getElementById('btn-prolongar');
+    if (btnProlongar) btnProlongar.classList.remove('checked');
 
     idParaExcluir = null;
 
@@ -57,14 +63,18 @@ function limparFormulario() {
     if (btnExcluir) btnExcluir.style.display = "none";
 
     const btnSalvar = document.getElementById('btn-salvar');
-    if (btnSalvar) btnSalvar.style.display = "block";
+    if (btnSalvar) {
+        btnSalvar.style.display = "block";
+        btnSalvar.innerText = "Salvar Exceção";
+        btnSalvar.disabled = false;
+    }
 
     document.querySelectorAll('.item-lista')
         .forEach(b => b.classList.remove('editando'));
 }
 
 /* =========================================================================
-   4. FUNÇÃO PARA MARCAR ID PARA EXCLUSÃO (AO CLICAR NO CARD)
+   4. FUNÇÃO PARA MARCAR ID PARA EXCLUSÃO (AO CLICAR NO CHECKBOX)
    ========================================================================= */
 function marcarIdParaExclusao(elementoCheckbox) {
     const id = elementoCheckbox.getAttribute('data-id');
@@ -76,45 +86,32 @@ function marcarIdParaExclusao(elementoCheckbox) {
     if (btnExcluir) btnExcluir.style.display = "block"; 
     if (btnSalvar) btnSalvar.style.display = "none";
     
-    document.querySelectorAll('.item-lista')
-        .forEach(b => b.classList.remove('editando'));
-    
+    // Remove estilo de edição de todos e adiciona só no atual
+    document.querySelectorAll('.item-lista').forEach(b => b.classList.remove('editando'));
     elementoCheckbox.closest('.item-lista').classList.add('editando');
 
-    document.querySelectorAll(".dias-semana-chips button")
-        .forEach(chip => chip.classList.remove('selected'));
-
+    // Reseta o form para garantir que não se está editando dados antigos
     document.getElementById('form-servico').reset();
+    
+    // Garante que o campo extra esteja fechado e o botão desmarcado
+    const containerDiaFim = document.getElementById('container_dia_fim');
+    if (containerDiaFim) containerDiaFim.style.display = 'none';
+    
+    const btnProlongar = document.getElementById('btn-prolongar');
+    if (btnProlongar) btnProlongar.classList.remove('checked');
 }
 
 /* =========================================================================
-   5. LÓGICA DOS CHIPS DE DIAS DA SEMANA (MODO CRIAÇÃO)
+   5. LISTENERS GERAIS (CARREGAMENTO DA PÁGINA)
    ========================================================================= */
 document.addEventListener("DOMContentLoaded", () => {
-    const chips = document.querySelectorAll(".dias-semana-chips button");
-
-    chips.forEach(chip => {
-        chip.addEventListener("click", () => {
-
-            // só limpa se estiver realmente no modo exclusão
-            const btnExcluir = document.getElementById('btn-excluir');
-            if (btnExcluir && btnExcluir.style.display === "block") {
-                limparFormulario();
-            }
-
-            // sempre mostrar o botão salvar quando clicado
-            document.getElementById('btn-salvar').style.display = "block";
-
-            // Agora permite seleção múltipla de fato
-            chip.classList.toggle("selected");
-        });
-    });
-
+    
+    // Configura os checkboxes da lista lateral
     const checkboxesHorarios = document.querySelectorAll(".checkbox-horario");
 
     checkboxesHorarios.forEach(cb => {
         cb.addEventListener("change", () => {
-
+            // Garante seleção única
             checkboxesHorarios.forEach(c => {
                 if (c !== cb) c.checked = false;
             });
@@ -124,48 +121,88 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 limparFormulario();
             }
-
         });
     });
 
+    // Garante estado inicial dos botões
     const btnExcluirInicial = document.getElementById('btn-excluir');
     if (btnExcluirInicial) btnExcluirInicial.style.display = "none";
+
+
+    /* --- LÓGICA DO BOTÃO PROLONGAR (NOVO ESTILO CHIP) --- */
+    const btnProlongar = document.getElementById('btn-prolongar');
+    const containerDiaFim = document.getElementById('container_dia_fim');
+    const inputDiaFim = document.getElementById('dia_fim_excecao');
+
+    if (btnProlongar && containerDiaFim) {
+        btnProlongar.addEventListener('click', () => {
+            // Alterna a classe visual
+            btnProlongar.classList.toggle('checked');
+            
+            // Verifica se está marcado
+            const isChecked = btnProlongar.classList.contains('checked');
+
+            if (isChecked) {
+                containerDiaFim.style.display = 'block';
+                inputDiaFim.required = true; 
+            } else {
+                containerDiaFim.style.display = 'none';
+                inputDiaFim.value = ''; 
+                inputDiaFim.required = false;
+            }
+        });
+    }
 });
 
 /* =========================================================================
-   6. LÓGICA DE SUBMISSÃO DO FORMULÁRIO (SALVAR HORÁRIOS EM MASSA - API)
+   6. LÓGICA DE SUBMISSÃO (SALVAR EXCEÇÃO)
    ========================================================================= */
-const formHorarios = document.getElementById('form-servico');
+const formServico = document.getElementById('form-servico');
 
-if (formHorarios) {
-    formHorarios.addEventListener('submit', async (e) => {
+if (formServico) {
+    formServico.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const btnSalvar = document.getElementById('btn-salvar');
         if (btnSalvar.style.display === "none") return; 
 
-        const chipsSelecionados = document.querySelectorAll(".dias-semana-chips button.selected");
-        const listaDias = Array.from(chipsSelecionados).map(chip => chip.getAttribute('data-value'));
-
+        // Captura os valores dos inputs
+        const diaInicio = document.getElementById('dia_excecao').value;
+        let diaFim = document.getElementById('dia_fim_excecao').value;
         const horarioInicio = document.getElementById('horario_inicio').value;
         const horarioFim = document.getElementById('horario_fim').value;
+        const motivo = document.getElementById('motivo_excecao').value;
+        
+        // Verifica o estado do botão PROLONGAR pela classe .checked
+        const btnProlongar = document.getElementById('btn-prolongar');
+        const isProlongado = btnProlongar && btnProlongar.classList.contains('checked');
+        
         const csrftoken = getCookie('csrftoken');
 
-        if (listaDias.length === 0) {
-            Swal.fire('Atenção', 'Selecione pelo menos um dia da semana.', 'warning');
+        // Se NÃO estiver prolongado, diaFim deve ser igual a diaInicio
+        if (!isProlongado || !diaFim) {
+            diaFim = diaInicio;
+        }
+
+        // Validação simples no front
+        if (!diaInicio || !diaFim || !horarioInicio || !horarioFim || !motivo) {
+            Swal.fire('Atenção', 'Preencha todos os campos.', 'warning');
             return;
         }
 
         const payload = {
-            dias_semana: listaDias,
+            dia_excecao: diaInicio,
+            dia_fim: diaFim,
             horario_inicio: horarioInicio,
             horario_fim: horarioFim,
+            motivo: motivo
         };
         
         btnSalvar.disabled = true;
+        btnSalvar.innerText = "Salvando...";
 
         try {
-            const response = await fetch('/barbeiro/agendamentos/editar-agenda/', {
+            const response = await fetch('/barbeiro/agendamentos/salvar-excecao/', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -173,12 +210,6 @@ if (formHorarios) {
                 },
                 body: JSON.stringify(payload)
             });
-
-            if (!response.ok && response.headers.get("content-type") && 
-                !response.headers.get("content-type").includes("application/json")) {
-                
-                throw new Error("Resposta inesperada do servidor (Erro 500). Tente novamente.");
-            }
 
             const data = await response.json();
 
@@ -191,13 +222,11 @@ if (formHorarios) {
             }
 
         } catch (error) {
-            console.error('Erro na submissão:', error);
-            let msg = error.message.includes("Resposta inesperada")
-                        ? error.message
-                        : "Falha na comunicação com o servidor. Verifique a rede.";
-            Swal.fire('Erro de Comunicação', msg, 'error');
+            console.error('Erro:', error);
+            Swal.fire('Erro', 'Falha na comunicação com o servidor.', 'error');
         } finally {
             btnSalvar.disabled = false;
+            btnSalvar.innerText = "Salvar Exceção";
         }
     });
 }
@@ -214,51 +243,48 @@ if (btnExcluir) {
         if (idParaExcluir) {
             Swal.fire({
                 title: 'Tem certeza?',
-                text: "Você deseja realmente excluir este bloco de horário?",
+                text: "Você deseja remover esta exceção?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Sim, excluir',
-                cancelButtonText: 'Voltar',
-                reverseButtons: true
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, remover',
+                cancelButtonText: 'Cancelar'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     const csrftoken = getCookie('csrftoken');
 
                     try {
-                        const response = await fetch('/barbeiro/agendamentos/excluir-horario/', {
+                        const response = await fetch('/barbeiro/agendamentos/excluir-excecao/', { 
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRFToken': csrftoken
                             },
-                            body: JSON.stringify({ 'id_horario': idParaExcluir })
+                            body: JSON.stringify({ 'id_excecao': idParaExcluir })
                         });
 
                         if (!response.ok && response.headers.get("content-type") && 
                             !response.headers.get("content-type").includes("application/json")) {
-                            
-                            throw new Error("Resposta inesperada do servidor (Erro 500). Tente novamente.");
+                            throw new Error("Erro no servidor.");
                         }
 
                         const data = await response.json();
 
                         if (response.ok && data.sucesso) {
-                            Swal.fire('Excluído!', data.mensagem || 'Horário excluído com sucesso!', 'success')
+                            Swal.fire('Excluído!', data.mensagem, 'success')
                                 .then(() => window.location.reload());
                         } else {
                             Swal.fire('Erro', data.mensagem || 'Erro ao excluir.', 'error');
                         }
                     } catch (error) {
                          console.error('Erro de Comunicação:', error);
-                         let msg = error.message.includes("Resposta inesperada")
-                                     ? error.message
-                                     : "Falha de rede ou JSON. Verifique a conexão.";
-                         Swal.fire('Erro de Exclusão', msg, 'error');
+                         Swal.fire('Erro de Exclusão', 'Falha ao tentar excluir.', 'error');
                     }
                 }
             });
         } else {
-            Swal.fire('Atenção', 'Selecione um bloco de horário na lista ao lado para excluir.', 'info');
+            Swal.fire('Atenção', 'Selecione um item na lista ao lado para excluir.', 'info');
         }
     });
 }

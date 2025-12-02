@@ -251,25 +251,123 @@ def barbeiro_excluir_horario(request):
 
 
 
-
 @login_required
 @ensure_csrf_cookie
 def barbeiro_exceccao(request):
     
-    if  hasattr(request.user, 'clientao'):
+    if hasattr(request.user, 'clientao'):
         return redirect('/clientes/dashboard/')
 
     if not hasattr(request.user, 'barber'):
         return redirect('/account/login')
     
-
-
     if request.method == 'GET': 
+        # Busca as exceções e ordena
+        lista_excecao = Excecoes.objects.filter(
+            fk_barbeiro__fk_user=request.user,
+        ).order_by('data_inicio')
 
-#        lista_excecao_do_cliente = Excecoes.objects.filter(
-#            fk_barbeiro__fk_user=request.user,
-#        ).order_by('data_e_horario_inicio')
-#
-#        contexto = {'agendamentos': lista_excecao_do_cliente}
+        contexto = {'lista_horarios': lista_excecao}
 
-        return render(request, 'agendamentos/excecao.html') 
+        return render(request, 'agendamentos/excecao.html', contexto) 
+
+
+@login_required
+@ensure_csrf_cookie
+def barbeiro_salvar_exceccao(request):
+    
+    if hasattr(request.user, 'clientao'):
+        return JsonResponse({'sucesso': False, 'mensagem': 'Acesso negado.'}, status=403)
+
+    if not hasattr(request.user, 'barber'):
+        return JsonResponse({'sucesso': False, 'mensagem': 'Acesso negado.'}, status=403)
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # 1. Recuperar dados do JSON
+            dia_inicio_str = data.get('dia_excecao')
+            dia_fim_str = data.get('dia_fim')  # Novo campo vindo do JS
+            
+            inicio_hora_str = data.get('horario_inicio')
+            fim_hora_str = data.get('horario_fim')
+            motivo = data.get('motivo')
+
+            # Se não houver data fim (não prolongado), usa a data de início
+            if not dia_fim_str:
+                dia_fim_str = dia_inicio_str
+
+            if not all([dia_inicio_str, dia_fim_str, inicio_hora_str, fim_hora_str, motivo]):
+                return JsonResponse({'sucesso': False, 'mensagem': 'Todos os campos são obrigatórios.'}, status=400)
+
+            # 2. Converter strings para objetos datetime
+            dt_inicio_naive = datetime.strptime(f"{dia_inicio_str} {inicio_hora_str}", "%Y-%m-%d %H:%M")
+            dt_fim_naive = datetime.strptime(f"{dia_fim_str} {fim_hora_str}", "%Y-%m-%d %H:%M")
+
+            # 3. Tornar as datas "aware" (com fuso horário)
+            dt_inicio = timezone.make_aware(dt_inicio_naive)
+            dt_fim = timezone.make_aware(dt_fim_naive)
+
+            # 4. Pegar a instância do barbeiro
+            barbeiro = request.user.barber
+
+            # 5. Instanciar o objeto
+            nova_excecao = Excecoes(
+                fk_barbeiro=barbeiro,
+                data_inicio=dt_inicio,
+                data_fim=dt_fim,
+                motivo_da_indisponibilidade=motivo
+            )
+
+            # 6. Validar (chama o clean() do models.py) e Salvar
+            nova_excecao.full_clean()
+            nova_excecao.save()
+
+            return JsonResponse({'sucesso': True, 'mensagem': 'Exceção cadastrada com sucesso!'})
+
+        except ValidationError as e:
+            # Captura erros de validação do Model (ex: conflitos ou data fim < inicio)
+            erros = e.message_dict
+            msg_erro = "Erro de validação."
+            for campo, lista_msgs in erros.items():
+                msg_erro = lista_msgs[0] 
+                break
+            return JsonResponse({'sucesso': False, 'mensagem': msg_erro}, status=400)
+
+        except Exception as e:
+            print(f"Erro no servidor: {e}")
+            return JsonResponse({'sucesso': False, 'mensagem': 'Erro interno ao salvar exceção.'}, status=500)
+
+
+@login_required
+@ensure_csrf_cookie
+def barbeiro_excluir_exceccao(request):
+
+    if hasattr(request.user, 'clientao'):
+        return JsonResponse({'sucesso': False, 'mensagem': 'Acesso negado.'}, status=403)
+
+    if not hasattr(request.user, 'barber'):
+        return JsonResponse({'sucesso': False, 'mensagem': 'Acesso negado.'}, status=403)
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            id_excecao = data.get('id_excecao')
+
+            if not id_excecao:
+                return JsonResponse({'sucesso': False, 'mensagem': 'ID não fornecido.'}, status=400)
+
+            excecao = Excecoes.objects.get(
+                pk=id_excecao, 
+                fk_barbeiro=request.user.barber
+            )
+            
+            excecao.delete()
+
+            return JsonResponse({'sucesso': True, 'mensagem': 'Exceção removida com sucesso!'})
+
+        except Excecoes.DoesNotExist:
+            return JsonResponse({'sucesso': False, 'mensagem': 'Exceção não encontrada.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'sucesso': False, 'mensagem': f'Erro ao excluir: {str(e)}'}, status=500)
