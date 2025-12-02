@@ -5,11 +5,11 @@
 
 :root {
     --color-primary: #f5f5f5;
-    --color-secondary: #DFB042;
+    --color-secondary: #DFB042; /* Amarelo principal */
     --color-background: #000000;
     --color-input-background: #171616;
     --color-text: #ffffff;
-    --color-incorrect: #de0101;
+    --color-incorrect: #de0101; /* Vermelho para Excluir */
     --color-hoje: #25f748;
     --color-black: #000000;
     --overlay-color: rgba(23, 22, 22, 0.90);
@@ -101,8 +101,8 @@ nav {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    justify-content: center;
-    padding: 20px;
+    justify-content: flex-start; /* ALINHA AO TOPO */
+    padding: 40px 20px 20px; /* Mais padding no topo */
     z-index: 10;
     overflow-y: auto;
     border-radius: 0 20px 20px 0;
@@ -166,55 +166,80 @@ form select:focus {
     border-color: var(--color-secondary);
 }
 
-.form-actions { 
+/* Estilos dos Botões de Ação na Sidebar */
+.botoes-acao { 
+    width: 100%;
     display: flex; 
-    flex-direction: row; 
-    gap: 10px; 
-    margin-top: 15px; 
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: center; 
+    margin-top: 20px; 
 }
 
-form button {
-    flex: 1; 
-    height: 50px; 
-    font-weight: bold; 
-    font-size: 1rem;
+.botoes-acao button {
+    width: 250px; /* Tamanho fixo para melhor alinhamento */
+    height: 55px; 
+    font-weight: 600; 
+    font-size: 1.1rem;
     border: none; 
     border-radius: 10px; 
     cursor: pointer; 
-    transition: 0.2s;
+    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    text-align: center;
 }
 
+/* Botão Salvar (Criação) */
 #btn-salvar { 
     background-color: var(--color-secondary); 
-    color: var(--color-background); 
+    color: var(--color-black); 
+    /* Estilo de botão principal */
 }
 
-.lightmode #btn-salvar { color: var(--color-black); }
-
-#btn-limpar {
+/* Botão Excluir (Deleção) */
+#btn-excluir {
     background-color: var(--color-incorrect); 
-    color: white; 
+    color: var(--color-primary); /* Texto branco para contraste */
+    /* Este botão é escondido/mostrado via JS */
 }
 
-form button:hover { 
+/* Efeito Hover nos botões de ação */
+.botoes-acao button:hover { 
     filter: brightness(1.1); 
     transform: scale(1.02); 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
 }
 
+
+/* Botão Voltar (Link/Botão neutro) */
 .back-text { 
     margin-top: 15px; 
     font-size: 0.9rem; 
     text-align: center;
+    width: 250px; /* Alinhado com os botões de ação */
 }
 
-.back-text a { 
-    color: var(--color-secondary); 
-    text-decoration: none; 
+.back-text a {
+    text-decoration: none;
+    display: block;
 }
 
-.lightmode .back-text a { 
-    color: var(--color-secondary); 
+.back-text button {
+    width: 100%;
+    height: 40px;
+    background-color: var(--color-input-background); /* Fundo escuro */
+    color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: 0.2s ease;
 }
+
+.back-text button:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-black);
+}
+
 
 /* ========================= */
 /* CHIPS DIAS DA SEMANA     */
@@ -244,30 +269,6 @@ form button:hover {
     color: var(--color-black);
 }
 
-
-form button {
-    width: 250px;
-    height: 50px;
-    font: inherit;
-    font-weight: 600;
-    font-size: 1.7rem;
-    color: var(--color-black); /* Cor do texto no Dark Mode (Black no fundo amarelo) */
-    background-color: var(--color-secondary);
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    /* EFEITO: Adicionado box-shadow e transform na transição */
-    transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-form button:hover {
-    /* Troca para cor de fundo principal e cor de texto escura */
-    background-color: var(--color-primary);
-    color: var(--color-input-background);
-    /* EFEITO: Box-shadow no hover para dar profundidade */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
-    transform: translateY(-2px);
-}
 
 /* ========================= */
 /* RIGHT SIDE CONTENT        */
@@ -311,6 +312,7 @@ form button:hover {
     flex-direction: column;
     gap: 10px;
     width: 100%;
+    max-width: 600px; /* Adiciona limite de largura para a lista ficar centralizada */
 }
 
 .item-lista {
@@ -322,20 +324,28 @@ form button:hover {
     background: var(--color-input-background);
     cursor: pointer;
     transition: 0.2s;
+    border: 2px solid transparent;
 }
 
 .item-lista:hover {
     filter: brightness(1.1);
 }
 
+.item-lista.editando {
+    border-color: var(--color-secondary); /* Borda amarela quando selecionado */
+}
+
+
 .item-lista input[type="checkbox"] {
     transform: scale(1.3);
     cursor: pointer;
+    margin-top: 4px; /* Alinha o checkbox com o texto */
 }
 
 .texto-servico h3 {
     margin: 0;
     font-size: 1.2rem;
+    color: var(--color-primary);
 }
 
 .texto-servico p {
@@ -345,33 +355,10 @@ form button:hover {
 }
 
 /* ========================= */
-/* BOTÃO EXCLUIR            */
+/* SWEETALERT / THEME SWITCH */
 /* ========================= */
 
-.confirm-button {
-    margin-top: 40px;
-    width: 220px; 
-    height: 55px; 
-    font-size: 1.2rem;
-    font-weight: 600; 
-    color: var(--color-primary);
-    background-color: var(--color-incorrect);
-    border: none; 
-    border-radius: 10px;
-    cursor: pointer; 
-    transition: 150ms ease;
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.confirm-button.ativo {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* ========================= */
-/* THEME SWITCH              */
-/* ========================= */
+/* ... (O restante do CSS para o theme-switch e sweetalert permanece igual) ... */
 
 #theme-switch {
     height: 50px; 
@@ -407,33 +394,7 @@ form button:hover {
     fill: var(--color-background); 
 }
 
-/* ========================= */
-/* RESPONSIVE                */
-/* ========================= */
-
-@media (max-width: 900px) {
-    .container { display: block; padding-top: 60px; }
-    
-    .wrapper {
-        position: relative; 
-        width: 100%; 
-        height: auto;
-        padding: 30px 20px;
-        border-bottom: 2px solid #333;
-    }
-
-    .lightmode .wrapper { border-bottom: 2px solid #ccc; }
-
-    .content-right { 
-        width: 100%; 
-        padding: 30px 10px; 
-    }
-}
-
-/* ========================= */
-/* SWEETALERT                */
-/* ========================= */
-
+/* SweetAlert */
 div:where(.swal2-container) { z-index: 2000 !important; }
 
 div:where(.swal2-container) .swal2-popup {
@@ -462,4 +423,32 @@ div:where(.swal2-container) .swal2-cancel {
     color: var(--color-black) !important;
     border-radius: 10px !important; 
     font-weight: bold !important;
+}
+
+
+/* ========================= */
+/* RESPONSIVE                */
+/* ========================= */
+
+@media (max-width: 900px) {
+    .container { display: block; padding-top: 60px; }
+    
+    .wrapper {
+        position: relative; 
+        width: 100%; 
+        height: auto;
+        padding: 30px 20px;
+        border-bottom: 2px solid #333;
+    }
+
+    .lightmode .wrapper { border-bottom: 2px solid #ccc; }
+
+    .content-right { 
+        width: 100%; 
+        padding: 30px 10px; 
+    }
+    
+    .botoes-acao button {
+        width: 100%;
+    }
 }

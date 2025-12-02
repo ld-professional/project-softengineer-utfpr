@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         excecaoButton.addEventListener('click', function() {
             
             
-            const urlDestino = '/barbeiro/agendamentos/editar-agenda/';
+            const urlDestino = '/barbeiro/agendamentos/exceccao/';
 
             
             window.location.href = urlDestino;
