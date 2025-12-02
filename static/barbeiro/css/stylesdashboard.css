@@ -25,7 +25,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* EFEITO: Adiciona transição de cor para elementos genéricos */
+    
     transition: color 0.3s ease;
 }
 
@@ -42,11 +42,11 @@ body {
     background-size: cover;
     background-position: right;
     overflow-x: hidden;
-    /* EFEITO: Transição de fundo */
+    
     transition: background-color 0.3s ease;
 }
 
-/* --- BARRA DE NAVEGAÇÃO SUPERIOR --- */
+
 nav {
     position: fixed;
     top: 0;
@@ -59,7 +59,7 @@ nav {
     justify-content: space-between;
     height: 60px;
     padding: 0 2rem;
-    /* EFEITO: Transição de fundo */
+    
     transition: background-color 0.3s ease;
 }
 
@@ -82,22 +82,22 @@ nav {
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--color-primary);
-    /* EFEITO: Transição de cor */
+    
     transition: color 0.3s ease;
 }
 
-/* --- LAYOUT GRID --- */
+
 .container {
     display: grid;
     grid-template-columns: 320px 1fr;
     min-height: 100vh;
     padding-top: 60px;
     background-color: var(--color-input-background);
-    /* EFEITO: Transição para cor de fundo */
+    
     transition: background-color 0.3s ease;
 }
 
-/* Menu Lateral */
+
 .wrapper {
     background-color: var(--color-background);
     width: 320px;
@@ -105,17 +105,17 @@ nav {
     border-radius: 0 20px 20px 0;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centraliza verticalmente */
+    justify-content: center; 
     align-items: center;
     position: fixed;
     left: 0;
     top: 60px;
     z-index: 10;
-    /* EFEITO: Transição para cor de fundo */
+    
     transition: background-color 0.3s ease;
 }
 
-/* Botões do Formulário */
+
 form {
     width: min(400px, 100%);
     margin-top: 20px;
@@ -133,12 +133,12 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black); /* Cor do texto padrão (Preto) */
+    color: var(--color-black); 
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    /* EFEITO: Adicionado box-shadow e transform na transição */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -146,22 +146,22 @@ form button:hover, form button:focus {
     background-color: var(--color-primary);
     color: var(--color-input-background);
     outline: none;
-    /* EFEITO: Box-shadow no hover para dar profundidade */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
     transform: translateY(-2px);
 }
-/* CORREÇÃO DE CORES: Garante contraste no Light Mode durante hover/focus */
+
 .lightmode form button:hover, .lightmode form button:focus {
-    color: var(--color-black); /* Texto PRETO em hover/focus no Light Mode */
-    background-color: var(--color-input-background); /* Fundo claro para o hover */
+    color: var(--color-black); 
+    background-color: var(--color-input-background); 
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
 }
 .lightmode form button {
-    color: var(--color-black); /* Garante texto preto no Light Mode */
+    color: var(--color-black); 
 }
 
 
-/* Área do Usuário (Direita) */
+
 .user-info {
     grid-column: 2;
     display: flex;
@@ -180,7 +180,7 @@ form button:hover, form button:focus {
     padding: 20px;
 }
 
-/* --- BOTÕES FLUTUANTES --- */
+
 
 #logout-button {
     height: 35px;
@@ -200,20 +200,20 @@ form button:hover, form button:focus {
     top: 12px; 
     right: 80px;
     z-index: 101; 
-    /* EFEITO: Transição completa de hover */
+    
     transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.05); 
     color: var(--color-input-background);
 }
-/* CORREÇÃO APLICADA: Cor do fundo e texto corretos no Light Mode hover do Logout */
+
 .lightmode #logout-button:hover {
-    color: var(--color-black); /* Texto PRETO */
-    background-color: var(--color-input-background); /* Fundo CLARO (f5f5f5) */
+    color: var(--color-black); 
+    background-color: var(--color-input-background); 
 }
 
 
@@ -230,7 +230,7 @@ form button:hover, form button:focus {
     position: fixed;
     top: 5px; 
     right: 20px;
-    /* EFEITO: Transição completa */
+    
     transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
@@ -247,30 +247,30 @@ form button:hover, form button:focus {
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.1); 
 }
 
 #theme-switch:hover svg {
     fill: var(--color-background);
 }
 
-/* --- RESPONSIVIDADE (CELULAR) --- */
+
 @media (max-width: 900px) {
 
-    /* CORREÇÃO DO CABEÇALHO */
+    
     nav {
-        justify-content: center; /* Centraliza o conteúdo */
+        justify-content: center; 
         padding-right: 0;
     }
 
     .page-header {
-        position: static; /* Tira o absolute para parar de flutuar por cima */
-        margin-right: 120px; /* Empurra o texto para a esquerda para não bater nos botões */
+        position: static; 
+        margin-right: 120px; 
         width: auto;
     }
 
     .page-title {
-        font-size: 1.1rem; /* Fonte menor para caber no celular */
+        font-size: 1.1rem; 
         white-space: nowrap;
     }
 
@@ -279,9 +279,9 @@ form button:hover, form button:focus {
         height: 35px;
     }
 
-    /* AJUSTE DOS BOTÕES LATERAIS */
+    
     #logout-button {
-        right: 75px; /* Ajuste fino da posição */
+        right: 75px; 
         width: 45px;
         font-size: 1rem;
     }
@@ -290,7 +290,7 @@ form button:hover, form button:focus {
         right: 15px;
     }
 
-    /* RESTO DO LAYOUT */
+    
     .container {
         grid-template-columns: 1fr;
         display: flex;
@@ -318,30 +318,30 @@ form button:hover, form button:focus {
     }
 
     #fundo-dashboard {
-        /* Muda o alinhamento para a ESQUERDA no celular. */
+        
         background-position: left center !important;
     }
 }
 
-/* --- CONFIGURAÇÃO DO FUNDO COM IMAGEM (CORRIGIDO) --- */
+
 #fundo-dashboard {
-    /* O var(--imagem-fundo) puxa o caminho que você colocou no HTML */
+    
     background-image: 
         linear-gradient(rgba(23, 22, 22, 0.90), rgba(23, 22, 22, 0.90)), 
         var(--imagem-fundo);
 
-    background-size: cover;      /* Cobre todo o espaço */
-    background-position: center; /* Centraliza a imagem */
+    background-size: cover;      
+    background-position: center; 
     background-repeat: no-repeat;
     
     position: relative;
 }
 
-/* --- MUDANÇA DE FUNDO ESPECÍFICA PARA O LIGHT MODE --- */
 
-/* Quando o 'body' tiver a classe 'lightmode', aplicamos esta regra ao #fundo-dashboard */
+
+
 body.lightmode #fundo-dashboard {
-    /* Removemos o gradiente escuro e aplicamos um gradiente branco suave */
+    
     background-image:  linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
      url('../images/fundobranco2.png');
 }

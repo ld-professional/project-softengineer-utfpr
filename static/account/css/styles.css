@@ -28,7 +28,7 @@
     font-family: var(--font-family-primary);
     color: var(--color-text);
 }
-/* EFEITO: Transição de cor de texto para o tema */
+
 .lightmode * {
     transition: color 0.3s ease;
 }
@@ -46,18 +46,16 @@ body {
     background-size: cover;
     background-position: right;
     overflow: hidden;
-    /* EFEITO: Transição para cor de fundo */
+    
     transition: background-color 0.3s ease;
 }
-/* Ajuste no body para o Light Mode (se for necessário mudar o background-image, isso deve ser feito aqui) */
-.lightmode body {
-    /* Exemplo: background-image: url(../images/scissors-light.jpg); */
-}
+
+
 
 
 .wrapper {
     box-sizing: border-box;
-    /* EFEITO: Transição de fundo e sombra */
+    
     background-color: var(--color-background);
     height: 100vh;
     width: max(40%, 600px);
@@ -69,16 +67,16 @@ body {
     align-items: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-/* CORREÇÃO DE CORES: Fundo claro no Light Mode (como na imagem) */
+
 .lightmode .wrapper {
-    background-color: var(--color-background); /* Usando var(--color-background) que é #cfcfcf */
+    background-color: var(--color-background); 
 }
 
 
 .forgot-password,
 .login-conta,
 .already-have-account {
-    margin-top: 25px; /* Ajustado para consistência */
+    margin-top: 25px; 
     font-size: 1.3rem;
     transition: color 0.3s ease;
 }
@@ -94,11 +92,11 @@ body {
     margin-top: -30px;
     font-size: 1.3rem;
 }
-/* Efeito de cores no Light Mode para links de rodapé */
+
 .lightmode .forgot-password,
 .lightmode .login-conta,
 .lightmode .already-have-account {
-    color: var(--color-text); /* Cor de texto padrão (preto) */
+    color: var(--color-text); 
 }
 
 
@@ -147,7 +145,7 @@ form > div {
     width: 100%;
     display: flex;
     justify-content: center;
-    border-radius: 10px; /* Para envolver input/label */
+    border-radius: 10px; 
     transition: box-shadow 0.2s ease;
 }
 
@@ -156,7 +154,7 @@ form label {
     height: 50px;
     width: 50px;
     background-color: var(--color-secondary);
-    /* CORREÇÃO CRÍTICA: Cor do ícone deve ser var(--color-black) para o fundo amarelo */
+    
     fill: var(--color-black); 
     border-radius: 10px 0 0 10px;
     display: flex;
@@ -164,9 +162,9 @@ form label {
     align-items: center;
     transition: background-color 0.2s ease, fill 0.2s ease;
 }
-/* Estilizando o SVG dentro da label (ícone) */
+
 form label svg {
-    /* Define o fill aqui para que a regra de hover abaixo possa sobrescrever */
+    
     fill: var(--color-black); 
     transition: fill 0.2s ease;
 }
@@ -183,12 +181,12 @@ form input {
     border: 2px solid var(--color-input-background);
     border-left: none;
     background-color: var(--color-input-background);
-    color: var(--color-primary); /* Garante que o texto digitado seja claro no dark mode */
+    color: var(--color-primary); 
     transition: 0.2s ease, border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
-/* CORREÇÃO DE CORES: Cor do texto digitado no Light Mode */
+
 .lightmode form input {
-    color: var(--color-black); /* Preto no fundo claro */
+    color: var(--color-black); 
 }
 
 
@@ -197,29 +195,29 @@ form input:hover {
 }
 
 form input:focus {
-    border-color: var(--color-secondary); /* Efeito: Borda amarela no foco */
+    border-color: var(--color-secondary); 
     outline: none;
 }
-/* EFEITO: Destaque visual (sombra) ao focar/hover no container div */
+
 div:has(input:focus), div:has(input:hover) {
     box-shadow: 0 0 8px rgba(223, 176, 66, 0.6);
 }
 
 
-/* --- CORREÇÃO DE CORES NO HOVER/FOCUS --- */
 
-/* 1. MUDANÇA DE COR DO FUNDO DA LABEL (Fundo VAI para var(--color-primary)) */
+
+
 div:has(input:focus) > label, 
 div:has(input:hover) > label {
-    background-color: var(--color-primary); /* Fundo branco/preto */
-    /* Garante que o ícone mude */
-    fill: var(--color-background); /* Ícone deve ser a cor oposta (background) */
+    background-color: var(--color-primary); 
+    
+    fill: var(--color-background); 
 }
 
-/* 2. MUDANÇA DE COR DO ÍCONE (SVG) */
+
 div:has(input:focus) > label svg,
 div:has(input:hover) > label svg {
-    /* CORREÇÃO APLICADA AQUI: Ícone pega a cor oposta do fundo, garantindo contraste */
+    
     fill: var(--color-background); 
 }
 
@@ -230,40 +228,40 @@ form input::placeholder {
     transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-/* --- BOTÃO PRINCIPAL --- */
+
 form button {
     width: 100%;
     height: 50px;
     font: inherit;
     font-weight: 600;
     font-size: 1.2rem;
-    color: var(--color-black); /* Texto preto no fundo amarelo */
+    color: var(--color-black); 
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    /* EFEITO: Transição completa de hover/focus */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 
 form button:hover, form button:focus {
     background-color: var(--color-primary);
-    /* CORREÇÃO: Cor do texto no hover. Deve ser a cor oposta do fundo */
+    
     color: var(--color-background); 
     outline: none;
-    /* EFEITO: Sombra e pulo */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
 }
-/* CORREÇÃO DE CORES: Garante contraste no Light Mode hover */
+
 .lightmode form button:hover, .lightmode form button:focus {
-    color: var(--color-black); /* Texto PRETO no hover */
-    background-color: var(--color-input-background); /* Fundo claro para o hover */
+    color: var(--color-black); 
+    background-color: var(--color-input-background); 
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
 }
 .lightmode form button {
-    color: var(--color-black); /* Garante texto preto no Light Mode */
+    color: var(--color-black); 
 }
 
 
@@ -297,7 +295,7 @@ form div.incorrect input {
     color: var(--color-incorrect);
 }
 
-/* --- BOTÃO TEMA (FLUTUANTE) --- */
+
 #theme-switch{
     height: 50px;
     width: 50px;
@@ -311,7 +309,7 @@ form div.incorrect input {
     position: fixed;
     top: 5px;
     right: 20px;
-    /* EFEITO: Transição completa */
+    
     transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
@@ -336,7 +334,7 @@ form div.incorrect input {
 #theme-switch:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.1); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.1); 
 }
 
 #theme-switch:hover svg {

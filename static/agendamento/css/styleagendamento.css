@@ -34,7 +34,7 @@ html {
     text-align: center;
 }
 
-/* EFEITO: Adicionado transição para cores de fundo e texto na troca de tema */
+
 nav {
     position: fixed;
     top: 0;
@@ -74,7 +74,7 @@ nav {
     gap: 0.75rem;
 }
 
-/* EFEITO: Adicionado transição para cor de fundo */
+
 body {
     min-width: 100vw;
     background-color: var(--color-input-background);
@@ -84,7 +84,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* EFEITO: Adicionado transição para cor de fundo */
+
 .container {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -94,7 +94,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* EFEITO: Adicionado transição para cor de fundo */
+
 .wrapper {
     background-color: var(--color-background);
     width: 320px;
@@ -149,38 +149,38 @@ form button {
     font: inherit;
     font-weight: 600;
     font-size: 2rem;
-    color: var(--color-black); /* Cor do texto no Dark Mode (Black no fundo amarelo) */
+    color: var(--color-black); 
     background-color: var(--color-secondary);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    /* EFEITO: Adicionado box-shadow e transform na transição */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 form button:hover {
-    /* Troca para cor de fundo principal e cor de texto escura */
+    
     background-color: var(--color-primary);
     color: var(--color-input-background);
-    /* EFEITO: Box-shadow no hover para dar profundidade */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
     transform: translateY(-2px);
 }
-/* Correção de cores para Light Mode no hover */
+
 .lightmode form button:hover, .lightmode form button:focus {
-    color: var(--color-black); /* Garante texto preto no hover */
-    background-color: #f5f5f5; /* Força um fundo claro para o hover no Light Mode */
+    color: var(--color-black); 
+    background-color: #f5f5f5; 
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
 }
 .lightmode form button {
-    color: var(--color-black); /* Garante texto preto no Light Mode */
+    color: var(--color-black); 
 }
 
 form button:focus {
     outline: none;
     background-color: var(--color-primary);
     color: var(--color-input-background);
-    /* EFEITO: Box-shadow no focus */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
 }
 
@@ -249,7 +249,7 @@ form button:focus {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    /* EFEITO: Transição completa de hover */
+    
     transition: transform 0.2s ease, background-color 0.2s, color 0.2s;
     z-index: 20;
 }
@@ -259,7 +259,7 @@ form button:focus {
     color: var(--color-background);
     transform: scale(1.1);
 }
-/* Correção de cores para Light Mode no hover da seta */
+
 .lightmode .seta:hover {
     background-color: var(--color-primary); 
     color: var(--color-background);
@@ -289,19 +289,19 @@ form button:focus {
     border-radius: 20px;
     background: var(--color-background);
     
-    /* Box shadow inicial para Dark Mode */
+    
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.8), 0px 2px 5px var(--color-input-background);
     text-align: left;
     font-size: 1.2rem;
     font-family: var(--font-family-secondary);
-    /* EFEITO: Transição de transform, box-shadow e background */
+    
     transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
 }
 
-/* Correção de cores e sombra para Cards no Light Mode */
+
 .lightmode .corte, .lightmode .barba, .lightmode .barba-corte {
-    background: var(--color-input-background); /* Fundo claro para o card no lightmode */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); /* Sombra mais suave */
+    background: var(--color-input-background); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1), 0px 2px 5px rgba(0, 0, 0, 0.05); 
 }
 
 
@@ -311,9 +311,9 @@ form button:focus {
     outline: 3px solid var(--color-secondary);
     z-index: 3;
     outline-offset: 0px;
-    /* EFEITO: Pulo suave ao selecionar */
+    
     transform: scale(1.03); 
-    /* EFEITO: Brilho na cor secundária ao selecionar */
+    
     box-shadow: 0 0 10px rgba(223, 176, 66, 0.8);
 }
 
@@ -360,7 +360,7 @@ form button:focus {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    /* EFEITO: Transição completa */
+    
     transition: 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: block;
     z-index: 20;
@@ -369,13 +369,13 @@ form button:focus {
 .confirm-button:hover {
     background-color: var(--color-primary);
     color: var(--color-input-background);
-    /* EFEITO: Box-shadow no hover para dar profundidade */
+    
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
-    transform: scale(1.05); /* EFEITO: Pulo maior no hover */
+    transform: scale(1.05); 
 }
-/* Correção de cores para Light Mode no hover do botão Confirmar */
+
 .lightmode .confirm-button:hover {
-    color: var(--color-black); /* Garante texto preto no hover */
+    color: var(--color-black); 
     background-color: #f5f5f5;
 }
 
@@ -440,17 +440,17 @@ form button:focus {
     top: 12px;
     right: 80px;
     z-index: 101;
-    /* EFEITO: Transição completa de hover */
+    
     transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 #logout-button:hover {
     cursor: pointer;
     background-color: var(--color-primary);
-    transform: scale(1.05); /* EFEITO: Pulo sutil no hover */
+    transform: scale(1.05); 
     color: var(--color-input-background);
 }
-/* Correção de cores para Light Mode no hover do Logout */
+
 .lightmode #logout-button:hover {
     color: var(--color-black);
 }
@@ -469,7 +469,7 @@ form button:focus {
     position: fixed;
     top: 5px;
     right: 20px;
-    /* EFEITO: Transição completa */
+    
     transition: background-color 0.3s ease, transform 0.2s ease;
     z-index: 200;
 }
